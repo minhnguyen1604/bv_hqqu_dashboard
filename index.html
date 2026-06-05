@@ -1317,6 +1317,9 @@
         .trend-item.neutral .trend-arrow {
             color: #6b7280 !important;
         }
+        .text-success {
+            color: var(--success) !important;
+        }
     </style>
 </head>
 
@@ -1623,6 +1626,68 @@
                     </div>
                 </div>
 
+                <!-- ================= SEASONAL REVENUE ANALYSIS ================= -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="margin-bottom: 16px;">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">
+                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO ĐƠN VỊ
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="seasonalSearchInput" class="form-control" placeholder="Tìm kiếm đơn vị..." style="width: 250px; height: 38px; font-size: 13px; padding-left: 12px; border: 1px solid var(--sidebar-border); border-radius: 8px;">
+                        </div>
+                    </div>
+                    <div class="table-container" style="max-height: 400px; overflow-y: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
+                        <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center;">STT</th>
+                                    <th style="min-width: 200px;">Đơn Vị</th>
+                                    <th class="text-right">Tăng Q1->Q2 2025</th>
+                                    <th class="text-right">Tăng Q2->Q3 2025</th>
+                                    <th class="text-right">Tăng Q3->Q4 2025</th>
+                                    <th class="text-right" style="background: rgba(0, 86, 163, 0.03) !important;">TB Tăng 2025</th>
+                                    <th class="text-right" style="background: rgba(0, 86, 163, 0.05) !important;">Tăng Q1.25->Q1.26</th>
+                                    <th style="text-align: center; width: 120px;">Mùa vụ Q1</th>
+                                </tr>
+                            </thead>
+                            <tbody id="seasonalTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= SEASONAL REVENUE ANALYSIS ================= -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="margin-bottom: 16px;">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">
+                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO ĐƠN VỊ
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="seasonalSearchInput" class="form-control" placeholder="Tìm kiếm đơn vị..." style="width: 250px; height: 38px; font-size: 13px; padding-left: 12px; border: 1px solid var(--sidebar-border); border-radius: 8px;">
+                        </div>
+                    </div>
+                    <div class="table-container" style="max-height: 400px; overflow-y: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
+                        <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center;">STT</th>
+                                    <th style="min-width: 200px;">Đơn Vị</th>
+                                    <th class="text-right">Tăng Q1->Q2 2025</th>
+                                    <th class="text-right">Tăng Q2->Q3 2025</th>
+                                    <th class="text-right">Tăng Q3->Q4 2025</th>
+                                    <th class="text-right" style="background: rgba(0, 86, 163, 0.03) !important;">TB Tăng 2025</th>
+                                    <th class="text-right" style="background: rgba(0, 86, 163, 0.05) !important;">Tăng Q1.25->Q1.26</th>
+                                    <th style="text-align: center; width: 120px;">Mùa vụ Q1</th>
+                                </tr>
+                            </thead>
+                            <tbody id="seasonalTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px;">
@@ -1717,7 +1782,7 @@
 
                 <!-- ================= VIEW 2: BRANCH PERFORMANCE ================= -->
             <div id="viewBranch" class="view-panel">
-                <div class="panel glass-panel" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; z-index: 100;">
+                <div class="panel glass-panel" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; z-index: 100; overflow: visible !important;">
                     <div class="panel-header" style="margin-bottom: 0;">
                         <div class="panel-title">LỰA CHỌN ĐƠN VỊ PHÂN TÍCH</div>
                     </div>
@@ -2120,6 +2185,7 @@
             setupSidebarCollapsing();
             setupDragAndDrop();
             initCustomBranchSelect();
+            setupSeasonalSearch();
         });
 
         // Trigger manual/drop upload setup
@@ -2276,10 +2342,14 @@
             document.getElementById('uploadOverlay').classList.add('hidden');
 
             // Render views
+            computeSeasonalData();
             initOverviewDashboard();
             populateBranchDropdown();
             renderBranchesTable();
         }
+
+        let raw2025Cumulative = {}; // Global variable to store 2025 raw quarterly cumulative data
+        let seasonalData = [];      // Global variable to store calculated seasonal analysis data
 
         // Parse 2025 Excel Workbook for YoY/QoQ calculations
         function parseExcelWorkbook2025(buffer) {
@@ -2287,16 +2357,21 @@
                 const data = new Uint8Array(buffer);
                 const workbook = XLSX.read(data, { type: 'array' });
                 
-                const sheetName = workbook.SheetNames[0];
+                // Try reading "Tổng doanh thu quý" first, fallback to first sheet
+                let sheetName = "Tổng doanh thu quý";
+                if (!workbook.SheetNames.includes(sheetName)) {
+                    sheetName = workbook.SheetNames[0];
+                }
                 const sheet = workbook.Sheets[sheetName];
                 const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-                if (!rows || rows.length < 3) {
+                if (!rows || rows.length < 2) {
                     throw new Error('Dữ liệu bảng tính 2025 không hợp lệ.');
                 }
                 
                 data2025 = {};
+                raw2025Cumulative = {};
 
-                let headerRowIndex = -1;
+                let headerRowIndex = 0;
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
                     if (row && row.includes('Tên đơn vị')) {
@@ -2305,19 +2380,19 @@
                     }
                 }
 
-                if (headerRowIndex === -1) {
-                    headerRowIndex = 1;
-                }
-
                 const headers = rows[headerRowIndex];
                 let nameIdx = -1;
                 let q1Idx = -1;
+                let q2Idx = -1;
+                let q3Idx = -1;
                 let q4Idx = -1;
                 for (let j = 0; j < headers.length; j++) {
                     if (headers[j]) {
                         const hStr = String(headers[j]).trim().toLowerCase();
                         if (hStr.includes('tên đơn vị') || hStr.includes('ten don vi')) nameIdx = j;
                         if (hStr.includes('quý 1') || hStr.includes('quy 1')) q1Idx = j;
+                        if (hStr.includes('quý 2') || hStr.includes('quy 2')) q2Idx = j;
+                        if (hStr.includes('quý 3') || hStr.includes('quy 3')) q3Idx = j;
                         if (hStr.includes('quý 4') || hStr.includes('quy 4')) q4Idx = j;
                     }
                 }
@@ -2335,17 +2410,127 @@
                     if (!branchName || branchName === 'UNMAPPED' || branchName === 'Grand Total') continue;
                     
                     const q1Val = Number(row[q1Idx]) || 0;
+                    const q2Val = q2Idx !== -1 ? (Number(row[q2Idx]) || 0) : 0;
+                    const q3Val = q3Idx !== -1 ? (Number(row[q3Idx]) || 0) : 0;
                     const q4Val = Number(row[q4Idx]) || 0;
                     
-                    if (!data2025[branchName]) {
-                        data2025[branchName] = { q1: 0, q4: 0 };
-                    }
-                    data2025[branchName].q1 += q1Val;
-                    data2025[branchName].q4 += q4Val;
+                    // Cumulative values
+                    raw2025Cumulative[branchName] = { q1: q1Val, q2: q2Val, q3: q3Val, q4: q4Val };
+
+                    // Compute actual values for YoY/QoQ details cards
+                    const q1_actual = q1Val;
+                    const q4_actual = Math.max(0, q4Val - q3Val);
+
+                    data2025[branchName] = { q1: q1_actual, q4: q4_actual };
                 }
-                console.log('Đã nạp thành công dữ liệu lịch sử 2025 cho', Object.keys(data2025).length, 'đơn vị');
+                console.log('Đã nạp thành công dữ liệu lịch sử 2025 cho', Object.keys(raw2025Cumulative).length, 'đơn vị');
             } catch (err) {
                 console.error('Lỗi khi phân tích tệp DT_CTTV_2025.xlsx:', err);
+            }
+        }
+
+        function computeSeasonalData() {
+            seasonalData = [];
+            
+            const allItems = [...branchesData];
+            if (headquartersData) allItems.push(headquartersData);
+
+            allItems.forEach(branch => {
+                const name = branch.name;
+                const hist = raw2025Cumulative[name] || { q1: 0, q2: 0, q3: 0, q4: 0 };
+                
+                // Actual quarterly revenues (2025)
+                const q1_25 = hist.q1;
+                const q2_25 = Math.max(0, hist.q2 - hist.q1);
+                const q3_25 = Math.max(0, hist.q3 - hist.q2);
+                const q4_25 = Math.max(0, hist.q4 - hist.q3);
+                
+                // Percent changes inside 2025
+                const change_q1_q2 = q1_25 > 0 ? ((q2_25 - q1_25) / q1_25) * 100 : 0;
+                const change_q2_q3 = q2_25 > 0 ? ((q3_25 - q2_25) / q2_25) * 100 : 0;
+                const change_q3_q4 = q3_25 > 0 ? ((q4_25 - q3_25) / q3_25) * 100 : 0;
+                
+                const avg_change_2025 = (change_q1_q2 + change_q2_q3 + change_q3_q4) / 3;
+                
+                // Compare Q1 2026 to Q1 2025
+                const q1_26 = branch.tong_dt;
+                const change_25_26 = q1_25 > 0 ? ((q1_26 - q1_25) / q1_25) * 100 : 0;
+                
+                const is_seasonal = change_25_26 > avg_change_2025;
+
+                seasonalData.push({
+                    name: name,
+                    q1_25: q1_25,
+                    q2_25: q2_25,
+                    q3_25: q3_25,
+                    q4_25: q4_25,
+                    change_q1_q2: change_q1_q2,
+                    change_q2_q3: change_q2_q3,
+                    change_q3_q4: change_q3_q4,
+                    avg_change_2025: avg_change_2025,
+                    q1_26: q1_26,
+                    change_25_26: change_25_26,
+                    is_seasonal: is_seasonal
+                });
+            });
+        }
+
+        function renderSeasonalTable() {
+            const tbody = document.getElementById('seasonalTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const query = document.getElementById('seasonalSearchInput') ? document.getElementById('seasonalSearchInput').value.toLowerCase().trim() : '';
+
+            // Filter items based on query
+            const filteredData = seasonalData.filter(item => item.name.toLowerCase().includes(query));
+
+            // Sort alphabetically by name
+            filteredData.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+
+            filteredData.forEach((item, index) => {
+                const formatPct = (val) => {
+                    const sign = val >= 0 ? '+' : '';
+                    return sign + val.toFixed(2) + '%';
+                };
+
+                const changeQ1Q2Str = formatPct(item.change_q1_q2);
+                const changeQ2Q3Str = formatPct(item.change_q2_q3);
+                const changeQ3Q4Str = formatPct(item.change_q3_q4);
+                const avgChangeStr = formatPct(item.avg_change_2025);
+                const change2526Str = formatPct(item.change_25_26);
+
+                // Seasonality badge
+                let badgeHTML = '';
+                if (item.is_seasonal) {
+                    badgeHTML = '<span class="status-badge" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25)">Có</span>';
+                } else {
+                    badgeHTML = '<span class="status-badge" style="background: rgba(107, 114, 128, 0.1); color: #4b5563; border: 1px solid rgba(107, 114, 128, 0.25)">Không</span>';
+                }
+
+                const getColorClass = (val) => val >= 0 ? 'text-success bold' : 'text-danger bold';
+
+                tbody.insertAdjacentHTML('beforeend', `
+                    <tr>
+                        <td class="text-center">${index + 1}</td>
+                        <td class="bold">${item.name}</td>
+                        <td class="text-right ${getColorClass(item.change_q1_q2)}">${changeQ1Q2Str}</td>
+                        <td class="text-right ${getColorClass(item.change_q2_q3)}">${changeQ2Q3Str}</td>
+                        <td class="text-right ${getColorClass(item.change_q3_q4)}">${changeQ3Q4Str}</td>
+                        <td class="text-right bold ${getColorClass(item.avg_change_2025)}" style="background: rgba(0, 86, 163, 0.02) !important;">${avgChangeStr}</td>
+                        <td class="text-right bold ${getColorClass(item.change_25_26)}" style="background: rgba(0, 86, 163, 0.04) !important;">${change2526Str}</td>
+                        <td class="text-center">${badgeHTML}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        function setupSeasonalSearch() {
+            const searchInput = document.getElementById('seasonalSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    renderSeasonalTable();
+                });
             }
         }
 
@@ -2465,6 +2650,7 @@
 
             // Populate Profitable & Unprofitable tables
             populateProfitableTables();
+            renderSeasonalTable();
 
             // Initialize Diagnostic Ratio Charts
             initRatioCharts();
