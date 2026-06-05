@@ -2274,7 +2274,7 @@
     </main>
 
     <!-- Excel Drag & Drop Overlay Loader Fallback -->
-    <div class="upload-overlay" id="uploadOverlay">
+    <div class="upload-overlay hidden" id="uploadOverlay">
         <div class="upload-container" id="uploadDropzone">
             <div class="upload-icon">📊</div>
             <h3 style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Đang tải Dữ liệu HQQU</h3>
@@ -2520,11 +2520,11 @@
                 }
                 const buffer = await response.arrayBuffer();
                 parseExcelWorkbook(buffer);
-                showToast('Tải dữ liệu thành công!');
             } catch (err) {
                 console.warn('Auto fetch failed, falling back to manual upload:', err);
                 statusText.innerHTML = '⚠️ <strong>Không thể đồng bộ tự động!</strong><br>Do chạy ở chế độ file:// hoặc máy chủ chưa sẵn sàng. Vui lòng kéo thả hoặc tải lên các tệp dữ liệu.';
                 document.getElementById('manualUploadArea').style.display = 'block';
+                document.getElementById('uploadOverlay').classList.remove('hidden');
             }
         }
 
