@@ -1827,6 +1827,12 @@
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
+                                    <th class="filterable-th" data-col="peak_quarter" style="min-width: 120px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">
+                                        <div class="th-content" style="justify-content: center;">
+                                            <span>Quý Cao Điểm</span>
+                                            <span class="filter-arrow-btn">▼</span>
+                                        </div>
+                                    </th>
                                     <th class="filterable-th" data-col="change_q1_q2" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
                                         <div class="th-content">
                                             <span>% thay đổi Q1->Q2 2025</span>
@@ -2817,6 +2823,14 @@
                 const prop_q3 = total_25 > 0 ? (q3_25 / total_25) * 100 : 0;
                 const prop_q4 = total_25 > 0 ? (q4_25 / total_25) * 100 : 0;
 
+                // Let's compute the peak quarter
+                let peak_quarter = 'Q1';
+                let max_prop = prop_q1;
+                if (prop_q2 > max_prop) { max_prop = prop_q2; peak_quarter = 'Q2'; }
+                if (prop_q3 > max_prop) { max_prop = prop_q3; peak_quarter = 'Q3'; }
+                if (prop_q4 > max_prop) { max_prop = prop_q4; peak_quarter = 'Q4'; }
+                if (total_25 === 0) peak_quarter = '--';
+
                 seasonalData.push({
                     name: name,
                     q1_25: q1_25,
@@ -2831,7 +2845,8 @@
                     prop_q3: prop_q3,
                     prop_q4: prop_q4,
                     q1_26: q1_26,
-                    change_25_26: change_25_26
+                    change_25_26: change_25_26,
+                    peak_quarter: peak_quarter
                 });
             });
             computeLobSeasonalData();
@@ -2878,6 +2893,14 @@
                 const prop_q2 = total_25 > 0 ? (q2_25 / total_25) * 100 : 0;
                 const prop_q3 = total_25 > 0 ? (q3_25 / total_25) * 100 : 0;
                 const prop_q4 = total_25 > 0 ? (q4_25 / total_25) * 100 : 0;
+
+                // Let's compute the peak quarter
+                let peak_quarter = 'Q1';
+                let max_prop = prop_q1;
+                if (prop_q2 > max_prop) { max_prop = prop_q2; peak_quarter = 'Q2'; }
+                if (prop_q3 > max_prop) { max_prop = prop_q3; peak_quarter = 'Q3'; }
+                if (prop_q4 > max_prop) { max_prop = prop_q4; peak_quarter = 'Q4'; }
+                if (total_25 === 0) peak_quarter = '--';
                 
                 lobSeasonalData.push({
                     name: lobName,
@@ -2893,13 +2916,15 @@
                     prop_q3: prop_q3,
                     prop_q4: prop_q4,
                     q1_26: q1_26,
-                    change_25_26: change_25_26
+                    change_25_26: change_25_26,
+                    peak_quarter: peak_quarter
                 });
             });
         }
 
         let activeColFilters = {
             name: [],
+            peak_quarter: [],
             change_q1_q2: [],
             change_q2_q3: [],
             change_q3_q4: [],
@@ -2926,6 +2951,8 @@
             let uniqueValues = [];
             if (colKey === 'name') {
                 uniqueValues = seasonalData.map(item => item.name);
+            } else if (colKey === 'peak_quarter') {
+                uniqueValues = seasonalData.map(item => item.peak_quarter);
             } else if (colKey.startsWith('prop_')) {
                 uniqueValues = seasonalData.map(item => item[colKey].toFixed(2) + '%');
             } else {
@@ -2938,7 +2965,7 @@
             
             uniqueValues = [...new Set(uniqueValues)];
             
-            if (colKey === 'name') {
+            if (colKey === 'name' || colKey === 'peak_quarter') {
                 uniqueValues.sort((a, b) => a.localeCompare(b, 'vi'));
             } else {
                 uniqueValues.sort((a, b) => parseFloat(a) - parseFloat(b));
@@ -3095,6 +3122,8 @@
                         let itemStr = '';
                         if (colKey === 'name') {
                             itemStr = item.name;
+                        } else if (colKey === 'peak_quarter') {
+                            itemStr = item.peak_quarter;
                         } else if (colKey.startsWith('prop_')) {
                             itemStr = item[colKey].toFixed(2) + '%';
                         } else {
@@ -3137,18 +3166,43 @@
 
                 const getColorClass = (val) => val >= 0 ? 'text-success bold' : 'text-danger bold';
 
+                const isMaxQ1 = item.peak_quarter === 'Q1';
+                const isMaxQ2 = item.peak_quarter === 'Q2';
+                const isMaxQ3 = item.peak_quarter === 'Q3';
+                const isMaxQ4 = item.peak_quarter === 'Q4';
+
+                const peakCellHighlight = 'background-color: rgba(245, 158, 11, 0.08) !important; color: #d97706 !important; font-weight: 700;';
+                const q1Style = isMaxQ1 ? peakCellHighlight : '';
+                const q2Style = isMaxQ2 ? peakCellHighlight : '';
+                const q3Style = isMaxQ3 ? peakCellHighlight : '';
+                const q4Style = isMaxQ4 ? peakCellHighlight : '';
+
+                let peakBadge = '';
+                if (item.peak_quarter === 'Q1') {
+                    peakBadge = `<span class="badge-custom" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q1</span>`;
+                } else if (item.peak_quarter === 'Q2') {
+                    peakBadge = `<span class="badge-custom" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q2</span>`;
+                } else if (item.peak_quarter === 'Q3') {
+                    peakBadge = `<span class="badge-custom" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q3</span>`;
+                } else if (item.peak_quarter === 'Q4') {
+                    peakBadge = `<span class="badge-custom" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q4</span>`;
+                } else {
+                    peakBadge = `<span class="badge-custom" style="background: #f3f4f6; color: #6b7280; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">--</span>`;
+                }
+
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td class="text-center">${index + 1}</td>
                         <td class="bold">${item.name}</td>
+                        <td class="text-center">${peakBadge}</td>
                         <td class="text-right ${getColorClass(item.change_q1_q2)}">${changeQ1Q2Str}</td>
                         <td class="text-right ${getColorClass(item.change_q2_q3)}">${changeQ2Q3Str}</td>
                         <td class="text-right ${getColorClass(item.change_q3_q4)}">${changeQ3Q4Str}</td>
                         <td class="text-right bold ${getColorClass(item.change_25_26)}">${change2526Str}</td>
-                        <td class="text-right">${propQ1Str}</td>
-                        <td class="text-right">${propQ2Str}</td>
-                        <td class="text-right">${propQ3Str}</td>
-                        <td class="text-right">${propQ4Str}</td>
+                        <td class="text-right" style="${q1Style}">${propQ1Str}</td>
+                        <td class="text-right" style="${q2Style}">${propQ2Str}</td>
+                        <td class="text-right" style="${q3Style}">${propQ3Str}</td>
+                        <td class="text-right" style="${q4Style}">${propQ4Str}</td>
                     </tr>
                 `);
             });
@@ -3221,6 +3275,7 @@
             const data = filtered.map((item, index) => ({
                 'STT': index + 1,
                 'Đơn vị': item.name,
+                'Quý Cao Điểm': item.peak_quarter,
                 '% thay đổi Q1->Q2 2025': (item.change_q1_q2 >= 0 ? '+' : '') + item.change_q1_q2.toFixed(2) + '%',
                 '% thay đổi Q2->Q3 2025': (item.change_q2_q3 >= 0 ? '+' : '') + item.change_q2_q3.toFixed(2) + '%',
                 '% thay đổi Q3->Q4 2025': (item.change_q3_q4 >= 0 ? '+' : '') + item.change_q3_q4.toFixed(2) + '%',
@@ -3238,6 +3293,7 @@
                 const colWidths = [
                     { wch: 6 },
                     { wch: 28 },
+                    { wch: 15 },
                     { wch: 22 },
                     { wch: 22 },
                     { wch: 22 },
@@ -3281,6 +3337,17 @@
 
                 const getColorClass = (val) => val >= 0 ? 'text-success bold' : 'text-danger bold';
 
+                const isMaxQ1 = item.peak_quarter === 'Q1';
+                const isMaxQ2 = item.peak_quarter === 'Q2';
+                const isMaxQ3 = item.peak_quarter === 'Q3';
+                const isMaxQ4 = item.peak_quarter === 'Q4';
+
+                const peakCellHighlight = 'background-color: rgba(245, 158, 11, 0.08) !important; color: #d97706 !important; font-weight: 700;';
+                const q1Style = isMaxQ1 ? peakCellHighlight : '';
+                const q2Style = isMaxQ2 ? peakCellHighlight : '';
+                const q3Style = isMaxQ3 ? peakCellHighlight : '';
+                const q4Style = isMaxQ4 ? peakCellHighlight : '';
+
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td class="text-center">${index + 1}</td>
@@ -3289,10 +3356,10 @@
                         <td class="text-right ${getColorClass(item.change_q2_q3)}">${changeQ2Q3Str}</td>
                         <td class="text-right ${getColorClass(item.change_q3_q4)}">${changeQ3Q4Str}</td>
                         <td class="text-right bold ${getColorClass(item.change_25_26)}">${change2526Str}</td>
-                        <td class="text-right">${propQ1Str}</td>
-                        <td class="text-right">${propQ2Str}</td>
-                        <td class="text-right">${propQ3Str}</td>
-                        <td class="text-right">${propQ4Str}</td>
+                        <td class="text-right" style="${q1Style}">${propQ1Str}</td>
+                        <td class="text-right" style="${q2Style}">${propQ2Str}</td>
+                        <td class="text-right" style="${q3Style}">${propQ3Str}</td>
+                        <td class="text-right" style="${q4Style}">${propQ4Str}</td>
                     </tr>
                 `);
             });
