@@ -1332,12 +1332,12 @@
                     </div>
                 </div>
 
-                <div class="metrics-row-6" style="margin-top: 16px; margin-bottom: 24px;">
+                <div class="metrics-row" style="margin-top: 16px; margin-bottom: 24px;">
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">DT trung bình</span>
+                            <span class="metric-label">Đơn vị có hiệu quả</span>
                         </div>
-                        <span class="metric-value" id="kpiAvgRevenue">0 ₫</span>
+                        <span class="metric-value text-success" id="kpiCountProfitable">0 đơn vị</span>
                         <div class="metric-trend-row">
                             <span class="trend-item">
                                 <span class="trend-arrow">▲</span>
@@ -1351,9 +1351,9 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">BT thuộc TN trung bình</span>
+                            <span class="metric-label">Đơn vị không có hiệu quả</span>
                         </div>
-                        <span class="metric-value" id="kpiAvgCompensation">0 ₫</span>
+                        <span class="metric-value text-danger" id="kpiCountUnprofitable">0 đơn vị</span>
                         <div class="metric-trend-row">
                             <span class="trend-item">
                                 <span class="trend-arrow">▲</span>
@@ -1367,9 +1367,9 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">Dự phòng phí trung bình</span>
+                            <span class="metric-label">Tỷ lệ Bồi thường / Doanh thu thuần</span>
                         </div>
-                        <span class="metric-value" id="kpiAvgPremiumReserve">0 ₫</span>
+                        <span class="metric-value" id="kpiClaimsRatio">0.00%</span>
                         <div class="metric-trend-row">
                             <span class="trend-item">
                                 <span class="trend-arrow">▲</span>
@@ -1383,41 +1383,9 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">Chênh lệch DPBT trung bình</span>
+                            <span class="metric-label">Tỷ lệ HQ1 / Doanh thu thuần</span>
                         </div>
-                        <span class="metric-value" id="kpiAvgClaimReserveDiff">0 ₫</span>
-                        <div class="metric-trend-row">
-                            <span class="trend-item">
-                                <span class="trend-arrow">▲</span>
-                                <span>--% YoY</span>
-                            </span>
-                            <span class="trend-item">
-                                <span class="trend-arrow">▲</span>
-                                <span>--% QoQ</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-card-top">
-                            <span class="metric-label">CPDM trung bình</span>
-                        </div>
-                        <span class="metric-value" id="kpiAvgExpenseLimit">0 ₫</span>
-                        <div class="metric-trend-row">
-                            <span class="trend-item">
-                                <span class="trend-arrow">▲</span>
-                                <span>--% YoY</span>
-                            </span>
-                            <span class="trend-item">
-                                <span class="trend-arrow">▲</span>
-                                <span>--% QoQ</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-card-top">
-                            <span class="metric-label">HQ1 trung bình</span>
-                        </div>
-                        <span class="metric-value text-bv" id="kpiAvgHQ1">0 ₫</span>
+                        <span class="metric-value text-bv" id="kpiHQ1Ratio">0.00%</span>
                         <div class="metric-trend-row">
                             <span class="trend-item">
                                 <span class="trend-arrow">▲</span>
@@ -1450,6 +1418,7 @@
                             <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
                                 <thead>
                                     <tr>
+                                        <th style="width: 100px; text-align: center;">Xếp hạng</th>
                                         <th>Đơn Vị</th>
                                         <th class="text-right">HQ1</th>
                                     </tr>
@@ -1478,6 +1447,7 @@
                             <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
                                 <thead>
                                     <tr>
+                                        <th style="width: 100px; text-align: center;">Xếp hạng</th>
                                         <th>Đơn Vị</th>
                                         <th class="text-right">HQ1</th>
                                     </tr>
@@ -1493,7 +1463,7 @@
                 <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px;">
-                        <div class="panel-title">Phân tích chuyên sâu Tỷ lệ Tài chính (Chi nhánh)</div>
+                        <div class="panel-title">Các tỷ lệ tài chính</div>
                         <div style="display: flex; gap: 8px; margin-top: 8px;">
                             <button class="btn-ratio-tab active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
                                 Đơn vị hoạt động có hiệu quả
@@ -2117,18 +2087,31 @@
                 document.getElementById('kpiTotalHQ1').className = 'metric-value text-bv';
             }
 
-            // Render overall KPIs - Averages
-            document.getElementById('kpiAvgRevenue').innerText = formatShortVND(avgRevenue);
-            document.getElementById('kpiAvgCompensation').innerText = formatShortVND(avgClaims);
-            document.getElementById('kpiAvgPremiumReserve').innerText = formatShortVND(avgPremiumReserve);
-            document.getElementById('kpiAvgClaimReserveDiff').innerText = formatShortVND(avgClaimReserveDiff);
-            document.getElementById('kpiAvgExpenseLimit').innerText = formatShortVND(avgExpenseLimit);
-            document.getElementById('kpiAvgHQ1').innerText = formatShortVND(avgHQ1);
+            // Calculate new KPIs
+            const countProfitable = branchesData.filter(b => b.hqqu > 0).length;
+            const countUnprofitable = branchesData.filter(b => b.hqqu <= 0).length;
 
-            if (avgHQ1 < 0) {
-                document.getElementById('kpiAvgHQ1').className = 'metric-value text-danger';
+            let totalNetRevenue = 0;
+            const allItemsForRatio = [...branchesData];
+            if (headquartersData) allItemsForRatio.push(headquartersData);
+            allItemsForRatio.forEach(b => {
+                totalNetRevenue += b.dt_thuan;
+            });
+
+            const claimsRatio = totalNetRevenue > 0 ? (totalClaims / totalNetRevenue) * 100 : 0;
+            const hq1Ratio = totalNetRevenue > 0 ? (totalHQ1 / totalNetRevenue) * 100 : 0;
+
+            // Render overall KPIs - New Cards
+            document.getElementById('kpiCountProfitable').innerText = countProfitable + ' đơn vị';
+            document.getElementById('kpiCountUnprofitable').innerText = countUnprofitable + ' đơn vị';
+            document.getElementById('kpiClaimsRatio').innerText = claimsRatio.toFixed(2) + '%';
+            
+            const hq1RatioEl = document.getElementById('kpiHQ1Ratio');
+            hq1RatioEl.innerText = hq1Ratio.toFixed(2) + '%';
+            if (hq1Ratio < 0) {
+                hq1RatioEl.className = 'metric-value text-danger';
             } else {
-                document.getElementById('kpiAvgHQ1').className = 'metric-value text-bv';
+                hq1RatioEl.className = 'metric-value text-bv';
             }
 
             // Build LOB breakdown metrics
@@ -2391,11 +2374,12 @@
 
             // Populate profitable
             if (profitableBranches.length === 0) {
-                profitableBody.innerHTML = '<tr><td colspan="2" class="text-center" style="color: var(--text-secondary); padding: 12px;">Không có đơn vị nào</td></tr>';
+                profitableBody.innerHTML = '<tr><td colspan="3" class="text-center" style="color: var(--text-secondary); padding: 12px;">Không có đơn vị nào</td></tr>';
             } else {
-                profitableBranches.forEach(b => {
+                profitableBranches.forEach((b, index) => {
                     profitableBody.insertAdjacentHTML('beforeend', `
                         <tr class="clickable" onclick="openBranchModal('${b.name}')">
+                            <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${index + 1}</td>
                             <td class="bold" style="font-weight: 500;"><span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10b981; margin-right:8px; box-shadow:0 0 6px rgba(16,185,129,0.6); vertical-align:middle;"></span>${b.name}</td>
                             <td class="text-right bold text-success" style="font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
                         </tr>
@@ -2405,11 +2389,12 @@
 
             // Populate unprofitable
             if (unprofitableBranches.length === 0) {
-                unprofitableBody.innerHTML = '<tr><td colspan="2" class="text-center" style="color: var(--text-secondary); padding: 12px;">Không có đơn vị nào</td></tr>';
+                unprofitableBody.innerHTML = '<tr><td colspan="3" class="text-center" style="color: var(--text-secondary); padding: 12px;">Không có đơn vị nào</td></tr>';
             } else {
-                unprofitableBranches.forEach(b => {
+                unprofitableBranches.forEach((b, index) => {
                     unprofitableBody.insertAdjacentHTML('beforeend', `
                         <tr class="clickable" onclick="openBranchModal('${b.name}')">
+                            <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${index + 1}</td>
                             <td class="bold" style="font-weight: 500;"><span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ef4444; margin-right:8px; box-shadow:0 0 6px rgba(239,68,68,0.6); vertical-align:middle;"></span>${b.name}</td>
                             <td class="text-right bold text-danger" style="font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
                         </tr>
