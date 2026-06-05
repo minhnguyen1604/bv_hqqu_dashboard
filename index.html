@@ -1175,40 +1175,123 @@
             color: var(--danger);
         }
 
-        /* Branch tab filter styling */
-        .branch-tabs-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-height: 150px;
-            overflow-y: auto;
-            padding: 8px;
-            border: 1px solid var(--sidebar-border);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(8px);
+        /* Custom searchable dropdown / combobox styling */
+        .custom-select-container {
+            position: relative;
+            width: 380px;
+            user-select: none;
+            z-index: 100;
             margin-top: 8px;
         }
-        .branch-tab {
-            padding: 6px 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--sidebar-text);
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
             background: #ffffff;
             border: 1px solid var(--sidebar-border);
-            border-radius: 6px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
-        .branch-tab:hover {
+        .custom-select-trigger:hover {
             border-color: var(--bv-blue);
-            color: var(--bv-blue);
+            box-shadow: 0 4px 12px rgba(0, 86, 163, 0.08);
+        }
+        .custom-select-container.open .custom-select-trigger {
+            border-color: var(--bv-blue);
+            box-shadow: 0 4px 12px rgba(0, 86, 163, 0.08);
+        }
+        .custom-select-icon {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        .custom-select-arrow {
+            font-size: 10px;
+            color: var(--text-secondary);
+            transition: transform 0.2s ease;
+        }
+        .custom-select-container.open .custom-select-arrow {
+            transform: rotate(180deg);
+        }
+        .custom-select-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 101;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .custom-select-container.open .custom-select-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .custom-select-search-wrapper {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--sidebar-border);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .custom-select-search-wrapper input {
+            width: 100%;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+        .custom-select-search-wrapper input:focus {
+            border-color: var(--bv-blue);
+        }
+        .custom-select-options {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 6px;
+        }
+        .custom-select-option {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .custom-select-option:hover {
             background: rgba(0, 86, 163, 0.05);
+            color: var(--bv-blue);
         }
-        .branch-tab.active {
+        .custom-select-option.selected {
             background: var(--bv-blue);
-            color: #ffffff;
-            border-color: var(--bv-blue);
+            color: #ffffff !important;
+        }
+        .custom-select-option.selected::after {
+            content: "✓";
+            font-weight: bold;
+            font-size: 12px;
         }
         .trend-item.up {
             background: rgba(16, 185, 129, 0.06) !important;
@@ -1634,16 +1717,24 @@
 
                 <!-- ================= VIEW 2: BRANCH PERFORMANCE ================= -->
             <div id="viewBranch" class="view-panel">
-                <div class="panel glass-panel" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px;">
+                <div class="panel glass-panel" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; z-index: 100;">
                     <div class="panel-header" style="margin-bottom: 0;">
                         <div class="panel-title">LỰA CHỌN ĐƠN VỊ PHÂN TÍCH</div>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-                        <div style="position: relative; width: 100%; max-width: 400px;">
-                            <input type="text" id="branchSearchInput" class="form-control" placeholder="Tìm kiếm đơn vị..." style="width: 100%; height: 40px; font-size: 13px; padding-left: 12px; border: 1px solid var(--sidebar-border); border-radius: 8px;">
-                        </div>
-                        <div id="branchTabsContainer" class="branch-tabs-container">
-                            <!-- Dynamic branch tabs/buttons will be generated here -->
+                        <div class="custom-select-container" id="branchSelectContainer">
+                            <div class="custom-select-trigger" id="branchSelectTrigger">
+                                <span><span class="custom-select-icon">🏢</span><span id="selectedBranchLabel">Chọn Đơn vị phân tích...</span></span>
+                                <span class="custom-select-arrow">▼</span>
+                            </div>
+                            <div class="custom-select-dropdown" id="branchSelectDropdown">
+                                <div class="custom-select-search-wrapper">
+                                    <input type="text" id="branchSearchInput" placeholder="Tìm kiếm đơn vị..." autocomplete="off">
+                                </div>
+                                <div class="custom-select-options" id="branchSelectOptions">
+                                    <!-- Options dynamically populated here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2028,7 +2119,7 @@
             fetchExcelData();
             setupSidebarCollapsing();
             setupDragAndDrop();
-            setupBranchSearch();
+            initCustomBranchSelect();
         });
 
         // Trigger manual/drop upload setup
@@ -2186,7 +2277,7 @@
 
             // Render views
             initOverviewDashboard();
-            populateBranchTabs();
+            populateBranchDropdown();
             renderBranchesTable();
         }
 
@@ -2899,10 +2990,64 @@
         // ================= VIEW 2: BRANCH PERFORMANCE ENGINE =================
         let activeBranchName = "";
 
-        function populateBranchTabs() {
-            const container = document.getElementById('branchTabsContainer');
-            if (!container) return;
-            container.innerHTML = '';
+        function initCustomBranchSelect() {
+            const container = document.getElementById('branchSelectContainer');
+            const trigger = document.getElementById('branchSelectTrigger');
+            const dropdown = document.getElementById('branchSelectDropdown');
+            const searchInput = document.getElementById('branchSearchInput');
+            const optionsContainer = document.getElementById('branchSelectOptions');
+
+            if (!container || !trigger || !optionsContainer) return;
+
+            // Toggle dropdown
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = container.classList.contains('open');
+                closeAllDropdowns();
+                if (!isOpen) {
+                    container.classList.add('open');
+                    searchInput.value = '';
+                    // Reset options visibility
+                    const options = optionsContainer.querySelectorAll('.custom-select-option');
+                    options.forEach(opt => opt.style.display = 'flex');
+                    searchInput.focus();
+                }
+            });
+
+            // Prevent dropdown closure when clicking inside it
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Search filter
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const options = optionsContainer.querySelectorAll('.custom-select-option');
+                options.forEach(opt => {
+                    const text = opt.textContent.toLowerCase();
+                    if (text.includes(query)) {
+                        opt.style.display = 'flex';
+                    } else {
+                        opt.style.display = 'none';
+                    }
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                container.classList.remove('open');
+            });
+        }
+
+        function closeAllDropdowns() {
+            const openContainers = document.querySelectorAll('.custom-select-container.open');
+            openContainers.forEach(c => c.classList.remove('open'));
+        }
+
+        function populateBranchDropdown() {
+            const optionsContainer = document.getElementById('branchSelectOptions');
+            if (!optionsContainer) return;
+            optionsContainer.innerHTML = '';
 
             const allItems = [...branchesData].sort((a, b) => a.name.localeCompare(b.name, 'vi'));
             if (headquartersData) {
@@ -2910,64 +3055,50 @@
             }
 
             allItems.forEach(b => {
-                const tab = document.createElement('button');
-                tab.className = 'branch-tab';
-                tab.setAttribute('data-name', b.name);
-                tab.textContent = b.name;
+                const opt = document.createElement('div');
+                opt.className = 'custom-select-option';
+                opt.setAttribute('data-value', b.name);
+                opt.textContent = b.name;
                 
-                tab.addEventListener('click', () => {
-                    selectBranchTab(b.name);
+                opt.addEventListener('click', () => {
+                    selectBranch(b.name);
+                    document.getElementById('branchSelectContainer').classList.remove('open');
                 });
                 
-                container.appendChild(tab);
+                optionsContainer.appendChild(opt);
             });
 
             if (allItems.length > 0) {
                 if (!activeBranchName || !allItems.some(item => item.name === activeBranchName)) {
                     activeBranchName = allItems[0].name;
                 }
-                selectBranchTab(activeBranchName);
+                selectBranch(activeBranchName);
             }
         }
 
-        function selectBranchTab(branchName) {
+        function selectBranch(branchName) {
             activeBranchName = branchName;
             
-            const tabs = document.querySelectorAll('.branch-tab');
-            let activeTab = null;
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-name') === branchName) {
-                    tab.classList.add('active');
-                    tab.style.display = 'inline-block';
-                    activeTab = tab;
+            // Update label
+            const label = document.getElementById('selectedBranchLabel');
+            if (label) label.textContent = branchName;
+
+            // Clear search field when selecting
+            const searchInput = document.getElementById('branchSearchInput');
+            if (searchInput) searchInput.value = '';
+
+            // Reset options visibility & active selection state
+            const options = document.querySelectorAll('.custom-select-option');
+            options.forEach(opt => {
+                opt.style.display = 'flex';
+                if (opt.getAttribute('data-value') === branchName) {
+                    opt.classList.add('selected');
                 } else {
-                    tab.classList.remove('active');
+                    opt.classList.remove('selected');
                 }
             });
 
-            if (activeTab) {
-                activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-            }
-
             renderBranchDetails(branchName);
-        }
-
-        function setupBranchSearch() {
-            const searchInput = document.getElementById('branchSearchInput');
-            if (!searchInput) return;
-
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase().trim();
-                const tabs = document.querySelectorAll('.branch-tab');
-                tabs.forEach(tab => {
-                    const name = tab.getAttribute('data-name').toLowerCase();
-                    if (name.includes(query)) {
-                        tab.style.display = 'inline-block';
-                    } else {
-                        tab.style.display = 'none';
-                    }
-                });
-            });
         }
 
         function updateTrendBadge(elemId, currentVal, pastVal, labelSuffix) {
@@ -3232,7 +3363,7 @@
             document.getElementById('modalBtnAnalyze').onclick = function() {
                 closeModal();
                 switchSubTab('branch');
-                selectBranchTab(branch.name);
+                selectBranch(branch.name);
             };
 
             document.getElementById('detailModal').classList.add('active');
