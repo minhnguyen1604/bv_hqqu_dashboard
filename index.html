@@ -1988,6 +1988,38 @@
                     </div>
                 </div>
 
+                <!-- ================= NEW PERFORMANCE MATRIX & PARETO CHARTS ================= -->
+                <div class="chart-grid-2x2" style="margin-bottom: 24px;">
+                    <!-- 2x2 Performance Matrix -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header" style="margin-bottom: 16px;">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">MA TRẬN PHÂN NHÓM HIỆU QUẢ HOẠT ĐỘNG (2X2)</div>
+                        </div>
+                        <div class="chart-container" style="height: 320px; position: relative;">
+                            <canvas id="chartMatrixQuadrants"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Pareto HQ1 Contribution -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">ĐÓNG GÓP HIỆU QUẢ NGHIỆP VỤ (PARETO)</div>
+                            <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
+                                <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
+                                    Gánh team (HQ1 > 0)
+                                </button>
+                                <button id="tabParetoNegative" onclick="switchParetoTab('negative')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
+                                    Thâm hụt (HQ1 < 0)
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="height: 320px; position: relative;">
+                            <canvas id="chartParetoPositive"></canvas>
+                            <canvas id="chartParetoNegative" style="display: none;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Chart Row 1 -->
                 <div class="chart-grid-2x2">
                     <div class="panel glass-panel">
@@ -2315,6 +2347,9 @@
         let chartLobComparison = null;
         let chartLobPie = null;
         let chartBranchBreakdown = null;
+        let chartMatrixQuadrants = null;
+        let chartParetoPositive = null;
+        let chartParetoNegative = null;
 
         // Clean currency numbers formatting
         function formatVND(value) {
@@ -3434,6 +3469,11 @@
 
             // Initialize Diagnostic Ratio Charts
             initRatioCharts();
+            
+            // Draw new 2x2 Matrix & Pareto Charts
+            drawPerformanceMatrix();
+            drawParetoCharts();
+            switchParetoTab('positive');
         }
 
         // ================= DIAGNOSTIC RATIO CHARTS ENGINE =================
@@ -3950,6 +3990,455 @@
                         y: { 
                             grid: { display: false },
                             ticks: { font: { family: 'Inter', size: 10, weight: '600' } } 
+                        }
+                    }
+                }
+            });
+        }
+
+        function switchParetoTab(type) {
+            document.getElementById('tabParetoPositive').classList.remove('active');
+            document.getElementById('tabParetoNegative').classList.remove('active');
+            
+            document.getElementById('chartParetoPositive').style.display = 'none';
+            document.getElementById('chartParetoNegative').style.display = 'none';
+            
+            if (type === 'positive') {
+                document.getElementById('tabParetoPositive').classList.add('active');
+                document.getElementById('chartParetoPositive').style.display = 'block';
+            } else {
+                document.getElementById('tabParetoNegative').classList.add('active');
+                document.getElementById('chartParetoNegative').style.display = 'block';
+            }
+        }
+
+        const quadrantPlugin = {
+            id: 'quadrantLines',
+            beforeDraw(chart) {
+                const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+                const options = chart.config.options.plugins.quadrantLines;
+                if (!options) return;
+                
+                const xMedianVal = options.xValue;
+                const yZeroVal = options.yValue;
+                
+                const xPixel = x.getPixelForValue(xMedianVal);
+                const yPixel = y.getPixelForValue(yZeroVal);
+                
+                ctx.save();
+                ctx.strokeStyle = 'rgba(156, 163, 175, 0.4)'; // grey dashed line
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 4]);
+                
+                // Draw vertical median line
+                ctx.beginPath();
+                ctx.moveTo(xPixel, top);
+                ctx.lineTo(xPixel, bottom);
+                ctx.stroke();
+                
+                // Draw horizontal 0% line
+                ctx.beginPath();
+                ctx.moveTo(left, yPixel);
+                ctx.lineTo(right, yPixel);
+                ctx.stroke();
+                
+                // Draw quadrant labels in the corners
+                ctx.fillStyle = 'rgba(107, 114, 128, 0.45)';
+                ctx.font = 'bold 9px Inter, sans-serif';
+                
+                // Top-Right: Stars
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'top';
+                ctx.fillText('NGÔI SAO (STARS)', right - 10, top + 10);
+                
+                // Bottom-Right: Cash Cows
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText('TRỤ CỘT (CASH COWS)', right - 10, bottom - 10);
+                
+                // Top-Left: Potentials
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.fillText('TIỀM NĂNG (POTENTIALS)', left + 10, top + 10);
+                
+                // Bottom-Left: Dogs
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText('CẦN CẢI THIỆN (DOGS)', left + 10, bottom - 10);
+                
+                ctx.restore();
+            }
+        };
+
+        function drawPerformanceMatrix() {
+            const ctx = document.getElementById('chartMatrixQuadrants').getContext('2d');
+            if (chartMatrixQuadrants) chartMatrixQuadrants.destroy();
+
+            const allItems = [...branchesData];
+            if (headquartersData) allItems.push(headquartersData);
+
+            // Compute Median Revenue
+            const revenues = allItems.map(b => b.tong_dt);
+            revenues.sort((a, b) => a - b);
+            const mid = Math.floor(revenues.length / 2);
+            const medianRevenue = revenues.length % 2 !== 0 ? revenues[mid] : (revenues[mid - 1] + revenues[mid]) / 2;
+            const medianRevBln = medianRevenue / 1e9;
+
+            const stars = [];
+            const cashCows = [];
+            const potentials = [];
+            const dogs = [];
+
+            allItems.forEach(b => {
+                const revBln = b.tong_dt / 1e9;
+                const margin = b.dt_thuan > 0 ? (b.hqqu / b.dt_thuan) * 100 : 0;
+                
+                const point = {
+                    x: revBln,
+                    y: margin,
+                    label: b.name
+                };
+
+                if (b.tong_dt >= medianRevenue) {
+                    if (b.hqqu >= 0) {
+                        stars.push(point);
+                    } else {
+                        cashCows.push(point);
+                    }
+                } else {
+                    if (b.hqqu >= 0) {
+                        potentials.push(point);
+                    } else {
+                        dogs.push(point);
+                    }
+                }
+            });
+
+            chartMatrixQuadrants = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Ngôi Sao (Doanh thu cao, HQ1 >= 0)',
+                            data: stars,
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Tiềm Năng (Doanh thu thấp, HQ1 >= 0)',
+                            data: potentials,
+                            backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Trụ Cột (Doanh thu cao, HQ1 < 0)',
+                            data: cashCows,
+                            backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                            borderColor: '#f59e0b',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Cần Cải Thiện (Doanh thu thấp, HQ1 < 0)',
+                            data: dogs,
+                            backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                            borderColor: '#ef4444',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                font: { family: 'Inter', size: 10, weight: '500' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            cornerRadius: 8,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.raw.label}: DT = ${context.raw.x.toFixed(1)} Tỷ, Tỷ suất HQ1 = ${context.raw.y.toFixed(1)}%`;
+                                }
+                            }
+                        },
+                        quadrantLines: {
+                            xValue: medianRevBln,
+                            yValue: 0
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Doanh thu (Tỷ VND)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.03)'
+                            },
+                            ticks: {
+                                font: { family: 'Inter', size: 10 }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Tỷ suất HQ1 / Doanh thu thuần (%)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.03)'
+                            },
+                            ticks: {
+                                font: { family: 'Inter', size: 10 },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [quadrantPlugin]
+            });
+        }
+
+        function drawParetoCharts() {
+            const allItems = [...branchesData];
+            if (headquartersData) allItems.push(headquartersData);
+
+            // 1. Pareto Positive (Gánh team)
+            const positiveItems = allItems
+                .filter(b => b.hqqu > 0)
+                .sort((a, b) => b.hqqu - a.hqqu);
+            
+            const topPos = positiveItems.slice(0, 12);
+            const totalPos = positiveItems.reduce((sum, b) => sum + b.hqqu, 0);
+            
+            let accumPos = 0;
+            const posLabels = topPos.map(b => b.name);
+            const posBarData = topPos.map(b => b.hqqu / 1e9);
+            const posLineData = topPos.map(b => {
+                accumPos += b.hqqu;
+                return (accumPos / totalPos) * 100;
+            });
+
+            const ctxPos = document.getElementById('chartParetoPositive').getContext('2d');
+            if (chartParetoPositive) chartParetoPositive.destroy();
+
+            chartParetoPositive = new Chart(ctxPos, {
+                type: 'bar',
+                data: {
+                    labels: posLabels,
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Lợi nhuận HQ1 (Tỷ VND)',
+                            data: posBarData,
+                            backgroundColor: 'rgba(0, 86, 163, 0.85)',
+                            borderColor: 'rgba(0, 86, 163, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Đóng góp lũy kế (%)',
+                            data: posLineData,
+                            borderColor: '#b38f35',
+                            backgroundColor: 'rgba(179, 143, 83, 0.15)',
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#b38f35',
+                            tension: 0.1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: 'Inter', size: 10, weight: '500' } }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            cornerRadius: 8,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        return `Lợi nhuận HQ1: ${(context.raw).toFixed(2)} Tỷ VND`;
+                                    } else {
+                                        return `Đóng góp lũy kế: ${context.raw.toFixed(1)}%`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', size: 9, weight: '600' } }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'HQ1 (Tỷ VND)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.03)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            min: 0,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ lũy kế (%)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: { display: false },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Pareto Negative (Thâm hụt)
+            const negativeItems = allItems
+                .filter(b => b.hqqu <= 0)
+                .sort((a, b) => a.hqqu - b.hqqu); // most negative first
+            
+            const topNeg = negativeItems.slice(0, 12);
+            const totalNeg = negativeItems.reduce((sum, b) => sum + Math.abs(b.hqqu), 0);
+            
+            let accumNeg = 0;
+            const negLabels = topNeg.map(b => b.name);
+            const negBarData = topNeg.map(b => Math.abs(b.hqqu) / 1e9);
+            const negLineData = topNeg.map(b => {
+                accumNeg += Math.abs(b.hqqu);
+                return (accumNeg / totalNeg) * 100;
+            });
+
+            const ctxNeg = document.getElementById('chartParetoNegative').getContext('2d');
+            if (chartParetoNegative) chartParetoNegative.destroy();
+
+            chartParetoNegative = new Chart(ctxNeg, {
+                type: 'bar',
+                data: {
+                    labels: negLabels,
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Mức lỗ thâm hụt (Tỷ VND)',
+                            data: negBarData,
+                            backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Thâm hụt lũy kế (%)',
+                            data: negLineData,
+                            borderColor: '#b38f35',
+                            backgroundColor: 'rgba(179, 143, 83, 0.15)',
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#b38f35',
+                            tension: 0.1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: 'Inter', size: 10, weight: '500' } }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            cornerRadius: 8,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        return `Mức lỗ thâm hụt: ${(context.raw).toFixed(2)} Tỷ VND`;
+                                    } else {
+                                        return `Thâm hụt lũy kế: ${context.raw.toFixed(1)}%`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', size: 9, weight: '600' } }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Mức lỗ (Tỷ VND)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.03)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            min: 0,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ lũy kế (%)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: { display: false },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
                         }
                     }
                 }
