@@ -2419,7 +2419,7 @@
 
                     // Compute actual values for YoY/QoQ details cards
                     const q1_actual = q1Val;
-                    const q4_actual = Math.max(0, q4Val - q3Val);
+                    const q4_actual = q4Val;
 
                     data2025[branchName] = { q1: q1_actual, q4: q4_actual };
                 }
@@ -2441,9 +2441,9 @@
                 
                 // Actual quarterly revenues (2025)
                 const q1_25 = hist.q1;
-                const q2_25 = Math.max(0, hist.q2 - hist.q1);
-                const q3_25 = Math.max(0, hist.q3 - hist.q2);
-                const q4_25 = Math.max(0, hist.q4 - hist.q3);
+                const q2_25 = hist.q2;
+                const q3_25 = hist.q3;
+                const q4_25 = hist.q4;
                 
                 // Percent changes inside 2025
                 const change_q1_q2 = q1_25 > 0 ? ((q2_25 - q1_25) / q1_25) * 100 : 0;
