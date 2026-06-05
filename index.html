@@ -4056,6 +4056,13 @@
                 ctx.lineTo(right, yPixel);
                 ctx.stroke();
                 
+                // Draw label for the median line
+                ctx.fillStyle = '#4b5563';
+                ctx.font = '600 10px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+                ctx.fillText(`Trung vị: ${xMedianVal.toFixed(1)} Tỷ`, xPixel, top + 5);
+
                 ctx.restore();
             }
         };
