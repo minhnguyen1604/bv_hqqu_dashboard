@@ -454,28 +454,55 @@
             width: 100%;
         }
 
-        .btn-ratio-tab {
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 13px;
+        .segmented-control {
+            display: inline-flex;
+            background: #f3f4f6;
+            padding: 3px;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .segmented-control button {
+            padding: 6px 16px;
+            border-radius: 17px;
+            font-size: 12px;
             font-weight: 600;
+            border: none;
+            background: transparent;
+            color: #4b5563;
             cursor: pointer;
-            background: #f4f4f5;
-            color: var(--text-secondary);
-            border: 1px solid #e4e4e7;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
         }
 
-        .btn-ratio-tab:hover {
-            background: #e4e4e7;
-            color: var(--text-primary);
+        .segmented-control button:hover {
+            color: #111827;
         }
 
-        .btn-ratio-tab.active {
-            background: var(--bv-blue);
-            color: #ffffff;
-            border-color: var(--bv-blue);
-            box-shadow: 0 4px 10px rgba(0, 86, 163, 0.15);
+        .segmented-control button.active {
+            background: #ffffff;
+            color: var(--bv-blue);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .indicator-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .indicator-dot.success {
+            background: var(--success);
+        }
+
+        .indicator-dot.danger {
+            background: var(--danger);
         }
 
         /* Sidebar Resizer */
@@ -1892,14 +1919,14 @@
 
                 <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px;">
-                        <div class="panel-title">CÁC TỶ LỆ TÀI CHÍNH</div>
-                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                            <button class="btn-ratio-tab active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
-                                CÁC ĐƠN VỊ HOẠT ĐỘNG CÓ HIỆU QUẢ
+                    <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CÁC TỶ LỆ TÀI CHÍNH</div>
+                        <div class="segmented-control">
+                            <button class="active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
+                                <span class="indicator-dot success"></span> Đơn vị hoạt động có hiệu quả
                             </button>
-                            <button class="btn-ratio-tab" id="tabUnprofitableCharts" onclick="switchRatioTab('unprofitable')">
-                                CÁC ĐƠN VỊ HOẠT ĐỘNG KHÔNG HIỆU QUẢ
+                            <button id="tabUnprofitableCharts" onclick="switchRatioTab('unprofitable')">
+                                <span class="indicator-dot danger"></span> Đơn vị hoạt động không hiệu quả
                             </button>
                         </div>
                     </div>
