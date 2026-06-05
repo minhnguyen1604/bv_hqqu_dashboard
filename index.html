@@ -1993,7 +1993,7 @@
                     <!-- 2x2 Performance Matrix -->
                     <div class="panel glass-panel">
                         <div class="panel-header" style="margin-bottom: 16px;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">MA TRẬN PHÂN NHÓM HIỆU QUẢ HOẠT ĐỘNG (2X2)</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">PHÂN NHÓM HQ1</div>
                         </div>
                         <div class="chart-container" style="height: 320px; position: relative;">
                             <canvas id="chartMatrixQuadrants"></canvas>
@@ -2006,10 +2006,10 @@
                             <div class="panel-title" style="border-left-color: var(--bv-accent);">ĐÓNG GÓP HIỆU QUẢ NGHIỆP VỤ (PARETO)</div>
                             <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
                                 <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    Gánh team (HQ1 > 0)
+                                    HQ1 > 0
                                 </button>
                                 <button id="tabParetoNegative" onclick="switchParetoTab('negative')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    Thâm hụt (HQ1 < 0)
+                                    HQ1 < 0
                                 </button>
                             </div>
                         </div>
@@ -4042,30 +4042,6 @@
                 ctx.lineTo(right, yPixel);
                 ctx.stroke();
                 
-                // Draw quadrant labels in the corners
-                ctx.fillStyle = 'rgba(107, 114, 128, 0.45)';
-                ctx.font = 'bold 9px Inter, sans-serif';
-                
-                // Top-Right: Stars
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'top';
-                ctx.fillText('NGÔI SAO (STARS)', right - 10, top + 10);
-                
-                // Bottom-Right: Cash Cows
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText('TRỤ CỘT (CASH COWS)', right - 10, bottom - 10);
-                
-                // Top-Left: Potentials
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText('TIỀM NĂNG (POTENTIALS)', left + 10, top + 10);
-                
-                // Bottom-Left: Dogs
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText('CẦN CẢI THIỆN (DOGS)', left + 10, bottom - 10);
-                
                 ctx.restore();
             }
         };
@@ -4119,7 +4095,7 @@
                 data: {
                     datasets: [
                         {
-                            label: 'Ngôi Sao (Doanh thu cao, HQ1 >= 0)',
+                            label: 'Doanh thu cao, HQ1 >= 0',
                             data: stars,
                             backgroundColor: 'rgba(16, 185, 129, 0.85)',
                             borderColor: '#10b981',
@@ -4128,7 +4104,7 @@
                             pointHoverRadius: 8
                         },
                         {
-                            label: 'Tiềm Năng (Doanh thu thấp, HQ1 >= 0)',
+                            label: 'Doanh thu thấp, HQ1 >= 0',
                             data: potentials,
                             backgroundColor: 'rgba(59, 130, 246, 0.85)',
                             borderColor: '#3b82f6',
@@ -4137,7 +4113,7 @@
                             pointHoverRadius: 8
                         },
                         {
-                            label: 'Trụ Cột (Doanh thu cao, HQ1 < 0)',
+                            label: 'Doanh thu cao, HQ1 < 0',
                             data: cashCows,
                             backgroundColor: 'rgba(245, 158, 11, 0.85)',
                             borderColor: '#f59e0b',
@@ -4146,7 +4122,7 @@
                             pointHoverRadius: 8
                         },
                         {
-                            label: 'Cần Cải Thiện (Doanh thu thấp, HQ1 < 0)',
+                            label: 'Doanh thu thấp, HQ1 < 0',
                             data: dogs,
                             backgroundColor: 'rgba(239, 68, 68, 0.85)',
                             borderColor: '#ef4444',
