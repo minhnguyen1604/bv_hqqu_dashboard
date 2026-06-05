@@ -605,7 +605,7 @@
         }
 
         .panel-title {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
             display: flex;
@@ -614,7 +614,7 @@
             border-left: 3px solid var(--bv-blue);
             border-radius: 2px;
             padding-left: 12px;
-            line-height: 1;
+            line-height: 1.2;
         }
 
         /* Dashboard metric blocks layout */
@@ -1367,7 +1367,7 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">Tỷ lệ Bồi thường / Doanh thu thuần</span>
+                            <span class="metric-label">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</span>
                         </div>
                         <span class="metric-value" id="kpiClaimsRatio">0.00%</span>
                         <div class="metric-trend-row">
@@ -1383,7 +1383,7 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">Tỷ lệ HQ1 / Doanh thu thuần</span>
+                            <span class="metric-label">TỶ LỆ HQ1 / DOANH THU THUẦN</span>
                         </div>
                         <span class="metric-value text-bv" id="kpiHQ1Ratio">0.00%</span>
                         <div class="metric-trend-row">
@@ -1463,7 +1463,7 @@
                 <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px;">
-                        <div class="panel-title">Các tỷ lệ tài chính</div>
+                        <div class="panel-title">CÁC TỶ LỆ TÀI CHÍNH</div>
                         <div style="display: flex; gap: 8px; margin-top: 8px;">
                             <button class="btn-ratio-tab active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
                                 Đơn vị hoạt động có hiệu quả
@@ -1477,7 +1477,7 @@
                     <!-- Profitable Charts Grid -->
                     <div id="gridProfitableCharts" class="ratio-charts-grid">
                         <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">Tỷ lệ Bồi thường / Doanh thu thuần</div>
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartProfClaims"></canvas>
@@ -1485,7 +1485,7 @@
                             </div>
                         </div>
                         <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">Tỷ lệ CPDM / Doanh thu thuần</div>
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartProfCpdm"></canvas>
@@ -1493,7 +1493,7 @@
                             </div>
                         </div>
                         <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">Tỷ lệ HQ1 / Doanh thu thuần</div>
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartProfHq1"></canvas>
@@ -1505,7 +1505,7 @@
                     <!-- Unprofitable Charts Grid -->
                     <div id="gridUnprofitableCharts" class="ratio-charts-grid" style="display: none;">
                         <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">Tỷ lệ Bồi thường / Doanh thu thuần</div>
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartUnprofClaims"></canvas>
@@ -1513,7 +1513,7 @@
                             </div>
                         </div>
                         <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">Tỷ lệ CPDM / Doanh thu thuần</div>
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartUnprofCpdm"></canvas>
@@ -1521,7 +1521,7 @@
                             </div>
                         </div>
                         <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">Tỷ lệ HQ1 / Doanh thu thuần</div>
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartUnprofHq1"></canvas>
@@ -1535,7 +1535,7 @@
                 <div class="chart-grid-2x2">
                     <div class="panel glass-panel">
                         <div class="panel-header">
-                            <div class="panel-title">Doanh Thu & Bồi Thường Theo Nghiệp Vụ (LOB)</div>
+                            <div class="panel-title">DOANH THU & BỒI THƯỜNG THEO NGHIỆP VỤ (LOB)</div>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartLobComparison"></canvas>
@@ -1543,7 +1543,7 @@
                     </div>
                     <div class="panel glass-panel">
                         <div class="panel-header">
-                            <div class="panel-title">Cơ Cấu Doanh Thu LOB</div>
+                            <div class="panel-title">CƠ CẤU DOANH THU LOB</div>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartLobPie"></canvas>
@@ -1551,28 +1551,7 @@
                     </div>
                 </div>
 
-                <!-- Chart Row 2 -->
-                <div class="chart-grid-2x2">
-                    <div class="panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title">Top 10 Đơn Vị Có Doanh Thu Cao Nhất</div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartTopRevenue"></canvas>
-                        </div>
-                    </div>
-                    <div class="panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title">Top 10 Đơn Vị Có HQQU Cao Nhất</div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartTopHQQU"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= VIEW 2: BRANCH PERFORMANCE ================= -->
+                <!-- ================= VIEW 2: BRANCH PERFORMANCE ================= -->
             <div id="viewBranch" class="view-panel">
                 <div class="panel glass-panel" style="flex-shrink: 0;">
                     <div class="panel-header" style="margin-bottom: 12px;">
@@ -1787,8 +1766,6 @@
         // Chart instances
         let chartLobComparison = null;
         let chartLobPie = null;
-        let chartTopRevenue = null;
-        let chartTopHQQU = null;
         let chartBranchBreakdown = null;
 
         // Clean currency numbers formatting
@@ -2138,11 +2115,7 @@
             // Draw Chart 2: LOB Doughnut Chart
             drawLobPieChart(lobData.revenue);
 
-            // Draw Chart 3: Top 10 Branches by Revenue
-            drawTopRevenueChart();
 
-            // Draw Chart 4: Top 10 Branches by HQQU
-            drawTopHQQUChart();
 
             // Populate Profitable & Unprofitable tables
             populateProfitableTables();
