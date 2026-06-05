@@ -21,22 +21,7 @@
             --bv-accent: #0284c7;
             --sidebar-width: 280px;
             
-            /* Theme variables (Default Option A: Dark Sidebar) */
-            --bg-canvas: #f1f5f9;
-            --bg-sidebar: #0f172a;
-            --sidebar-text: #94a3b8;
-            --sidebar-text-active: #ffffff;
-            --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
-            --sidebar-border: #1e293b;
-            --sidebar-active-indicator: var(--bv-gold);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --success: #0d9488; /* Teal-600 */
-            --danger: #f43f5e;  /* Rose-600 */
-        }
-
-        /* Option B: Minimalist Light Theme */
-        body.theme-minimalist-light {
+            /* Option B theme variables (Sáng kính mờ) */
             --bg-canvas: #f8fafc;
             --bg-sidebar: #f3f4f6; /* Smoke gray */
             --sidebar-text: #4b5563;
@@ -48,29 +33,6 @@
             --text-secondary: #4b5563;
             --success: #10b981; /* Standard emerald */
             --danger: #ef4444;  /* Standard danger */
-        }
-
-        /* Glassmorphic overrides for Option B */
-        body.theme-minimalist-light .glass-panel {
-            background: rgba(255, 255, 255, 0.75) !important;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.6) !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
-        }
-
-        /* Specific navigation adjustments for Dark Sidebar */
-        body:not(.theme-minimalist-light) .nav-sub-item.active {
-            color: #ffffff !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-            border-color: rgba(255, 255, 255, 0.15) !important;
-        }
-        
-        body:not(.theme-minimalist-light) .logo-full {
-            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) brightness(1.2);
-        }
-        body:not(.theme-minimalist-light) .logo-mini {
-            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) brightness(1.2);
         }
 
         * {
@@ -100,11 +62,13 @@
             height: 0;
         }
 
-        /* Modern Glassmorphism Core */
+        /* Modern Glassmorphic Core (Option B styling) */
         .glass-panel {
-            background: #ffffff !important;
-            border: 1px solid rgba(226, 232, 240, 0.8) !important;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -2px rgba(0,0,0,0.01) !important;
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
         }
 
         /* Sidebar styling identical to reference index_upr_calculation.html */
@@ -245,17 +209,6 @@
             border: 1px solid var(--sidebar-border);
             font-weight: 600;
             position: relative;
-        }
-        
-        /* When dark sidebar is active, active nav-item style */
-        body:not(.theme-minimalist-light) .nav-item.active {
-            background: rgba(255, 255, 255, 0.08) !important;
-            color: var(--sidebar-text-active) !important;
-            box-shadow: none !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        }
-        body:not(.theme-minimalist-light) .nav-item.active .nav-icon {
-            color: var(--sidebar-text-active) !important;
         }
 
         .nav-item:active, .nav-sub-item:active {
@@ -1259,6 +1212,10 @@
                 <span style="margin-right: 10px; font-size: 12px; opacity: 0.5;">↳</span>
                 Phân tích chi tiết
             </div>
+            <div class="nav-sub-item" id="subitemTable" onclick="switchSubTab('table')">
+                <span style="margin-right: 10px; font-size: 12px; opacity: 0.5;">↳</span>
+                Bảng tổng hợp chi tiết
+            </div>
         </div>
 
         <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="showToast('Tính năng HQ2 Dashboard đang được phát triển!', 'error')">
@@ -1726,10 +1683,7 @@
                     <div style="display: flex; flex-direction: column; gap: 24px; margin-top: 10px;">
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 600; color: var(--text-primary); font-size: 14px;">Chế độ giao diện</label>
-                            <div style="display: flex; gap: 12px; margin-top: 4px;">
-                                <button class="btn" id="themeBtnDarkSidebar" onclick="setTheme('dark-sidebar')" style="height: 38px; width: 180px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer;">Thanh bên tối (Option A)</button>
-                                <button class="btn" id="themeBtnMinimalistLight" onclick="setTheme('minimalist-light')" style="height: 38px; width: 180px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer;">Sáng kính mờ (Option B)</button>
-                            </div>
+                            <span style="color: var(--text-secondary); font-size: 13px; font-weight: 500;">Sáng kính mờ (Option B)</span>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 600; color: var(--text-primary); font-size: 14px;">Ngôn ngữ</label>
@@ -1923,40 +1877,8 @@
             }
         }
 
-        // Theme switching logic
-        function setTheme(themeName) {
-            const body = document.body;
-            const darkBtn = document.getElementById('themeBtnDarkSidebar');
-            const lightBtn = document.getElementById('themeBtnMinimalistLight');
-            
-            if (themeName === 'minimalist-light') {
-                body.classList.add('theme-minimalist-light');
-                if (darkBtn && lightBtn) {
-                    darkBtn.className = 'btn btn-outline';
-                    lightBtn.className = 'btn btn-primary';
-                }
-            } else {
-                body.classList.remove('theme-minimalist-light');
-                if (darkBtn && lightBtn) {
-                    darkBtn.className = 'btn btn-primary';
-                    lightBtn.className = 'btn btn-outline';
-                }
-            }
-            
-            localStorage.setItem('dashboard-theme', themeName);
-            
-            // Re-render ratio charts to match semantic colors if they exist
-            if (typeof branchesData !== 'undefined' && branchesData.length > 0) {
-                initRatioCharts();
-            }
-        }
-
         // Fetch local file on start
         window.addEventListener('load', () => {
-            // Load theme from localStorage
-            const savedTheme = localStorage.getItem('dashboard-theme') || 'dark-sidebar';
-            setTheme(savedTheme);
-            
             fetchExcelData();
             setupSidebarCollapsing();
             setupDragAndDrop();
@@ -3044,7 +2966,7 @@
         function updateDashboardNavActiveState() {
             const submenu = document.getElementById('hqqu-submenu');
             const dashboardNav = document.getElementById('dashboardNavItem');
-            if (activeSubTab === 'overview' || activeSubTab === 'branch') {
+            if (activeSubTab === 'overview' || activeSubTab === 'branch' || activeSubTab === 'table') {
                 if (submenu.classList.contains('expanded')) {
                     dashboardNav.classList.remove('active');
                 } else {
@@ -3061,11 +2983,15 @@
             // Update subitems active classes
             document.getElementById('subitemOverview').classList.remove('active');
             document.getElementById('subitemBranch').classList.remove('active');
+            if (document.getElementById('subitemTable')) {
+                document.getElementById('subitemTable').classList.remove('active');
+            }
             document.getElementById('settingsNavItem').classList.remove('active');
 
             // Update visible panels
             document.getElementById('viewOverview').classList.remove('active');
             document.getElementById('viewBranch').classList.remove('active');
+            document.getElementById('viewTable').classList.remove('active');
             document.getElementById('viewSettings').classList.remove('active');
 
             if (subTabId === 'overview') {
@@ -3075,6 +3001,12 @@
             } else if (subTabId === 'branch') {
                 document.getElementById('subitemBranch').classList.add('active');
                 document.getElementById('viewBranch').classList.add('active');
+                updateDashboardNavActiveState();
+            } else if (subTabId === 'table') {
+                if (document.getElementById('subitemTable')) {
+                    document.getElementById('subitemTable').classList.add('active');
+                }
+                document.getElementById('viewTable').classList.add('active');
                 updateDashboardNavActiveState();
             } else if (subTabId === 'settings') {
                 document.getElementById('settingsNavItem').classList.add('active');
