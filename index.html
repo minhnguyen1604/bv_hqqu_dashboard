@@ -1174,6 +1174,66 @@
         .modal-close:hover {
             color: var(--danger);
         }
+
+        /* Branch tab filter styling */
+        .branch-tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid var(--sidebar-border);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            margin-top: 8px;
+        }
+        .branch-tab {
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--sidebar-text);
+            background: #ffffff;
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .branch-tab:hover {
+            border-color: var(--bv-blue);
+            color: var(--bv-blue);
+            background: rgba(0, 86, 163, 0.05);
+        }
+        .branch-tab.active {
+            background: var(--bv-blue);
+            color: #ffffff;
+            border-color: var(--bv-blue);
+        }
+        .trend-item.up {
+            background: rgba(16, 185, 129, 0.06) !important;
+            color: #059669 !important;
+            border: 1px solid rgba(16, 185, 129, 0.12) !important;
+        }
+        .trend-item.down {
+            background: rgba(239, 68, 68, 0.06) !important;
+            color: #dc2626 !important;
+            border: 1px solid rgba(239, 68, 68, 0.12) !important;
+        }
+        .trend-item.neutral {
+            background: rgba(107, 114, 128, 0.06) !important;
+            color: #4b5563 !important;
+            border: 1px solid rgba(107, 114, 128, 0.12) !important;
+        }
+        .trend-item.up .trend-arrow {
+            color: #10b981 !important;
+        }
+        .trend-item.down .trend-arrow {
+            color: #ef4444 !important;
+        }
+        .trend-item.neutral .trend-arrow {
+            color: #6b7280 !important;
+        }
     </style>
 </head>
 
@@ -1573,44 +1633,129 @@
 
                 <!-- ================= VIEW 2: BRANCH PERFORMANCE ================= -->
             <div id="viewBranch" class="view-panel">
-                <div class="panel glass-panel" style="flex-shrink: 0;">
-                    <div class="panel-header" style="margin-bottom: 12px;">
-                        <div class="panel-title">Lựa chọn Đơn vị phân tích</div>
+                <div class="panel glass-panel" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px;">
+                    <div class="panel-header" style="margin-bottom: 0;">
+                        <div class="panel-title">LỰA CHỌN ĐƠN VỊ PHÂN TÍCH</div>
                     </div>
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <span style="font-weight: 600; color: var(--text-secondary);">Chọn Đơn Vị:</span>
-                        <select id="selectBranchDropdown" class="form-control" style="width: 320px; height: 42px;">
-                            <!-- Dynamic branch options -->
-                        </select>
+                    <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                        <div style="position: relative; width: 100%; max-width: 400px;">
+                            <input type="text" id="branchSearchInput" class="form-control" placeholder="Tìm kiếm đơn vị..." style="width: 100%; height: 40px; font-size: 13px; padding-left: 12px; border: 1px solid var(--sidebar-border); border-radius: 8px;">
+                        </div>
+                        <div id="branchTabsContainer" class="branch-tabs-container">
+                            <!-- Dynamic branch tabs/buttons will be generated here -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="metrics-row" id="branchMetricsRow">
+                <div class="metrics-row-6" id="branchMetricsRow" style="margin-top: 16px; margin-bottom: 24px;">
+                    <!-- Doanh Thu -->
                     <div class="metric-card">
-                        <span class="metric-label">Doanh thu Đơn vị</span>
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỔNG DT</span>
+                        </div>
                         <span class="metric-value" id="branchKpiRevenue">0 ₫</span>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Bồi thường Đơn vị</span>
-                        <span class="metric-value" id="branchKpiClaims">0 ₫</span>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Tỷ lệ bồi thường</span>
-                        <span class="metric-value" id="branchKpiLossRatio">0.00%</span>
-                        <div style="width: 100%; border-radius: 99px; height: 6px; overflow: hidden; background: #e5e7eb; margin-top: 4px;">
-                            <div id="branchKpiLossBar" style="height: 100%; width: 0%; background: var(--bv-blue); border-radius: 99px; transition: width 0.5s;"></div>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYRevenue">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQRevenue">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
                         </div>
                     </div>
+                    <!-- Bồi thường -->
                     <div class="metric-card">
-                        <span class="metric-label">Hiệu quả nghiệp vụ (HQQU)</span>
-                        <span class="metric-value" id="branchKpiHQQU">0 ₫</span>
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỔNG BT THUỘC TN</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiClaims">0 ₫</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYClaims">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQClaims">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Dự phòng phí -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỔNG DỰ PHÒNG PHÍ</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiPremiumReserve">0 ₫</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYPremiumReserve">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQPremiumReserve">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Chênh lệch DPBT -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỔNG CHÊNH LỆCH DPBT</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiClaimReserveDiff">0 ₫</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYClaimReserveDiff">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQClaimReserveDiff">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- CPDM -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỔNG CPDM</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiExpenseLimit">0 ₫</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYExpenseLimit">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQExpenseLimit">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- HQ1 -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỔNG HQ1</span>
+                        </div>
+                        <span class="metric-value text-bv" id="branchKpiHQ1">0 ₫</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYHQ1">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQHQ1">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="chart-grid-2x2">
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title">Cơ cấu Nghiệp vụ của Đơn vị</div>
+                            <div class="panel-title">CƠ CẤU NGHIỆP VỤ CỦA ĐƠN VỊ</div>
                         </div>
                         <div class="table-container" style="flex: 1; margin-top: 0;">
                             <table>
@@ -1882,6 +2027,7 @@
             fetchExcelData();
             setupSidebarCollapsing();
             setupDragAndDrop();
+            setupBranchSearch();
         });
 
         // Trigger manual/drop upload setup
@@ -1917,26 +2063,41 @@
         }
 
         // Fetch excel workbook from the server
+        let data2025 = {}; // Global variable to store 2025 aggregated data
+
         async function fetchExcelData() {
             const statusText = document.getElementById('uploadStatusText');
-            statusText.innerHTML = 'Đang đồng bộ trực tiếp tệp <strong>HQ1_Q1_2026.xlsx</strong> từ máy chủ cục bộ...';
+            statusText.innerHTML = 'Đang tải dữ liệu báo cáo từ máy chủ cục bộ...';
             
             try {
+                // Try loading 2025 data first
+                statusText.innerHTML = 'Đang tải tệp dữ liệu lịch sử <strong>DT_CTTV_2025.xlsx</strong>...';
+                const response2025 = await fetch('DT_CTTV_2025.xlsx');
+                if (response2025.ok) {
+                    const buffer2025 = await response2025.arrayBuffer();
+                    parseExcelWorkbook2025(buffer2025);
+                } else {
+                    console.warn('Cannot download DT_CTTV_2025.xlsx from server, YoY/QoQ will be unavailable');
+                }
+            } catch (err2025) {
+                console.warn('Auto fetch 2025 data failed:', err2025);
+            }
+
+            try {
+                statusText.innerHTML = 'Đang tải tệp dữ liệu <strong>HQ1_Q1_2026.xlsx</strong>...';
                 const response = await fetch('HQ1_Q1_2026.xlsx');
                 if (!response.ok) {
-                    throw new Error('Không thể tải tệp từ server.');
+                    throw new Error('Không thể tải tệp HQ1_Q1_2026.xlsx từ server.');
                 }
                 const buffer = await response.arrayBuffer();
                 parseExcelWorkbook(buffer);
                 showToast('Tải dữ liệu thành công!');
             } catch (err) {
                 console.warn('Auto fetch failed, falling back to manual upload:', err);
-                statusText.innerHTML = '⚠️ <strong>Không thể đồng bộ tự động!</strong><br>Do chạy ở chế độ file:// hoặc máy chủ chưa sẵn sàng. Vui lòng kéo thả hoặc tải lên tệp <strong>HQ1_Q1_2026.xlsx</strong>.';
+                statusText.innerHTML = '⚠️ <strong>Không thể đồng bộ tự động!</strong><br>Do chạy ở chế độ file:// hoặc máy chủ chưa sẵn sàng. Vui lòng kéo thả hoặc tải lên các tệp dữ liệu.';
                 document.getElementById('manualUploadArea').style.display = 'block';
             }
         }
-
-
 
         // Process manually uploaded file
         function processLocalExcelFile(file) {
@@ -1947,8 +2108,16 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 try {
-                    parseExcelWorkbook(e.target.result);
-                    showToast('Xử lý tệp tải lên thành công!');
+                    if (file.name.includes('2025')) {
+                        parseExcelWorkbook2025(e.target.result);
+                        showToast('Xử lý tệp dữ liệu lịch sử 2025 thành công!');
+                        if (activeBranchName) {
+                            renderBranchDetails(activeBranchName);
+                        }
+                    } else {
+                        parseExcelWorkbook(e.target.result);
+                        showToast('Xử lý tệp dữ liệu Q1 2026 thành công!');
+                    }
                 } catch (err) {
                     showToast('Lỗi đọc file Excel!', 'error');
                     console.error(err);
@@ -2016,8 +2185,76 @@
 
             // Render views
             initOverviewDashboard();
-            populateBranchDropdown();
+            populateBranchTabs();
             renderBranchesTable();
+        }
+
+        // Parse 2025 Excel Workbook for YoY/QoQ calculations
+        function parseExcelWorkbook2025(buffer) {
+            try {
+                const data = new Uint8Array(buffer);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                if (!rows || rows.length < 3) {
+                    throw new Error('Dữ liệu bảng tính 2025 không hợp lệ.');
+                }
+                
+                data2025 = {};
+
+                let headerRowIndex = -1;
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row && row.includes('Tên đơn vị')) {
+                        headerRowIndex = i;
+                        break;
+                    }
+                }
+
+                if (headerRowIndex === -1) {
+                    headerRowIndex = 1;
+                }
+
+                const headers = rows[headerRowIndex];
+                let nameIdx = -1;
+                let q1Idx = -1;
+                let q4Idx = -1;
+                for (let j = 0; j < headers.length; j++) {
+                    if (headers[j]) {
+                        const hStr = String(headers[j]).trim().toLowerCase();
+                        if (hStr.includes('tên đơn vị') || hStr.includes('ten don vi')) nameIdx = j;
+                        if (hStr.includes('quý 1') || hStr.includes('quy 1')) q1Idx = j;
+                        if (hStr.includes('quý 4') || hStr.includes('quy 4')) q4Idx = j;
+                    }
+                }
+
+                if (nameIdx === -1 || q1Idx === -1 || q4Idx === -1) {
+                    console.error('Không tìm thấy các cột cần thiết trong tệp 2025:', headers);
+                    return;
+                }
+
+                for (let i = headerRowIndex + 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row || row.length === 0) continue;
+                    
+                    const branchName = row[nameIdx] ? String(row[nameIdx]).trim() : '';
+                    if (!branchName || branchName === 'UNMAPPED' || branchName === 'Grand Total') continue;
+                    
+                    const q1Val = Number(row[q1Idx]) || 0;
+                    const q4Val = Number(row[q4Idx]) || 0;
+                    
+                    if (!data2025[branchName]) {
+                        data2025[branchName] = { q1: 0, q4: 0 };
+                    }
+                    data2025[branchName].q1 += q1Val;
+                    data2025[branchName].q4 += q4Val;
+                }
+                console.log('Đã nạp thành công dữ liệu lịch sử 2025 cho', Object.keys(data2025).length, 'đơn vị');
+            } catch (err) {
+                console.error('Lỗi khi phân tích tệp DT_CTTV_2025.xlsx:', err);
+            }
         }
 
         // ================= VIEW 1: OVERVIEW ENGINE =================
@@ -2659,31 +2896,96 @@
         }
 
         // ================= VIEW 2: BRANCH PERFORMANCE ENGINE =================
-        function populateBranchDropdown() {
-            const dropdown = document.getElementById('selectBranchDropdown');
-            dropdown.innerHTML = '';
+        let activeBranchName = "";
 
-            // Add all branches + headquarters option
+        function populateBranchTabs() {
+            const container = document.getElementById('branchTabsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
             const allItems = [...branchesData].sort((a, b) => a.name.localeCompare(b.name, 'vi'));
             if (headquartersData) {
                 allItems.unshift(headquartersData);
             }
 
             allItems.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b.name;
-                opt.textContent = b.name;
-                dropdown.appendChild(opt);
+                const tab = document.createElement('button');
+                tab.className = 'branch-tab';
+                tab.setAttribute('data-name', b.name);
+                tab.textContent = b.name;
+                
+                tab.addEventListener('click', () => {
+                    selectBranchTab(b.name);
+                });
+                
+                container.appendChild(tab);
             });
 
-            dropdown.addEventListener('change', (e) => {
-                renderBranchDetails(e.target.value);
-            });
-
-            // Initial render of first branch details
             if (allItems.length > 0) {
-                renderBranchDetails(allItems[0].name);
+                if (!activeBranchName || !allItems.some(item => item.name === activeBranchName)) {
+                    activeBranchName = allItems[0].name;
+                }
+                selectBranchTab(activeBranchName);
             }
+        }
+
+        function selectBranchTab(branchName) {
+            activeBranchName = branchName;
+            
+            const tabs = document.querySelectorAll('.branch-tab');
+            let activeTab = null;
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-name') === branchName) {
+                    tab.classList.add('active');
+                    tab.style.display = 'inline-block';
+                    activeTab = tab;
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            if (activeTab) {
+                activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            }
+
+            renderBranchDetails(branchName);
+        }
+
+        function setupBranchSearch() {
+            const searchInput = document.getElementById('branchSearchInput');
+            if (!searchInput) return;
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const tabs = document.querySelectorAll('.branch-tab');
+                tabs.forEach(tab => {
+                    const name = tab.getAttribute('data-name').toLowerCase();
+                    if (name.includes(query)) {
+                        tab.style.display = 'inline-block';
+                    } else {
+                        tab.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        function updateTrendBadge(elemId, currentVal, pastVal, labelSuffix) {
+            const elem = document.getElementById(elemId);
+            if (!elem) return;
+
+            if (pastVal === undefined || pastVal === null || pastVal === 0 || isNaN(pastVal) || isNaN(currentVal)) {
+                elem.className = 'trend-item neutral';
+                elem.innerHTML = `<span class="trend-arrow">▲</span><span>--% ${labelSuffix}</span>`;
+                return;
+            }
+
+            const diffPct = ((currentVal - pastVal) / pastVal) * 100;
+            const sign = diffPct >= 0 ? '+' : '';
+            const arrow = diffPct >= 0 ? '▲' : '▼';
+            const className = diffPct >= 0 ? 'trend-item up' : 'trend-item down';
+
+            elem.className = className;
+            elem.innerHTML = `<span class="trend-arrow">${arrow}</span><span>${sign}${diffPct.toFixed(1)}% ${labelSuffix}</span>`;
         }
 
         function renderBranchDetails(branchName) {
@@ -2693,20 +2995,24 @@
             const branch = allItems.find(b => b.name === branchName);
             if (!branch) return;
 
-            const lossRatio = branch.tong_dt > 0 ? (branch.bt_trach_nhiem / branch.tong_dt) : 0;
-
-            // Render KPI fields
+            // Render 6 KPI fields
             document.getElementById('branchKpiRevenue').innerText = formatVND(branch.tong_dt);
             document.getElementById('branchKpiClaims').innerText = formatVND(branch.bt_trach_nhiem);
-            document.getElementById('branchKpiLossRatio').innerText = (lossRatio * 100).toFixed(2) + '%';
-            document.getElementById('branchKpiLossBar').style.width = Math.min(lossRatio * 100, 100) + '%';
-            document.getElementById('branchKpiHQQU').innerText = formatVND(branch.hqqu);
+            document.getElementById('branchKpiPremiumReserve').innerText = formatVND(branch.du_phong_phi);
+            document.getElementById('branchKpiClaimReserveDiff').innerText = formatVND(branch.chenh_lech_dpbt);
+            document.getElementById('branchKpiExpenseLimit').innerText = formatVND(branch.cpdm);
+            document.getElementById('branchKpiHQ1').innerText = formatVND(branch.hqqu);
 
             if (branch.hqqu < 0) {
-                document.getElementById('branchKpiHQQU').className = 'metric-value text-danger';
+                document.getElementById('branchKpiHQ1').className = 'metric-value text-danger';
             } else {
-                document.getElementById('branchKpiHQQU').className = 'metric-value text-bv';
+                document.getElementById('branchKpiHQ1').className = 'metric-value text-bv';
             }
+
+            // Calculate YoY and QoQ for Revenue based on 2025 data
+            const hist2025 = data2025[branchName] || { q1: 0, q4: 0 };
+            updateTrendBadge('branchYoYRevenue', branch.tong_dt, hist2025.q1, 'YoY');
+            updateTrendBadge('branchQoQRevenue', branch.tong_dt, hist2025.q4, 'QoQ');
 
             // Build LOB breakdown rows
             const lobs = [
@@ -2925,8 +3231,7 @@
             document.getElementById('modalBtnAnalyze').onclick = function() {
                 closeModal();
                 switchSubTab('branch');
-                document.getElementById('selectBranchDropdown').value = branch.name;
-                renderBranchDetails(branch.name);
+                selectBranchTab(branch.name);
             };
 
             document.getElementById('detailModal').classList.add('active');
