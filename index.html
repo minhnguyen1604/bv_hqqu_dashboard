@@ -1827,12 +1827,6 @@
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
-                                    <th class="filterable-th" data-col="peak_quarter" style="min-width: 120px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">
-                                        <div class="th-content" style="justify-content: center;">
-                                            <span>Quý Cao Điểm</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
                                     <th class="filterable-th" data-col="change_q1_q2" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
                                         <div class="th-content">
                                             <span>% thay đổi Q1->Q2 2025</span>
@@ -1878,6 +1872,12 @@
                                     <th class="filterable-th" data-col="prop_q4" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
                                         <div class="th-content">
                                             <span>Tỉ trọng Q4 2025</span>
+                                            <span class="filter-arrow-btn">▼</span>
+                                        </div>
+                                    </th>
+                                    <th class="filterable-th" data-col="peak_quarter" style="min-width: 120px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">
+                                        <div class="th-content" style="justify-content: center;">
+                                            <span>Quý Cao Điểm</span>
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
@@ -3194,7 +3194,6 @@
                     <tr>
                         <td class="text-center">${index + 1}</td>
                         <td class="bold">${item.name}</td>
-                        <td class="text-center">${peakBadge}</td>
                         <td class="text-right ${getColorClass(item.change_q1_q2)}">${changeQ1Q2Str}</td>
                         <td class="text-right ${getColorClass(item.change_q2_q3)}">${changeQ2Q3Str}</td>
                         <td class="text-right ${getColorClass(item.change_q3_q4)}">${changeQ3Q4Str}</td>
@@ -3203,6 +3202,7 @@
                         <td class="text-right" style="${q2Style}">${propQ2Str}</td>
                         <td class="text-right" style="${q3Style}">${propQ3Str}</td>
                         <td class="text-right" style="${q4Style}">${propQ4Str}</td>
+                        <td class="text-center">${peakBadge}</td>
                     </tr>
                 `);
             });
@@ -3275,7 +3275,6 @@
             const data = filtered.map((item, index) => ({
                 'STT': index + 1,
                 'Đơn vị': item.name,
-                'Quý Cao Điểm': item.peak_quarter,
                 '% thay đổi Q1->Q2 2025': (item.change_q1_q2 >= 0 ? '+' : '') + item.change_q1_q2.toFixed(2) + '%',
                 '% thay đổi Q2->Q3 2025': (item.change_q2_q3 >= 0 ? '+' : '') + item.change_q2_q3.toFixed(2) + '%',
                 '% thay đổi Q3->Q4 2025': (item.change_q3_q4 >= 0 ? '+' : '') + item.change_q3_q4.toFixed(2) + '%',
@@ -3283,7 +3282,8 @@
                 'Tỉ trọng Q1 2025': item.prop_q1.toFixed(2) + '%',
                 'Tỉ trọng Q2 2025': item.prop_q2.toFixed(2) + '%',
                 'Tỉ trọng Q3 2025': item.prop_q3.toFixed(2) + '%',
-                'Tỉ trọng Q4 2025': item.prop_q4.toFixed(2) + '%'
+                'Tỉ trọng Q4 2025': item.prop_q4.toFixed(2) + '%',
+                'Quý Cao Điểm': item.peak_quarter
             }));
 
             try {
@@ -3293,7 +3293,6 @@
                 const colWidths = [
                     { wch: 6 },
                     { wch: 28 },
-                    { wch: 15 },
                     { wch: 22 },
                     { wch: 22 },
                     { wch: 22 },
@@ -3301,7 +3300,8 @@
                     { wch: 18 },
                     { wch: 18 },
                     { wch: 18 },
-                    { wch: 18 }
+                    { wch: 18 },
+                    { wch: 15 }
                 ];
                 ws['!cols'] = colWidths;
 
