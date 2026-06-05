@@ -3177,19 +3177,6 @@
                 const q3Style = isMaxQ3 ? peakCellHighlight : '';
                 const q4Style = isMaxQ4 ? peakCellHighlight : '';
 
-                let peakBadge = '';
-                if (item.peak_quarter === 'Q1') {
-                    peakBadge = `<span class="badge-custom" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q1</span>`;
-                } else if (item.peak_quarter === 'Q2') {
-                    peakBadge = `<span class="badge-custom" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q2</span>`;
-                } else if (item.peak_quarter === 'Q3') {
-                    peakBadge = `<span class="badge-custom" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q3</span>`;
-                } else if (item.peak_quarter === 'Q4') {
-                    peakBadge = `<span class="badge-custom" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.2); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">Q4</span>`;
-                } else {
-                    peakBadge = `<span class="badge-custom" style="background: #f3f4f6; color: #6b7280; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px;">--</span>`;
-                }
-
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td class="text-center">${index + 1}</td>
@@ -3202,7 +3189,7 @@
                         <td class="text-right" style="${q2Style}">${propQ2Str}</td>
                         <td class="text-right" style="${q3Style}">${propQ3Str}</td>
                         <td class="text-right" style="${q4Style}">${propQ4Str}</td>
-                        <td class="text-center">${peakBadge}</td>
+                        <td class="text-center bold">${item.peak_quarter}</td>
                     </tr>
                 `);
             });
