@@ -15,15 +15,62 @@
     <style>
         :root {
             /* Sleek Grey-White Palette and BV Blue/Gold accents */
-            --text-primary: #111827;
-            --text-secondary: #4b5563;
             --bv-blue: #0056A3;
             --bv-blue-hover: #004582;
             --bv-gold: #B38F35;
             --bv-accent: #0284c7;
-            --success: #10b981;
-            --danger: #ef4444;
             --sidebar-width: 280px;
+            
+            /* Theme variables (Default Option A: Dark Sidebar) */
+            --bg-canvas: #f1f5f9;
+            --bg-sidebar: #0f172a;
+            --sidebar-text: #94a3b8;
+            --sidebar-text-active: #ffffff;
+            --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+            --sidebar-border: #1e293b;
+            --sidebar-active-indicator: var(--bv-gold);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --success: #0d9488; /* Teal-600 */
+            --danger: #f43f5e;  /* Rose-600 */
+        }
+
+        /* Option B: Minimalist Light Theme */
+        body.theme-minimalist-light {
+            --bg-canvas: #f8fafc;
+            --bg-sidebar: #f3f4f6; /* Smoke gray */
+            --sidebar-text: #4b5563;
+            --sidebar-text-active: var(--bv-blue);
+            --sidebar-hover-bg: rgba(0, 0, 0, 0.04);
+            --sidebar-border: #e5e7eb;
+            --sidebar-active-indicator: var(--bv-blue);
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --success: #10b981; /* Standard emerald */
+            --danger: #ef4444;  /* Standard danger */
+        }
+
+        /* Glassmorphic overrides for Option B */
+        body.theme-minimalist-light .glass-panel {
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+        }
+
+        /* Specific navigation adjustments for Dark Sidebar */
+        body:not(.theme-minimalist-light) .nav-sub-item.active {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+        
+        body:not(.theme-minimalist-light) .logo-full {
+            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) brightness(1.2);
+        }
+        body:not(.theme-minimalist-light) .logo-mini {
+            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) brightness(1.2);
         }
 
         * {
@@ -36,13 +83,14 @@
         }
 
         body {
-            background: #f8fafc; /* Cool premium off-white canvas */
+            background: var(--bg-canvas);
             color: var(--text-primary);
             display: flex;
             height: 100vh;
             overflow: hidden;
             font-size: 14px;
             position: relative;
+            transition: background 0.3s ease;
         }
 
         /* Hide scrollbars for Chrome, Safari and Opera */
@@ -66,10 +114,10 @@
             flex-direction: column;
             padding: 24px 16px 12px 16px;
             z-index: 10;
-            border-right: 1px solid #e4e4e7;
-            background: #f9fafb;
+            border-right: 1px solid var(--sidebar-border);
+            background: var(--bg-sidebar);
             box-shadow: none;
-            transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -127,12 +175,12 @@
         .nav-label {
             font-size: 11px;
             text-transform: uppercase;
-            color: var(--text-secondary);
+            color: var(--sidebar-text);
             font-weight: 600;
             letter-spacing: 0.05em;
             margin: 20px 0 10px 8px;
             transition: opacity 0.3s, height 0.3s, margin 0.3s;
-            opacity: 0.8;
+            opacity: 0.6;
             overflow: hidden;
             white-space: nowrap;
         }
@@ -150,7 +198,7 @@
             margin-bottom: 6px;
             border-radius: 10px;
             cursor: pointer;
-            color: var(--text-primary);
+            color: var(--sidebar-text);
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             font-weight: 500;
             font-size: 14px;
@@ -186,17 +234,28 @@
         }
 
         .nav-item:hover {
-            background-color: #f4f4f5;
-            color: var(--bv-blue);
+            background-color: var(--sidebar-hover-bg);
+            color: var(--sidebar-text-active);
         }
 
         .nav-item.active {
             background: #ffffff;
             color: var(--bv-blue);
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-            border: 1px solid #e4e4e7;
+            border: 1px solid var(--sidebar-border);
             font-weight: 600;
             position: relative;
+        }
+        
+        /* When dark sidebar is active, active nav-item style */
+        body:not(.theme-minimalist-light) .nav-item.active {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: var(--sidebar-text-active) !important;
+            box-shadow: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+        body:not(.theme-minimalist-light) .nav-item.active .nav-icon {
+            color: var(--sidebar-text-active) !important;
         }
 
         .nav-item:active, .nav-sub-item:active {
@@ -210,7 +269,7 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: var(--bv-blue);
+            background: var(--sidebar-active-indicator, var(--bv-blue));
             border-radius: 0 4px 4px 0;
         }
 
@@ -229,7 +288,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            color: var(--sidebar-text, var(--text-secondary));
         }
 
         .sidebar.collapsed .nav-icon {
@@ -268,7 +327,7 @@
             margin-bottom: 4px;
             border-radius: 10px;
             cursor: pointer;
-            color: var(--text-secondary);
+            color: var(--sidebar-text);
             transition: all 0.2s ease;
             font-weight: 500;
             font-size: 13px;
@@ -278,18 +337,20 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            opacity: 0.8;
         }
 
         .nav-sub-item:hover {
-            background-color: #f4f4f5;
-            color: var(--bv-blue);
+            color: var(--sidebar-text-active);
+            background-color: var(--sidebar-hover-bg);
+            opacity: 1;
         }
 
         .nav-sub-item.active {
-            color: var(--bv-blue);
+            color: var(--sidebar-text-active);
             font-weight: 600;
             background: #ffffff;
-            border: 1px solid #e4e4e7;
+            border: 1px solid var(--sidebar-border);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
         }
 
@@ -322,16 +383,18 @@
             overflow: hidden;
             white-space: nowrap;
             transition: all 0.2s ease;
+            color: var(--sidebar-text);
         }
 
         .user-profile:hover {
-            background-color: #f4f4f5;
+            background-color: var(--sidebar-hover-bg);
+            color: var(--sidebar-text-active);
         }
 
         .user-profile-text {
             font-size: 14px;
             font-weight: 600;
-            color: #374151;
+            color: var(--sidebar-text-active, #374151);
             transition: opacity 0.3s;
             opacity: 1;
         }
@@ -1404,7 +1467,7 @@
                     <div class="panel glass-panel" style="padding: 20px;">
                         <div class="panel-header" style="margin-bottom: 12px; align-items: center; display: flex; justify-content: space-between;">
                             <div class="panel-title" style="border-left-color: var(--success);">
-                                Các đơn vị hoạt động có hiệu quả
+                                CÁC ĐƠN VỊ HOẠT ĐỘNG CÓ HIỆU QUẢ
                             </div>
                             <button class="btn-download-icon" onclick="downloadEfficiencyReport()" title="Tải báo cáo hiệu quả đơn vị (1 file 2 sheets)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1433,7 +1496,7 @@
                     <div class="panel glass-panel" style="padding: 20px;">
                         <div class="panel-header" style="margin-bottom: 12px; align-items: center; display: flex; justify-content: space-between;">
                             <div class="panel-title" style="border-left-color: var(--danger);">
-                                Các đơn vị hoạt động không hiệu quả
+                                CÁC ĐƠN VỊ HOẠT ĐỘNG KHÔNG HIỆU QUẢ
                             </div>
                             <button class="btn-download-icon" onclick="downloadEfficiencyReport()" title="Tải báo cáo hiệu quả đơn vị (1 file 2 sheets)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1466,10 +1529,10 @@
                         <div class="panel-title">CÁC TỶ LỆ TÀI CHÍNH</div>
                         <div style="display: flex; gap: 8px; margin-top: 8px;">
                             <button class="btn-ratio-tab active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
-                                Đơn vị hoạt động có hiệu quả
+                                CÁC ĐƠN VỊ HOẠT ĐỘNG CÓ HIỆU QUẢ
                             </button>
                             <button class="btn-ratio-tab" id="tabUnprofitableCharts" onclick="switchRatioTab('unprofitable')">
-                                Đơn vị hoạt động không hiệu quả
+                                CÁC ĐƠN VỊ HOẠT ĐỘNG KHÔNG HIỆU QUẢ
                             </button>
                         </div>
                     </div>
@@ -1664,8 +1727,8 @@
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 600; color: var(--text-primary); font-size: 14px;">Chế độ giao diện</label>
                             <div style="display: flex; gap: 12px; margin-top: 4px;">
-                                <button class="btn btn-primary" style="height: 38px; width: 160px; font-weight: 600;">Sáng (Mặc định)</button>
-                                <button class="btn btn-outline" style="height: 38px; width: 160px; font-weight: 600; cursor: not-allowed; opacity: 0.6;" onclick="showToast('Chế độ tối đang được phát triển!')">Tối (Đang phát triển)</button>
+                                <button class="btn" id="themeBtnDarkSidebar" onclick="setTheme('dark-sidebar')" style="height: 38px; width: 180px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer;">Thanh bên tối (Option A)</button>
+                                <button class="btn" id="themeBtnMinimalistLight" onclick="setTheme('minimalist-light')" style="height: 38px; width: 180px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer;">Sáng kính mờ (Option B)</button>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -1860,8 +1923,40 @@
             }
         }
 
+        // Theme switching logic
+        function setTheme(themeName) {
+            const body = document.body;
+            const darkBtn = document.getElementById('themeBtnDarkSidebar');
+            const lightBtn = document.getElementById('themeBtnMinimalistLight');
+            
+            if (themeName === 'minimalist-light') {
+                body.classList.add('theme-minimalist-light');
+                if (darkBtn && lightBtn) {
+                    darkBtn.className = 'btn btn-outline';
+                    lightBtn.className = 'btn btn-primary';
+                }
+            } else {
+                body.classList.remove('theme-minimalist-light');
+                if (darkBtn && lightBtn) {
+                    darkBtn.className = 'btn btn-primary';
+                    lightBtn.className = 'btn btn-outline';
+                }
+            }
+            
+            localStorage.setItem('dashboard-theme', themeName);
+            
+            // Re-render ratio charts to match semantic colors if they exist
+            if (typeof branchesData !== 'undefined' && branchesData.length > 0) {
+                initRatioCharts();
+            }
+        }
+
         // Fetch local file on start
         window.addEventListener('load', () => {
+            // Load theme from localStorage
+            const savedTheme = localStorage.getItem('dashboard-theme') || 'dark-sidebar';
+            setTheme(savedTheme);
+            
             fetchExcelData();
             setupSidebarCollapsing();
             setupDragAndDrop();
@@ -2159,17 +2254,18 @@
                 ratioCharts[canvasId].destroy();
             }
 
+            // Resolve colors dynamically from CSS variables
+            const style = getComputedStyle(document.body);
+            const successColor = style.getPropertyValue('--success').trim();
+            const dangerColor = style.getPropertyValue('--danger').trim();
+            
+            const baseColor = isProfitable ? successColor : dangerColor;
+            const borderColor = baseColor;
+            
             // Create horizontal gradient for bars
             const gradient = ctx.createLinearGradient(0, 0, 400, 0);
-            if (isProfitable) {
-                gradient.addColorStop(0, 'rgba(16, 185, 129, 0.85)');
-                gradient.addColorStop(1, 'rgba(16, 185, 129, 0.25)');
-            } else {
-                gradient.addColorStop(0, 'rgba(239, 68, 68, 0.85)');
-                gradient.addColorStop(1, 'rgba(239, 68, 68, 0.25)');
-            }
-
-            const borderColor = isProfitable ? 'var(--success)' : 'var(--danger)';
+            gradient.addColorStop(0, baseColor + 'e6'); // 90% opacity hex
+            gradient.addColorStop(1, baseColor + '40'); // 25% opacity hex
 
             // Define custom vertical average line plugin
             const verticalLinePlugin = {
@@ -2240,7 +2336,7 @@
                         },
                         verticalLine: {
                             value: avgValue,
-                            color: isProfitable ? 'rgba(5, 150, 105, 0.7)' : 'rgba(185, 28, 28, 0.7)'
+                            color: isProfitable ? successColor + 'b3' : dangerColor + 'b3'
                         }
                     },
                     scales: {
@@ -2354,7 +2450,7 @@
                         <tr class="clickable" onclick="openBranchModal('${b.name}')">
                             <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${index + 1}</td>
                             <td class="bold" style="font-weight: 500;"><span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10b981; margin-right:8px; box-shadow:0 0 6px rgba(16,185,129,0.6); vertical-align:middle;"></span>${b.name}</td>
-                            <td class="text-right bold text-success" style="font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
+                            <td class="text-right bold" style="color: var(--success); font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
                         </tr>
                     `);
                 });
@@ -2369,7 +2465,7 @@
                         <tr class="clickable" onclick="openBranchModal('${b.name}')">
                             <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${index + 1}</td>
                             <td class="bold" style="font-weight: 500;"><span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ef4444; margin-right:8px; box-shadow:0 0 6px rgba(239,68,68,0.6); vertical-align:middle;"></span>${b.name}</td>
-                            <td class="text-right bold text-danger" style="font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
+                            <td class="text-right bold" style="color: var(--danger); font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
                         </tr>
                     `);
                 });
@@ -2821,7 +2917,7 @@
                         <td class="text-right">${formatVND(b.tong_bt)}</td>
                         <td class="text-right">${formatVND(b.dt_thuan)}</td>
                         <td class="text-right">${formatVND(b.cpdm)}</td>
-                        <td class="text-right bold ${b.hqqu >= 0 ? 'text-success' : 'text-danger'}">${formatVND(b.hqqu)}</td>
+                        <td class="text-right bold" style="color: ${b.hqqu >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatVND(b.hqqu)}</td>
                         <td class="text-center">
                             <span class="${statusClass}">${statusLabel}</span>
                         </td>
@@ -2839,7 +2935,7 @@
                         <td class="text-right bold">${formatVND(headquartersData.tong_bt)}</td>
                         <td class="text-right bold">${formatVND(headquartersData.dt_thuan)}</td>
                         <td class="text-right bold">${formatVND(headquartersData.cpdm)}</td>
-                        <td class="text-right bold ${headquartersData.hqqu >= 0 ? 'text-success' : 'text-danger'}">${formatVND(headquartersData.hqqu)}</td>
+                        <td class="text-right bold" style="color: ${headquartersData.hqqu >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatVND(headquartersData.hqqu)}</td>
                         <td class="text-center">
                             <span class="status-badge" style="background: rgba(0, 86, 163, 0.1); color: var(--bv-blue); border: 1px solid rgba(0, 86, 163, 0.25)">Trụ Sở</span>
                         </td>
