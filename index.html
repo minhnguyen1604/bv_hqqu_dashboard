@@ -1434,6 +1434,37 @@
         .text-success {
             color: var(--success) !important;
         }
+
+        /* Custom scroll on hover for table containers */
+        .scroll-on-hover {
+            overflow-x: auto !important;
+            scrollbar-width: none; /* Firefox: hide scrollbar by default */
+        }
+        
+        .scroll-on-hover:hover {
+            scrollbar-width: thin; /* Firefox: show scrollbar on hover */
+        }
+        
+        /* For Webkit browsers (Chrome, Safari, Edge) */
+        .scroll-on-hover::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-on-hover::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 10px;
+        }
+        
+        .scroll-on-hover:hover::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.45); /* gray-400 with opacity */
+        }
+        
+        .scroll-on-hover:hover::-webkit-scrollbar {
+            background: rgba(243, 244, 246, 0.4);
+        }
     </style>
 </head>
 
@@ -1520,11 +1551,11 @@
                         </div>
                         <span class="metric-value" id="kpiTotalRevenue">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral" id="kpiYoYRevenue">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral" id="kpiQoQRevenue">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1536,11 +1567,11 @@
                         </div>
                         <span class="metric-value" id="kpiTotalCompensation">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1552,11 +1583,11 @@
                         </div>
                         <span class="metric-value" id="kpiTotalPremiumReserve">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1568,11 +1599,11 @@
                         </div>
                         <span class="metric-value" id="kpiTotalClaimReserveDiff">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1584,11 +1615,11 @@
                         </div>
                         <span class="metric-value" id="kpiTotalExpenseLimit">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1600,11 +1631,11 @@
                         </div>
                         <span class="metric-value text-bv" id="kpiTotalHQ1">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1619,11 +1650,11 @@
                         </div>
                         <span class="metric-value text-success" id="kpiCountProfitable">0 đơn vị</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1635,11 +1666,11 @@
                         </div>
                         <span class="metric-value text-danger" id="kpiCountUnprofitable">0 đơn vị</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1651,11 +1682,11 @@
                         </div>
                         <span class="metric-value" id="kpiClaimsRatio">0.00%</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1667,11 +1698,11 @@
                         </div>
                         <span class="metric-value text-bv" id="kpiHQ1Ratio">0.00%</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item">
+                            <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -1754,12 +1785,12 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="table-container" style="max-height: 400px; overflow-y: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
+                    <div class="table-container scroll-on-hover" style="max-height: 400px; overflow-y: auto; overflow-x: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
                         <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
                             <thead>
                                 <tr>
                                     <th style="width: 60px; text-align: center; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; vertical-align: middle;">STT</th>
-                                    <th class="filterable-th" data-col="name" style="min-width: 200px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: left; vertical-align: middle;">
+                                    <th class="filterable-th" data-col="name" style="min-width: 180px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: left; vertical-align: middle;">
                                         <div class="th-content">
                                             <span>Đơn Vị</span>
                                             <span class="filter-arrow-btn">▼</span>
@@ -1783,21 +1814,33 @@
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
-                                    <th class="filterable-th" data-col="avg_change_2025" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>TB % thay đổi 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
                                     <th class="filterable-th" data-col="change_25_26" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
                                         <div class="th-content">
                                             <span>% thay đổi Q1.25->Q1.26</span>
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
-                                    <th class="filterable-th" data-col="is_seasonal" style="text-align: center; width: 120px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; vertical-align: middle;">
-                                        <div class="th-content" style="justify-content: center; width: 100%;">
-                                            <span>Mùa vụ Q1</span>
+                                    <th class="filterable-th" data-col="prop_q1" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
+                                        <div class="th-content">
+                                            <span>Tỉ trọng Q1 2025</span>
+                                            <span class="filter-arrow-btn">▼</span>
+                                        </div>
+                                    </th>
+                                    <th class="filterable-th" data-col="prop_q2" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
+                                        <div class="th-content">
+                                            <span>Tỉ trọng Q2 2025</span>
+                                            <span class="filter-arrow-btn">▼</span>
+                                        </div>
+                                    </th>
+                                    <th class="filterable-th" data-col="prop_q3" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
+                                        <div class="th-content">
+                                            <span>Tỉ trọng Q3 2025</span>
+                                            <span class="filter-arrow-btn">▼</span>
+                                        </div>
+                                    </th>
+                                    <th class="filterable-th" data-col="prop_q4" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
+                                        <div class="th-content">
+                                            <span>Tỉ trọng Q4 2025</span>
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
@@ -1805,6 +1848,43 @@
                             </thead>
                             <tbody id="seasonalTableBody">
                                 <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= SEASONAL REVENUE ANALYSIS BY LOB ================= -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">
+                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ
+                        </div>
+                        <button class="btn-download-icon" onclick="downloadLobSeasonalReport()" title="Tải báo cáo phân tích mùa vụ theo nghiệp vụ (Excel)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="table-container scroll-on-hover" style="max-height: 400px; overflow-y: auto; overflow-x: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
+                        <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; vertical-align: middle;">STT</th>
+                                    <th style="min-width: 180px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: left; vertical-align: middle;">Nghiệp Vụ</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q1->Q2 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q2->Q3 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q3->Q4 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q1.25->Q1.26</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q1 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q2 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q3 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q4 2025</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lobSeasonalTableBody">
+                                <!-- Dynamic LOB rows -->
                             </tbody>
                         </table>
                     </div>
@@ -2472,6 +2552,13 @@
 
         let raw2025Cumulative = {}; // Global variable to store 2025 raw quarterly cumulative data
         let seasonalData = [];      // Global variable to store calculated seasonal analysis data
+        let raw2025LOB = {
+            "Con người": { q1: 0, q2: 0, q3: 0, q4: 0 },
+            "Du lịch": { q1: 0, q2: 0, q3: 0, q4: 0 },
+            "Xe Cơ Giới": { q1: 0, q2: 0, q3: 0, q4: 0 },
+            "Y tế": { q1: 0, q2: 0, q3: 0, q4: 0 }
+        };
+        let lobSeasonalData = []; // Global variable to store calculated LOB seasonal analysis data
 
         // Parse 2025 Excel Workbook for YoY/QoQ calculations
         function parseExcelWorkbook2025(buffer) {
@@ -2545,6 +2632,83 @@
 
                     data2025[branchName] = { q1: q1_actual, q4: q4_actual };
                 }
+
+                // Reset and Parse Sheet1 for LOB totals
+                raw2025LOB = {
+                    "Con người": { q1: 0, q2: 0, q3: 0, q4: 0 },
+                    "Du lịch": { q1: 0, q2: 0, q3: 0, q4: 0 },
+                    "Xe Cơ Giới": { q1: 0, q2: 0, q3: 0, q4: 0 },
+                    "Y tế": { q1: 0, q2: 0, q3: 0, q4: 0 }
+                };
+
+                const sheet1Name = "Sheet1";
+                if (workbook.SheetNames.includes(sheet1Name)) {
+                    const sheet1 = workbook.Sheets[sheet1Name];
+                    const rows1 = XLSX.utils.sheet_to_json(sheet1, { header: 1 });
+                    
+                    let headerRowIndex1 = -1;
+                    for (let i = 0; i < rows1.length; i++) {
+                        const row = rows1[i];
+                        if (row && row.includes('Tên đơn vị') && row.includes('Nghiệp vụ')) {
+                            headerRowIndex1 = i;
+                            break;
+                        }
+                    }
+                    
+                    if (headerRowIndex1 !== -1) {
+                        const headers1 = rows1[headerRowIndex1];
+                        let unitIdx1 = -1;
+                        let lobIdx1 = -1;
+                        let q1Idx1 = -1;
+                        let q2Idx1 = -1;
+                        let q3Idx1 = -1;
+                        let q4Idx1 = -1;
+                        
+                        for (let j = 0; j < headers1.length; j++) {
+                            if (headers1[j]) {
+                                const hStr = String(headers1[j]).trim().toLowerCase();
+                                if (hStr.includes('tên đơn vị') || hStr.includes('ten don vi')) unitIdx1 = j;
+                                if (hStr.includes('nghiệp vụ') || hStr.includes('nghiep vu')) lobIdx1 = j;
+                                if (hStr.includes('quý 1') || hStr.includes('quy 1')) q1Idx1 = j;
+                                if (hStr.includes('quý 2') || hStr.includes('quy 2')) q2Idx1 = j;
+                                if (hStr.includes('quý 3') || hStr.includes('quy 3')) q3Idx1 = j;
+                                if (hStr.includes('quý 4') || hStr.includes('quy 4')) q4Idx1 = j;
+                            }
+                        }
+                        
+                        if (unitIdx1 !== -1 && lobIdx1 !== -1 && q1Idx1 !== -1) {
+                            const lobMap = {
+                                'BH TNCN': 'Con người',
+                                'BH du lịch': 'Du lịch',
+                                'BH xe cơ giới': 'Xe Cơ Giới',
+                                'BH y tế': 'Y tế'
+                            };
+                            
+                            for (let i = headerRowIndex1 + 1; i < rows1.length; i++) {
+                                const row = rows1[i];
+                                if (!row || row.length === 0) continue;
+                                
+                                const unitName = row[unitIdx1] ? String(row[unitIdx1]).trim() : '';
+                                if (!unitName || unitName === 'UNMAPPED' || unitName === 'Grand Total') continue;
+                                
+                                const lobRaw = row[lobIdx1] ? String(row[lobIdx1]).trim() : '';
+                                const lobName = lobMap[lobRaw];
+                                if (!lobName) continue;
+                                
+                                const q1Val = Number(row[q1Idx1]) || 0;
+                                const q2Val = q2Idx1 !== -1 ? (Number(row[q2Idx1]) || 0) : 0;
+                                const q3Val = q3Idx1 !== -1 ? (Number(row[q3Idx1]) || 0) : 0;
+                                const q4Val = q4Idx1 !== -1 ? (Number(row[q4Idx1]) || 0) : 0;
+                                
+                                raw2025LOB[lobName].q1 += q1Val;
+                                raw2025LOB[lobName].q2 += q2Val;
+                                raw2025LOB[lobName].q3 += q3Val;
+                                raw2025LOB[lobName].q4 += q4Val;
+                            }
+                        }
+                    }
+                }
+
                 console.log('Đã nạp thành công dữ liệu lịch sử 2025 cho', Object.keys(raw2025Cumulative).length, 'đơn vị');
             } catch (err) {
                 console.error('Lỗi khi phân tích tệp DT_CTTV_2025.xlsx:', err);
@@ -2578,7 +2742,11 @@
                 const q1_26 = branch.tong_dt;
                 const change_25_26 = q1_25 > 0 ? ((q1_26 - q1_25) / q1_25) * 100 : 0;
                 
-                const is_seasonal = change_25_26 > avg_change_2025;
+                const total_25 = q1_25 + q2_25 + q3_25 + q4_25;
+                const prop_q1 = total_25 > 0 ? (q1_25 / total_25) * 100 : 0;
+                const prop_q2 = total_25 > 0 ? (q2_25 / total_25) * 100 : 0;
+                const prop_q3 = total_25 > 0 ? (q3_25 / total_25) * 100 : 0;
+                const prop_q4 = total_25 > 0 ? (q4_25 / total_25) * 100 : 0;
 
                 seasonalData.push({
                     name: name,
@@ -2589,10 +2757,74 @@
                     change_q1_q2: change_q1_q2,
                     change_q2_q3: change_q2_q3,
                     change_q3_q4: change_q3_q4,
-                    avg_change_2025: avg_change_2025,
+                    prop_q1: prop_q1,
+                    prop_q2: prop_q2,
+                    prop_q3: prop_q3,
+                    prop_q4: prop_q4,
                     q1_26: q1_26,
-                    change_25_26: change_25_26,
-                    is_seasonal: is_seasonal
+                    change_25_26: change_25_26
+                });
+            });
+            computeLobSeasonalData();
+        }
+
+        function computeLobSeasonalData() {
+            lobSeasonalData = [];
+            const lobs = ["Con người", "Du lịch", "Xe Cơ Giới", "Y tế"];
+            
+            const lob2026Q1 = {
+                "Con người": 0,
+                "Du lịch": 0,
+                "Xe Cơ Giới": 0,
+                "Y tế": 0
+            };
+            
+            const allItems = [...branchesData];
+            if (headquartersData) allItems.push(headquartersData);
+            
+            allItems.forEach(b => {
+                lob2026Q1["Con người"] += b.dt_con_nguoi;
+                lob2026Q1["Du lịch"] += b.dt_du_lich;
+                lob2026Q1["Xe Cơ Giới"] += b.dt_xe_co_gioi;
+                lob2026Q1["Y tế"] += b.dt_y_te;
+            });
+            
+            lobs.forEach(lobName => {
+                const hist = raw2025LOB[lobName] || { q1: 0, q2: 0, q3: 0, q4: 0 };
+                
+                const q1_25 = hist.q1;
+                const q2_25 = hist.q2;
+                const q3_25 = hist.q3;
+                const q4_25 = hist.q4;
+                
+                const change_q1_q2 = q1_25 > 0 ? ((q2_25 - q1_25) / q1_25) * 100 : 0;
+                const change_q2_q3 = q2_25 > 0 ? ((q3_25 - q2_25) / q2_25) * 100 : 0;
+                const change_q3_q4 = q3_25 > 0 ? ((q4_25 - q3_25) / q3_25) * 100 : 0;
+                
+                const q1_26 = lob2026Q1[lobName];
+                const change_25_26 = q1_25 > 0 ? ((q1_26 - q1_25) / q1_25) * 100 : 0;
+                
+                const total_25 = q1_25 + q2_25 + q3_25 + q4_25;
+                const prop_q1 = total_25 > 0 ? (q1_25 / total_25) * 100 : 0;
+                const prop_q2 = total_25 > 0 ? (q2_25 / total_25) * 100 : 0;
+                const prop_q3 = total_25 > 0 ? (q3_25 / total_25) * 100 : 0;
+                const prop_q4 = total_25 > 0 ? (q4_25 / total_25) * 100 : 0;
+                
+                lobSeasonalData.push({
+                    name: lobName,
+                    q1_25: q1_25,
+                    q2_25: q2_25,
+                    q3_25: q3_25,
+                    q4_25: q4_25,
+                    change_q1_q2: change_q1_q2,
+                    change_q2_q3: change_q2_q3,
+                    change_q3_q4: change_q3_q4,
+                    prop_q1: prop_q1,
+                    prop_q2: prop_q2,
+                    prop_q3: prop_q3,
+                    prop_q4: prop_q4,
+                    q1_26: q1_26,
+                    change_25_26: change_25_26
                 });
             });
         }
@@ -2602,9 +2834,11 @@
             change_q1_q2: [],
             change_q2_q3: [],
             change_q3_q4: [],
-            avg_change_2025: [],
             change_25_26: [],
-            is_seasonal: []
+            prop_q1: [],
+            prop_q2: [],
+            prop_q3: [],
+            prop_q4: []
         };
         let currentFilterCol = '';
 
@@ -2623,8 +2857,8 @@
             let uniqueValues = [];
             if (colKey === 'name') {
                 uniqueValues = seasonalData.map(item => item.name);
-            } else if (colKey === 'is_seasonal') {
-                uniqueValues = ['Có', 'Không'];
+            } else if (colKey.startsWith('prop_')) {
+                uniqueValues = seasonalData.map(item => item[colKey].toFixed(2) + '%');
             } else {
                 uniqueValues = seasonalData.map(item => {
                     const val = item[colKey];
@@ -2637,8 +2871,6 @@
             
             if (colKey === 'name') {
                 uniqueValues.sort((a, b) => a.localeCompare(b, 'vi'));
-            } else if (colKey === 'is_seasonal') {
-                // Keep order
             } else {
                 uniqueValues.sort((a, b) => parseFloat(a) - parseFloat(b));
             }
@@ -2794,8 +3026,8 @@
                         let itemStr = '';
                         if (colKey === 'name') {
                             itemStr = item.name;
-                        } else if (colKey === 'is_seasonal') {
-                            itemStr = item.is_seasonal ? 'Có' : 'Không';
+                        } else if (colKey.startsWith('prop_')) {
+                            itemStr = item[colKey].toFixed(2) + '%';
                         } else {
                             const val = item[colKey];
                             const sign = val >= 0 ? '+' : '';
@@ -2827,15 +3059,12 @@
                 const changeQ1Q2Str = formatPct(item.change_q1_q2);
                 const changeQ2Q3Str = formatPct(item.change_q2_q3);
                 const changeQ3Q4Str = formatPct(item.change_q3_q4);
-                const avgChangeStr = formatPct(item.avg_change_2025);
                 const change2526Str = formatPct(item.change_25_26);
 
-                let badgeHTML = '';
-                if (item.is_seasonal) {
-                    badgeHTML = '<span class="status-badge" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25)">Có</span>';
-                } else {
-                    badgeHTML = '<span class="status-badge" style="background: rgba(107, 114, 128, 0.1); color: #4b5563; border: 1px solid rgba(107, 114, 128, 0.25)">Không</span>';
-                }
+                const propQ1Str = item.prop_q1.toFixed(2) + '%';
+                const propQ2Str = item.prop_q2.toFixed(2) + '%';
+                const propQ3Str = item.prop_q3.toFixed(2) + '%';
+                const propQ4Str = item.prop_q4.toFixed(2) + '%';
 
                 const getColorClass = (val) => val >= 0 ? 'text-success bold' : 'text-danger bold';
 
@@ -2846,9 +3075,11 @@
                         <td class="text-right ${getColorClass(item.change_q1_q2)}">${changeQ1Q2Str}</td>
                         <td class="text-right ${getColorClass(item.change_q2_q3)}">${changeQ2Q3Str}</td>
                         <td class="text-right ${getColorClass(item.change_q3_q4)}">${changeQ3Q4Str}</td>
-                        <td class="text-right bold ${getColorClass(item.avg_change_2025)}">${avgChangeStr}</td>
                         <td class="text-right bold ${getColorClass(item.change_25_26)}">${change2526Str}</td>
-                        <td class="text-center">${badgeHTML}</td>
+                        <td class="text-right">${propQ1Str}</td>
+                        <td class="text-right">${propQ2Str}</td>
+                        <td class="text-right">${propQ3Str}</td>
+                        <td class="text-right">${propQ4Str}</td>
                     </tr>
                 `);
             });
@@ -2924,9 +3155,11 @@
                 '% thay đổi Q1->Q2 2025': (item.change_q1_q2 >= 0 ? '+' : '') + item.change_q1_q2.toFixed(2) + '%',
                 '% thay đổi Q2->Q3 2025': (item.change_q2_q3 >= 0 ? '+' : '') + item.change_q2_q3.toFixed(2) + '%',
                 '% thay đổi Q3->Q4 2025': (item.change_q3_q4 >= 0 ? '+' : '') + item.change_q3_q4.toFixed(2) + '%',
-                'TB % thay đổi 2025': (item.avg_change_2025 >= 0 ? '+' : '') + item.avg_change_2025.toFixed(2) + '%',
                 '% thay đổi Q1.25->Q1.26': (item.change_25_26 >= 0 ? '+' : '') + item.change_25_26.toFixed(2) + '%',
-                'Mùa vụ Q1': item.is_seasonal ? 'Có' : 'Không'
+                'Tỉ trọng Q1 2025': item.prop_q1.toFixed(2) + '%',
+                'Tỉ trọng Q2 2025': item.prop_q2.toFixed(2) + '%',
+                'Tỉ trọng Q3 2025': item.prop_q3.toFixed(2) + '%',
+                'Tỉ trọng Q4 2025': item.prop_q4.toFixed(2) + '%'
             }));
 
             try {
@@ -2940,8 +3173,10 @@
                     { wch: 22 },
                     { wch: 22 },
                     { wch: 22 },
-                    { wch: 22 },
-                    { wch: 15 }
+                    { wch: 18 },
+                    { wch: 18 },
+                    { wch: 18 },
+                    { wch: 18 }
                 ];
                 ws['!cols'] = colWidths;
 
@@ -2950,6 +3185,92 @@
                 showToast('Đã tải xuống báo cáo mùa vụ!');
             } catch (err) {
                 console.error('Error exporting seasonal report:', err);
+                showToast('Lỗi xuất tệp Excel!', 'error');
+            }
+        }
+
+        function renderLobSeasonalTable() {
+            const tbody = document.getElementById('lobSeasonalTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            lobSeasonalData.forEach((item, index) => {
+                const formatPct = (val) => {
+                    const sign = val >= 0 ? '+' : '';
+                    return sign + val.toFixed(2) + '%';
+                };
+
+                const changeQ1Q2Str = formatPct(item.change_q1_q2);
+                const changeQ2Q3Str = formatPct(item.change_q2_q3);
+                const changeQ3Q4Str = formatPct(item.change_q3_q4);
+                const change2526Str = formatPct(item.change_25_26);
+
+                const propQ1Str = item.prop_q1.toFixed(2) + '%';
+                const propQ2Str = item.prop_q2.toFixed(2) + '%';
+                const propQ3Str = item.prop_q3.toFixed(2) + '%';
+                const propQ4Str = item.prop_q4.toFixed(2) + '%';
+
+                const getColorClass = (val) => val >= 0 ? 'text-success bold' : 'text-danger bold';
+
+                tbody.insertAdjacentHTML('beforeend', `
+                    <tr>
+                        <td class="text-center">${index + 1}</td>
+                        <td class="bold">${item.name}</td>
+                        <td class="text-right ${getColorClass(item.change_q1_q2)}">${changeQ1Q2Str}</td>
+                        <td class="text-right ${getColorClass(item.change_q2_q3)}">${changeQ2Q3Str}</td>
+                        <td class="text-right ${getColorClass(item.change_q3_q4)}">${changeQ3Q4Str}</td>
+                        <td class="text-right bold ${getColorClass(item.change_25_26)}">${change2526Str}</td>
+                        <td class="text-right">${propQ1Str}</td>
+                        <td class="text-right">${propQ2Str}</td>
+                        <td class="text-right">${propQ3Str}</td>
+                        <td class="text-right">${propQ4Str}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        function downloadLobSeasonalReport() {
+            if (!lobSeasonalData || lobSeasonalData.length === 0) {
+                showToast('Không có dữ liệu mùa vụ nghiệp vụ để tải xuống!', 'error');
+                return;
+            }
+
+            const data = lobSeasonalData.map((item, index) => ({
+                'STT': index + 1,
+                'Nghiệp vụ': item.name,
+                '% thay đổi Q1->Q2 2025': (item.change_q1_q2 >= 0 ? '+' : '') + item.change_q1_q2.toFixed(2) + '%',
+                '% thay đổi Q2->Q3 2025': (item.change_q2_q3 >= 0 ? '+' : '') + item.change_q2_q3.toFixed(2) + '%',
+                '% thay đổi Q3->Q4 2025': (item.change_q3_q4 >= 0 ? '+' : '') + item.change_q3_q4.toFixed(2) + '%',
+                '% thay đổi Q1.25->Q1.26': (item.change_25_26 >= 0 ? '+' : '') + item.change_25_26.toFixed(2) + '%',
+                'Tỉ trọng Q1 2025': item.prop_q1.toFixed(2) + '%',
+                'Tỉ trọng Q2 2025': item.prop_q2.toFixed(2) + '%',
+                'Tỉ trọng Q3 2025': item.prop_q3.toFixed(2) + '%',
+                'Tỉ trọng Q4 2025': item.prop_q4.toFixed(2) + '%'
+            }));
+
+            try {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(data);
+
+                const colWidths = [
+                    { wch: 6 },
+                    { wch: 20 },
+                    { wch: 22 },
+                    { wch: 22 },
+                    { wch: 22 },
+                    { wch: 22 },
+                    { wch: 18 },
+                    { wch: 18 },
+                    { wch: 18 },
+                    { wch: 18 }
+                ];
+                ws['!cols'] = colWidths;
+
+                XLSX.utils.book_append_sheet(wb, ws, "Phân tích mùa vụ Nghiệp vụ");
+                XLSX.writeFile(wb, "BaoViet_PhanTich_MuaVu_NghiepVu_2025_2026.xlsx");
+                showToast('Đã tải xuống báo cáo mùa vụ nghiệp vụ!');
+            } catch (err) {
+                console.error('Error exporting LOB seasonal report:', err);
                 showToast('Lỗi xuất tệp Excel!', 'error');
             }
         }
@@ -2964,6 +3285,9 @@
             let totalExpenseLimit = 0;
             let totalHQ1 = 0;
 
+            let totalRevenueQ1_2025 = 0;
+            let totalRevenueQ4_2025 = 0;
+
             const allItems = [...branchesData];
             if (headquartersData) allItems.push(headquartersData);
 
@@ -2974,6 +3298,12 @@
                 totalClaimReserveDiff += b.chenh_lech_dpbt;
                 totalExpenseLimit += b.cpdm;
                 totalHQ1 += b.hqqu;
+
+                const hist = raw2025Cumulative[b.name];
+                if (hist) {
+                    totalRevenueQ1_2025 += hist.q1;
+                    totalRevenueQ4_2025 += hist.q4;
+                }
             });
 
             // Aggregate averages (Branches ONLY - excluding Headquarters to avoid skewing)
@@ -3003,6 +3333,8 @@
 
             // Render overall KPIs - Totals
             document.getElementById('kpiTotalRevenue').innerText = formatShortVND(totalRevenue);
+            updateTrendBadge('kpiYoYRevenue', totalRevenue, totalRevenueQ1_2025, 'YoY');
+            updateTrendBadge('kpiQoQRevenue', totalRevenue, totalRevenueQ4_2025, 'QoQ');
             document.getElementById('kpiTotalCompensation').innerText = formatShortVND(totalClaims);
             document.getElementById('kpiTotalPremiumReserve').innerText = formatShortVND(totalPremiumReserve);
             document.getElementById('kpiTotalClaimReserveDiff').innerText = formatShortVND(totalClaimReserveDiff);
@@ -3071,6 +3403,7 @@
             // Populate Profitable & Unprofitable tables
             populateProfitableTables();
             renderSeasonalTable();
+            renderLobSeasonalTable();
 
             // Initialize Diagnostic Ratio Charts
             initRatioCharts();
