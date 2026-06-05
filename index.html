@@ -2183,6 +2183,37 @@
                     </div>
                 </div>
 
+                <!-- ================= BRANCH LOB SEASONAL REVENUE ANALYSIS ================= -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">
+                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ (ĐƠN VỊ ĐANG CHỌN)
+                        </div>
+                    </div>
+                    <div class="table-container scroll-on-hover" style="max-height: 300px; overflow-y: auto; overflow-x: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
+                        <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; vertical-align: middle;">STT</th>
+                                    <th style="min-width: 150px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: left; vertical-align: middle;">Nghiệp Vụ (LOB)</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q1->Q2 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q2->Q3 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q3->Q4 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q1.25->Q1.26</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q1 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q2 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q3 2025</th>
+                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q4 2025</th>
+                                    <th style="min-width: 120px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">Quý Cao Điểm</th>
+                                </tr>
+                            </thead>
+                            <tbody id="branchLobSeasonalTableBody">
+                                <!-- Dynamic LOB seasonal rows for selected branch -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="chart-grid-2x2">
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
@@ -2634,6 +2665,7 @@
             "Y tế": { q1: 0, q2: 0, q3: 0, q4: 0 }
         };
         let lobSeasonalData = []; // Global variable to store calculated LOB seasonal analysis data
+        let raw2025BranchLOB = {}; // Global variable to store 2025 LOB quarterly data by branch
 
         // Parse 2025 Excel Workbook for YoY/QoQ calculations
         function parseExcelWorkbook2025(buffer) {
@@ -2715,6 +2747,7 @@
                     "Xe Cơ Giới": { q1: 0, q2: 0, q3: 0, q4: 0 },
                     "Y tế": { q1: 0, q2: 0, q3: 0, q4: 0 }
                 };
+                raw2025BranchLOB = {};
 
                 const sheet1Name = "Sheet1";
                 if (workbook.SheetNames.includes(sheet1Name)) {
@@ -2779,6 +2812,19 @@
                                 raw2025LOB[lobName].q2 += q2Val;
                                 raw2025LOB[lobName].q3 += q3Val;
                                 raw2025LOB[lobName].q4 += q4Val;
+
+                                if (!raw2025BranchLOB[unitName]) {
+                                    raw2025BranchLOB[unitName] = {
+                                        "Con người": { q1: 0, q2: 0, q3: 0, q4: 0 },
+                                        "Du lịch": { q1: 0, q2: 0, q3: 0, q4: 0 },
+                                        "Xe Cơ Giới": { q1: 0, q2: 0, q3: 0, q4: 0 },
+                                        "Y tế": { q1: 0, q2: 0, q3: 0, q4: 0 }
+                                    };
+                                }
+                                raw2025BranchLOB[unitName][lobName].q1 += q1Val;
+                                raw2025BranchLOB[unitName][lobName].q2 += q2Val;
+                                raw2025BranchLOB[unitName][lobName].q3 += q3Val;
+                                raw2025BranchLOB[unitName][lobName].q4 += q4Val;
                             }
                         }
                     }
@@ -4704,6 +4750,102 @@
 
             // Draw Chart: Underwriting efficiency waterfall (HQQU breakdown)
             drawBranchWaterfallChart(branch);
+
+            // Render seasonal LOB table for this branch
+            renderBranchLobSeasonalTable(branch);
+        }
+
+        function renderBranchLobSeasonalTable(branch) {
+            const tbody = document.getElementById('branchLobSeasonalTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const lobs = ["Con người", "Du lịch", "Xe Cơ Giới", "Y tế"];
+            const branchName = branch.name;
+
+            // Get 2025 LOB history for this branch
+            const branchHist = raw2025BranchLOB[branchName] || {};
+
+            const lob2026Q1 = {
+                "Con người": branch.dt_con_nguoi,
+                "Du lịch": branch.dt_du_lich,
+                "Xe Cơ Giới": branch.dt_xe_co_gioi,
+                "Y tế": branch.dt_y_te
+            };
+
+            lobs.forEach((lobName, index) => {
+                const hist = branchHist[lobName] || { q1: 0, q2: 0, q3: 0, q4: 0 };
+                
+                const q1_25 = hist.q1;
+                const q2_25 = hist.q2;
+                const q3_25 = hist.q3;
+                const q4_25 = hist.q4;
+                
+                const change_q1_q2 = q1_25 > 0 ? ((q2_25 - q1_25) / q1_25) * 100 : 0;
+                const change_q2_q3 = q2_25 > 0 ? ((q3_25 - q2_25) / q2_25) * 100 : 0;
+                const change_q3_q4 = q3_25 > 0 ? ((q4_25 - q3_25) / q3_25) * 100 : 0;
+                
+                const q1_26 = lob2026Q1[lobName];
+                const change_25_26 = q1_25 > 0 ? ((q1_26 - q1_25) / q1_25) * 100 : 0;
+                
+                const total_25 = q1_25 + q2_25 + q3_25 + q4_25;
+                const prop_q1 = total_25 > 0 ? (q1_25 / total_25) * 100 : 0;
+                const prop_q2 = total_25 > 0 ? (q2_25 / total_25) * 100 : 0;
+                const prop_q3 = total_25 > 0 ? (q3_25 / total_25) * 100 : 0;
+                const prop_q4 = total_25 > 0 ? (q4_25 / total_25) * 100 : 0;
+
+                // Peak quarter
+                let peak_quarter = 'Q1';
+                let max_prop = prop_q1;
+                if (prop_q2 > max_prop) { max_prop = prop_q2; peak_quarter = 'Q2'; }
+                if (prop_q3 > max_prop) { max_prop = prop_q3; peak_quarter = 'Q3'; }
+                if (prop_q4 > max_prop) { max_prop = prop_q4; peak_quarter = 'Q4'; }
+                if (total_25 === 0) peak_quarter = '--';
+
+                const formatPct = (val) => {
+                    const sign = val >= 0 ? '+' : '';
+                    return sign + val.toFixed(2) + '%';
+                };
+
+                const changeQ1Q2Str = formatPct(change_q1_q2);
+                const changeQ2Q3Str = formatPct(change_q2_q3);
+                const changeQ3Q4Str = formatPct(change_q3_q4);
+                const change2526Str = formatPct(change_25_26);
+
+                const propQ1Str = prop_q1.toFixed(2) + '%';
+                const propQ2Str = prop_q2.toFixed(2) + '%';
+                const propQ3Str = prop_q3.toFixed(2) + '%';
+                const propQ4Str = prop_q4.toFixed(2) + '%';
+
+                const getColorClass = (val) => val >= 0 ? 'text-success bold' : 'text-danger bold';
+
+                const isMaxQ1 = peak_quarter === 'Q1';
+                const isMaxQ2 = peak_quarter === 'Q2';
+                const isMaxQ3 = peak_quarter === 'Q3';
+                const isMaxQ4 = peak_quarter === 'Q4';
+
+                const peakCellHighlight = 'background-color: rgba(245, 158, 11, 0.08) !important; color: #d97706 !important; font-weight: 700;';
+                const q1Style = isMaxQ1 ? peakCellHighlight : '';
+                const q2Style = isMaxQ2 ? peakCellHighlight : '';
+                const q3Style = isMaxQ3 ? peakCellHighlight : '';
+                const q4Style = isMaxQ4 ? peakCellHighlight : '';
+
+                tbody.insertAdjacentHTML('beforeend', `
+                    <tr>
+                        <td class="text-center">${index + 1}</td>
+                        <td class="bold">${lobName}</td>
+                        <td class="text-right ${getColorClass(change_q1_q2)}">${changeQ1Q2Str}</td>
+                        <td class="text-right ${getColorClass(change_q2_q3)}">${changeQ2Q3Str}</td>
+                        <td class="text-right ${getColorClass(change_q3_q4)}">${changeQ3Q4Str}</td>
+                        <td class="text-right bold ${getColorClass(change_25_26)}">${change2526Str}</td>
+                        <td class="text-right" style="${q1Style}">${propQ1Str}</td>
+                        <td class="text-right" style="${q2Style}">${propQ2Str}</td>
+                        <td class="text-right" style="${q3Style}">${propQ3Str}</td>
+                        <td class="text-right" style="${q4Style}">${propQ4Str}</td>
+                        <td class="text-center bold">${peak_quarter}</td>
+                    </tr>
+                `);
+            });
         }
 
         function drawBranchWaterfallChart(branch) {
