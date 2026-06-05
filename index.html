@@ -12,6 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- hammer.js for gesture support (optional but useful for zoom plugin) -->
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <!-- chartjs-plugin-zoom -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <style>
         :root {
             /* Sleek Grey-White Palette and BV Blue/Gold accents */
@@ -1992,8 +1996,11 @@
                 <div class="chart-grid-2x2" style="margin-bottom: 24px;">
                     <!-- 2x2 Performance Matrix -->
                     <div class="panel glass-panel">
-                        <div class="panel-header" style="margin-bottom: 16px;">
+                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
                             <div class="panel-title" style="border-left-color: var(--bv-accent);">PHÂN NHÓM HQ1</div>
+                            <button id="btnResetZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetMatrixZoom()">
+                                Reset Zoom
+                            </button>
                         </div>
                         <div class="chart-container" style="height: 320px; position: relative;">
                             <canvas id="chartMatrixQuadrants"></canvas>
@@ -4012,6 +4019,13 @@
             }
         }
 
+        function resetMatrixZoom() {
+            if (chartMatrixQuadrants) {
+                chartMatrixQuadrants.resetZoom();
+                document.getElementById('btnResetZoom').style.display = 'none';
+            }
+        }
+
         const quadrantPlugin = {
             id: 'quadrantLines',
             beforeDraw(chart) {
@@ -4158,6 +4172,30 @@
                         quadrantLines: {
                             xValue: medianRevBln,
                             yValue: 0
+                        },
+                        zoom: {
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                    speed: 0.05
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'xy',
+                                onZoomComplete: function() {
+                                    const resetBtn = document.getElementById('btnResetZoom');
+                                    if (resetBtn) resetBtn.style.display = 'inline-block';
+                                }
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                                onPanComplete: function() {
+                                    const resetBtn = document.getElementById('btnResetZoom');
+                                    if (resetBtn) resetBtn.style.display = 'inline-block';
+                                }
+                            }
                         }
                     },
                     scales: {
