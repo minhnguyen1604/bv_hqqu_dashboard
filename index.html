@@ -2157,7 +2157,7 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
                         <div class="panel-title" id="titleSeasonalUnit" style="border-left-color: var(--bv-accent);">
-                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO ĐƠN VỊ
+                            PHÂN TÍCH MÙA VỤ DOANH THU & BỒI THƯỜNG CHI TIẾT THEO ĐƠN VỊ
                         </div>
                         <div class="segmented-control" style="margin-left: auto; margin-right: 16px;">
                             <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
@@ -2253,7 +2253,7 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
                         <div class="panel-title" id="titleSeasonalLob" style="border-left-color: var(--bv-accent);">
-                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ
+                            PHÂN TÍCH MÙA VỤ DOANH THU & BỒI THƯỜNG CHI TIẾT THEO NGHIỆP VỤ
                         </div>
                         <div class="segmented-control" style="margin-left: auto; margin-right: 16px;">
                             <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
@@ -2428,7 +2428,7 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
                         <div class="panel-title" id="titleSeasonalBranchLob" style="border-left-color: var(--bv-accent);">
-                            PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ (ĐƠN VỊ ĐANG CHỌN)
+                            PHÂN TÍCH MÙA VỤ DOANH THU & BỒI THƯỜNG CHI TIẾT THEO NGHIỆP VỤ (ĐƠN VỊ ĐANG CHỌN)
                         </div>
                         <div class="segmented-control" style="margin-left: auto;">
                             <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
@@ -3763,20 +3763,7 @@
                 }
             });
             
-            // Update titles
-            const titleUnit = document.getElementById('titleSeasonalUnit');
-            const titleLob = document.getElementById('titleSeasonalLob');
-            const titleBranchLob = document.getElementById('titleSeasonalBranchLob');
-            
-            if (metric === 'revenue') {
-                if (titleUnit) titleUnit.innerText = 'PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO ĐƠN VỊ';
-                if (titleLob) titleLob.innerText = 'PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ';
-                if (titleBranchLob) titleBranchLob.innerText = 'PHÂN TÍCH YẾU TỐ DOANH THU CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ (ĐƠN VỊ ĐANG CHỌN)';
-            } else {
-                if (titleUnit) titleUnit.innerText = 'PHÂN TÍCH YẾU TỐ BỒI THƯỜNG CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO ĐƠN VỊ';
-                if (titleLob) titleLob.innerText = 'PHÂN TÍCH YẾU TỐ BỒI THƯỜNG CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ';
-                if (titleBranchLob) titleBranchLob.innerText = 'PHÂN TÍCH YẾU TỐ BỒI THƯỜNG CÓ LIÊN QUAN TỚI MÙA VỤ CHI TIẾT THEO NGHIỆP VỤ (ĐƠN VỊ ĐANG CHỌN)';
-            }
+
             
             // Re-render seasonal tables
             computeSeasonalData();
