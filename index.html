@@ -2145,7 +2145,7 @@
                     </div>
                     <div class="panel glass-panel">
                         <div class="panel-header">
-                            <div class="panel-title">CƠ CẤU DOANH THU LOB</div>
+                            <div class="panel-title">TỶ LỆ BỒI THƯỜNG THEO NGHIỆP VỤ (LOB)</div>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartLobPie"></canvas>
@@ -3928,8 +3928,8 @@
             // Draw Chart 1: LOB Comparison Chart
             drawLobComparisonChart(lobData);
 
-            // Draw Chart 2: LOB Doughnut Chart
-            drawLobPieChart(lobData.revenue);
+            // Draw Chart 2: LOB Claim Ratio Chart
+            drawLobPieChart(lobData);
 
 
 
@@ -4419,50 +4419,75 @@
             });
         }
 
-        function drawLobPieChart(revenueData) {
+        function drawLobPieChart(lobData) {
             const ctx = document.getElementById('chartLobPie').getContext('2d');
             if (chartLobPie) chartLobPie.destroy();
 
+            const labels = ['Con người', 'Du lịch', 'Xe Cơ Giới', 'Y tế'];
+            const claimRatios = [];
+            for (let i = 0; i < 4; i++) {
+                const ratio = lobData.revenue[i] > 0 ? (lobData.claims[i] / lobData.revenue[i]) * 100 : 0;
+                claimRatios.push(ratio);
+            }
+
             chartLobPie = new Chart(ctx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: ['Con người', 'Du lịch', 'Xe Cơ Giới', 'Y tế'],
+                    labels: labels,
                     datasets: [{
-                        data: revenueData,
+                        label: 'Tỷ lệ Bồi thường (%)',
+                        data: claimRatios,
                         backgroundColor: [
                             'rgba(0, 86, 163, 0.85)',
                             'rgba(14, 165, 233, 0.85)',
                             'rgba(179, 143, 53, 0.85)',
                             'rgba(16, 185, 129, 0.85)'
                         ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
+                        borderColor: [
+                            '#0056a3',
+                            '#0ea5e9',
+                            '#b38f35',
+                            '#10b981'
+                        ],
+                        borderWidth: 1,
                         borderRadius: 4
                     }]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, font: { family: 'Inter', size: 11, weight: '500' } } },
+                        legend: { display: false },
                         tooltip: {
                             backgroundColor: '#0f172a',
-                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
-                            bodyFont: { family: 'Inter', size: 12 },
+                            titleFont: { family: 'Inter', size: 11, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 11 },
                             cornerRadius: 8,
-                            padding: 10,
-                            boxPadding: 6,
+                            padding: 8,
                             callbacks: {
                                 label: function(context) {
-                                    const val = context.raw;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const pct = ((val / total) * 100).toFixed(1) + '%';
-                                    return context.label + ': ' + formatVND(val) + ' (' + pct + ')';
+                                    return context.dataset.label + ': ' + context.raw.toFixed(2) + '%';
                                 }
                             }
                         }
                     },
-                    cutout: '75%'
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + '%';
+                                },
+                                font: { size: 9, family: 'Inter' }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.03)' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { size: 9, family: 'Inter', weight: '600' } }
+                        }
+                    }
                 }
             });
         }
@@ -4814,6 +4839,16 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    onClick: (e, activeElements, chart) => {
+                        if (activeElements && activeElements.length > 0) {
+                            const datasetIndex = activeElements[0].datasetIndex;
+                            const index = activeElements[0].index;
+                            const label = chart.data.datasets[datasetIndex].data[index].label;
+                            handleBranchClickFromRatioChart(label);
+                        } else {
+                            handleBranchClickFromRatioChart(null);
+                        }
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -5154,6 +5189,16 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    onClick: (e, activeElements, chart) => {
+                        if (activeElements && activeElements.length > 0) {
+                            const datasetIndex = activeElements[0].datasetIndex;
+                            const index = activeElements[0].index;
+                            const label = chart.data.datasets[datasetIndex].data[index].label;
+                            handleBranchClickFromRatioChart(label);
+                        } else {
+                            handleBranchClickFromRatioChart(null);
+                        }
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom',
