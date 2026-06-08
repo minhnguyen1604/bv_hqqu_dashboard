@@ -6328,8 +6328,8 @@
             const colors = [
                 'rgba(16, 185, 129, 0.75)', // DT: Green
                 'rgba(239, 68, 68, 0.75)',  // BT: Red
-                'rgba(239, 68, 68, 0.75)',  // DP: Red
-                cl < 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)', // CL: Green if gain (negative cl), Red if loss (positive cl)
+                dp < 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)',  // DP: Green if gain, Red if loss
+                cl < 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)', // CL: Green if gain, Red if loss
                 'rgba(239, 68, 68, 0.75)',  // CPDM: Red
                 hq >= 0 ? 'rgba(0, 86, 163, 0.85)' : 'rgba(220, 38, 38, 0.85)' // HQ1: Dark blue if profit, Dark red if loss
             ];
@@ -6337,7 +6337,7 @@
             const borderColors = [
                 '#10b981',
                 '#ef4444',
-                '#ef4444',
+                dp < 0 ? '#10b981' : '#ef4444',
                 cl < 0 ? '#10b981' : '#ef4444',
                 '#ef4444',
                 hq >= 0 ? '#0056a3' : '#dc2626'
