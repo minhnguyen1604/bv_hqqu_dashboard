@@ -1784,8 +1784,8 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="metrics-row" style="margin-top: 16px; margin-bottom: 24px;">
+ 
+                <div class="metrics-row-6" style="margin-top: 16px; margin-bottom: 24px;">
                     <div class="metric-card">
                         <div class="metric-card-top">
                             <span class="metric-label">Đơn vị có hiệu quả</span>
@@ -1839,6 +1839,22 @@
                             <span class="metric-label">TỶ LỆ CPDM / DOANH THU THUẦN</span>
                         </div>
                         <span class="metric-value" id="kpiCpdmRatio">0.00%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ KẾT HỢP (COMBINED RATIO)</span>
+                        </div>
+                        <span class="metric-value" id="kpiCombinedRatio">0.00%</span>
                         <div class="metric-trend-row">
                             <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
@@ -3871,6 +3887,17 @@
             document.getElementById('kpiCountUnprofitable').innerText = countUnprofitable + ' đơn vị';
             document.getElementById('kpiClaimsRatio').innerText = claimsRatio.toFixed(2) + '%';
             document.getElementById('kpiCpdmRatio').innerText = cpdmRatio.toFixed(2) + '%';
+            
+            const combinedRatio = claimsRatio + cpdmRatio;
+            const combinedRatioEl = document.getElementById('kpiCombinedRatio');
+            if (combinedRatioEl) {
+                combinedRatioEl.innerText = combinedRatio.toFixed(2) + '%';
+                if (combinedRatio > 100) {
+                    combinedRatioEl.className = 'metric-value text-danger';
+                } else {
+                    combinedRatioEl.className = 'metric-value text-success';
+                }
+            }
             
             const hq1RatioEl = document.getElementById('kpiHQ1Ratio');
             hq1RatioEl.innerText = hq1Ratio.toFixed(2) + '%';
