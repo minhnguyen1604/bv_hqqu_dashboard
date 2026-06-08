@@ -2646,6 +2646,17 @@
         let chartParetoNegative = null;
         let highlightedBranchInMatrices = null;
 
+        let matrixGroupVisibility = {
+            stars: true,
+            potentials: true,
+            cashCows: true,
+            dogs: true,
+            goodMgmt: true,
+            lobRisk: true,
+            bulky: true,
+            poorMgmt: true
+        };
+
         function handleBranchClickFromRatioChart(branchName) {
             if (highlightedBranchInMatrices === branchName) {
                 highlightedBranchInMatrices = null;
@@ -3784,6 +3795,16 @@
         // ================= VIEW 1: OVERVIEW ENGINE =================
         function initOverviewDashboard() {
             highlightedBranchInMatrices = null;
+            matrixGroupVisibility = {
+                stars: true,
+                potentials: true,
+                cashCows: true,
+                dogs: true,
+                goodMgmt: true,
+                lobRisk: true,
+                bulky: true,
+                poorMgmt: true
+            };
             // Aggregate totals (including Headquarters)
             let totalRevenue = 0;
             let totalClaims = 0;
@@ -4733,10 +4754,7 @@
             }
         };
 
-        function drawPerformanceMatrix() {
-            const ctx = document.getElementById('chartMatrixQuadrants').getContext('2d');
-            if (chartMatrixQuadrants) chartMatrixQuadrants.destroy();
-
+        function getMatrixMedians() {
             const allItems = [...branchesData];
             if (headquartersData) allItems.push(headquartersData);
 
@@ -4745,7 +4763,73 @@
             revenues.sort((a, b) => a - b);
             const mid = Math.floor(revenues.length / 2);
             const medianRevenue = revenues.length % 2 !== 0 ? revenues[mid] : (revenues[mid - 1] + revenues[mid]) / 2;
-            const medianRevBln = medianRevenue / 1e9;
+
+            // Compute Median Claim & Expense
+            const validItems = allItems.filter(b => b.dt_thuan > 0);
+            const claimRatios = validItems.map(b => (b.bt_trach_nhiem / b.dt_thuan) * 100);
+            const expenseRatios = validItems.map(b => (b.cpdm / b.dt_thuan) * 100);
+
+            function getMedian(arr) {
+                if (arr.length === 0) return 0;
+                const sorted = [...arr].sort((a, b) => a - b);
+                const mid = Math.floor(sorted.length / 2);
+                return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+            }
+
+            const medianClaimRatio = getMedian(claimRatios);
+            const medianExpenseRatio = getMedian(expenseRatios);
+
+            return { medianRevenue, medianClaimRatio, medianExpenseRatio };
+        }
+
+        function getBranchGroups(b, medians) {
+            let perfGroup = 'dogs';
+            if (b.tong_dt >= medians.medianRevenue) {
+                if (b.hqqu >= 0) {
+                    perfGroup = 'stars';
+                } else {
+                    perfGroup = 'cashCows';
+                }
+            } else {
+                if (b.hqqu >= 0) {
+                    perfGroup = 'potentials';
+                } else {
+                    perfGroup = 'dogs';
+                }
+            }
+
+            let operGroup = null;
+            if (b.dt_thuan > 0) {
+                const claimRatio = (b.bt_trach_nhiem / b.dt_thuan) * 100;
+                const expenseRatio = (b.cpdm / b.dt_thuan) * 100;
+                if (claimRatio < medians.medianClaimRatio) {
+                    if (expenseRatio < medians.medianExpenseRatio) {
+                        operGroup = 'goodMgmt';
+                    } else {
+                        operGroup = 'bulky';
+                    }
+                } else {
+                    if (expenseRatio < medians.medianExpenseRatio) {
+                        operGroup = 'lobRisk';
+                    } else {
+                        operGroup = 'poorMgmt';
+                    }
+                }
+            }
+
+            return { perfGroup, operGroup };
+        }
+
+        function drawPerformanceMatrix() {
+            const ctx = document.getElementById('chartMatrixQuadrants').getContext('2d');
+            if (chartMatrixQuadrants) chartMatrixQuadrants.destroy();
+
+            const allItems = [...branchesData];
+            if (headquartersData) allItems.push(headquartersData);
+
+            // Compute Medians
+            const medians = getMatrixMedians();
+            const medianRevBln = medians.medianRevenue / 1e9;
 
             const stars = [];
             const cashCows = [];
@@ -4762,11 +4846,21 @@
                     label: b.name
                 };
 
-                if (highlightedBranchInMatrices && b.name !== highlightedBranchInMatrices) {
+                const isHighlighted = (highlightedBranchInMatrices && b.name === highlightedBranchInMatrices);
+
+                if (highlightedBranchInMatrices && !isHighlighted) {
                     return;
                 }
 
-                if (b.tong_dt >= medianRevenue) {
+                // If not explicitly highlighted, filter by cross-chart Operating quadrant visibility
+                if (!isHighlighted) {
+                    const { perfGroup, operGroup } = getBranchGroups(b, medians);
+                    if (operGroup !== null && !matrixGroupVisibility[operGroup]) {
+                        return;
+                    }
+                }
+
+                if (b.tong_dt >= medians.medianRevenue) {
                     if (b.hqqu >= 0) {
                         stars.push(point);
                     } else {
@@ -4792,7 +4886,8 @@
                             borderColor: '#10b981',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.stars
                         },
                         {
                             label: 'Doanh thu thấp, HQ1 >= 0',
@@ -4801,7 +4896,8 @@
                             borderColor: '#3b82f6',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.potentials
                         },
                         {
                             label: 'Doanh thu cao, HQ1 < 0',
@@ -4810,7 +4906,8 @@
                             borderColor: '#f59e0b',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.cashCows
                         },
                         {
                             label: 'Doanh thu thấp, HQ1 < 0',
@@ -4819,7 +4916,8 @@
                             borderColor: '#ef4444',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.dogs
                         }
                     ]
                 },
@@ -4842,6 +4940,16 @@
                             labels: {
                                 boxWidth: 10,
                                 font: { family: 'Inter', size: 10, weight: '500' }
+                            },
+                            onClick: (e, legendItem, legend) => {
+                                const index = legendItem.datasetIndex;
+                                const groups = ['stars', 'potentials', 'cashCows', 'dogs'];
+                                const groupName = groups[index];
+                                if (groupName) {
+                                    matrixGroupVisibility[groupName] = !matrixGroupVisibility[groupName];
+                                    drawPerformanceMatrix();
+                                    drawOperatingMatrix();
+                                }
                             }
                         },
                         tooltip: {
@@ -4952,20 +5060,10 @@
             // Filter out items where dt_thuan <= 0 to avoid division by zero or negative ratio anomalies
             const validItems = allItems.filter(b => b.dt_thuan > 0);
 
-            // Calculate Claim Ratio & Expense Ratio
-            const claimRatios = validItems.map(b => (b.bt_trach_nhiem / b.dt_thuan) * 100);
-            const expenseRatios = validItems.map(b => (b.cpdm / b.dt_thuan) * 100);
-
-            // Median helper function
-            function getMedian(arr) {
-                if (arr.length === 0) return 0;
-                const sorted = [...arr].sort((a, b) => a - b);
-                const mid = Math.floor(sorted.length / 2);
-                return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-            }
-
-            const medianClaimRatio = getMedian(claimRatios);
-            const medianExpenseRatio = getMedian(expenseRatios);
+            // Compute Medians
+            const medians = getMatrixMedians();
+            const medianClaimRatio = medians.medianClaimRatio;
+            const medianExpenseRatio = medians.medianExpenseRatio;
 
             const goodMgmt = []; // Quản trị tốt: Claim < Median & Expense < Median (Green)
             const lobRisk = []; // Rủi ro nghiệp vụ: Claim >= Median & Expense < Median (Blue)
@@ -4982,18 +5080,28 @@
                     label: b.name
                 };
 
-                if (highlightedBranchInMatrices && b.name !== highlightedBranchInMatrices) {
+                const isHighlighted = (highlightedBranchInMatrices && b.name === highlightedBranchInMatrices);
+
+                if (highlightedBranchInMatrices && !isHighlighted) {
                     return;
                 }
 
-                if (claimRatio < medianClaimRatio) {
-                    if (expenseRatio < medianExpenseRatio) {
+                // If not explicitly highlighted, filter by cross-chart Performance quadrant visibility
+                if (!isHighlighted) {
+                    const { perfGroup, operGroup } = getBranchGroups(b, medians);
+                    if (perfGroup && !matrixGroupVisibility[perfGroup]) {
+                        return;
+                    }
+                }
+
+                if (claimRatio < medians.medianClaimRatio) {
+                    if (expenseRatio < medians.medianExpenseRatio) {
                         goodMgmt.push(point);
                     } else {
                         bulky.push(point);
                     }
                 } else {
-                    if (expenseRatio < medianExpenseRatio) {
+                    if (expenseRatio < medians.medianExpenseRatio) {
                         lobRisk.push(point);
                     } else {
                         poorMgmt.push(point);
@@ -5142,7 +5250,8 @@
                             borderColor: '#10b981',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.goodMgmt
                         },
                         {
                             label: 'TLBT cao, CPDM thấp',
@@ -5151,7 +5260,8 @@
                             borderColor: '#3b82f6',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.lobRisk
                         },
                         {
                             label: 'TLBT thấp, CPDM cao',
@@ -5160,7 +5270,8 @@
                             borderColor: '#f59e0b',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.bulky
                         },
                         {
                             label: 'TLBT cao, CPDM cao',
@@ -5169,7 +5280,8 @@
                             borderColor: '#ef4444',
                             borderWidth: 1,
                             pointRadius: 6,
-                            pointHoverRadius: 8
+                            pointHoverRadius: 8,
+                            hidden: !matrixGroupVisibility.poorMgmt
                         }
                     ]
                 },
@@ -5192,6 +5304,16 @@
                             labels: {
                                 boxWidth: 10,
                                 font: { family: 'Inter', size: 10, weight: '500' }
+                            },
+                            onClick: (e, legendItem, legend) => {
+                                const index = legendItem.datasetIndex;
+                                const groups = ['goodMgmt', 'lobRisk', 'bulky', 'poorMgmt'];
+                                const groupName = groups[index];
+                                if (groupName) {
+                                    matrixGroupVisibility[groupName] = !matrixGroupVisibility[groupName];
+                                    drawPerformanceMatrix();
+                                    drawOperatingMatrix();
+                                }
                             }
                         },
                         tooltip: {
