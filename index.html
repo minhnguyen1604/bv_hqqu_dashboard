@@ -667,8 +667,19 @@
         /* Dashboard metric blocks layout */
         .metrics-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .metrics-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .metrics-section {
@@ -1725,6 +1736,22 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ CPDM / DOANH THU THUẦN</span>
+                        </div>
+                        <span class="metric-value" id="kpiCpdmRatio">0.00%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-top">
                             <span class="metric-label">TỶ LỆ HQ1 / DOANH THU THUẦN</span>
                         </div>
                         <span class="metric-value text-bv" id="kpiHQ1Ratio">0.00%</span>
@@ -1879,7 +1906,7 @@
                     <!-- 2x2 Performance Matrix -->
                     <div class="panel glass-panel">
                         <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">PHÂN NHÓM HQ1</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">MA TRẬN HIỆU QUẢ HOẠT ĐỘNG</div>
                             <button id="btnResetZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetMatrixZoom()">
                                 Reset Zoom
                             </button>
@@ -3543,12 +3570,14 @@
             });
 
             const claimsRatio = totalNetRevenue > 0 ? (totalClaims / totalNetRevenue) * 100 : 0;
+            const cpdmRatio = totalNetRevenue > 0 ? (totalExpenseLimit / totalNetRevenue) * 100 : 0;
             const hq1Ratio = totalNetRevenue > 0 ? (totalHQ1 / totalNetRevenue) * 100 : 0;
 
             // Render overall KPIs - New Cards
             document.getElementById('kpiCountProfitable').innerText = countProfitable + ' đơn vị';
             document.getElementById('kpiCountUnprofitable').innerText = countUnprofitable + ' đơn vị';
             document.getElementById('kpiClaimsRatio').innerText = claimsRatio.toFixed(2) + '%';
+            document.getElementById('kpiCpdmRatio').innerText = cpdmRatio.toFixed(2) + '%';
             
             const hq1RatioEl = document.getElementById('kpiHQ1Ratio');
             hq1RatioEl.innerText = hq1Ratio.toFixed(2) + '%';
@@ -3624,6 +3653,9 @@
             // Set dynamic canvas height based on data length (each item gets 24px)
             const barHeight = 24;
             const chartHeight = Math.max(labelsData.length * barHeight, 300);
+            if (canvas.parentNode) {
+                canvas.parentNode.style.height = chartHeight + 'px';
+            }
             canvas.style.height = chartHeight + 'px';
             canvas.height = chartHeight;
 
@@ -4733,7 +4765,7 @@
                 .filter(b => b.hqqu <= 0)
                 .sort((a, b) => a.hqqu - b.hqqu); // most negative first
             
-            const topNeg = negativeItems.slice(0, 12);
+            const topNeg = negativeItems; // Show all unprofitable units to address user's feedback
             const totalNeg = negativeItems.reduce((sum, b) => sum + Math.abs(b.hqqu), 0);
             
             let accumNeg = 0;
