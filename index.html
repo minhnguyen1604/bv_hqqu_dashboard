@@ -2580,12 +2580,12 @@
                     </div>
                 </div>
 
-                <!-- Side-by-side Pie Charts for LOB Revenue and Claims Q1.2026 -->
+                <!-- Side-by-side Pie Charts for LOB Revenue and Claims -->
                 <div class="chart-grid-2x2" style="margin-bottom: 24px;">
                     <!-- Left: Revenue Pie Chart -->
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU DOANH THU NGHIỆP VỤ Q1.2026</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU DOANH THU NGHIỆP VỤ</div>
                         </div>
                         <div style="flex: 1; min-height: 260px; position: relative; display: flex; align-items: center; justify-content: center;">
                             <canvas id="chartBranchRevenuePie"></canvas>
@@ -2594,7 +2594,7 @@
                     <!-- Right: Claims Pie Chart -->
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU BỒI THƯỜNG NGHIỆP VỤ Q1.2026</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU BỒI THƯỜNG NGHIỆP VỤ</div>
                         </div>
                         <div style="flex: 1; min-height: 260px; position: relative; display: flex; align-items: center; justify-content: center;">
                             <canvas id="chartBranchClaimsPie"></canvas>
@@ -2605,7 +2605,7 @@
                 <!-- Hero Panel: Waterfall Flow -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header">
-                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">PHÂN TÍCH DIỄN Biến HÌNH THÀNH HIỆU QUẢ NGHIỆP VỤ (HQ1)</div>
+                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">PHÂN TÍCH DIỄN BIẾN HÌNH THÀNH HIỆU QUẢ NGHIỆP VỤ (HQ1)</div>
                     </div>
                     <div style="font-size: 11px; font-weight: 500; color: #6b7280; margin-bottom: 12px; letter-spacing: 0.2px;">
                         DIỄN BIẾN CHI TIẾT CÁC CẤU PHẦN CỘNG/TRỪ TỪ DOANH THU THUẦN ĐẾN HIỆU QUẢ NGHIỆP VỤ THỰC TẾ (WATERFALL)
@@ -2618,7 +2618,7 @@
                 <!-- Detailed LOB Metrics Table -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header">
-                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CHI TIẾT CÁC CẤU PHẦN HIỆU QUẢ NGHIỆP VỤ (LOB) Q1.2026</div>
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CHI TIẾT CÁC CẤU PHẦN HIỆU QUẢ NGHIỆP VỤ</div>
                     </div>
                     <div class="table-container" style="margin-top: 0;">
                         <table>
@@ -2634,6 +2634,30 @@
                                 </tr>
                             </thead>
                             <tbody id="branchDetailedLobTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detailed LOB Ratios Table -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CÁC TỶ LỆ / DOANH THU CỦA CÁC NGHIỆP VỤ</div>
+                    </div>
+                    <div class="table-container" style="margin-top: 0;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nghiệp vụ</th>
+                                    <th class="text-right">Tỷ lệ Bồi thường thuộc trách nghiệm</th>
+                                    <th class="text-right">Tỷ lệ Dự phòng phí</th>
+                                    <th class="text-right">Tỷ lệ Chênh lệch Dự phòng bồi thường</th>
+                                    <th class="text-right">Tỷ lệ CPDM_HQ1</th>
+                                    <th class="text-right">Tỷ lệ HQQU</th>
+                                </tr>
+                            </thead>
+                            <tbody id="branchDetailedLobRatiosTableBody">
                                 <!-- Dynamic rows -->
                             </tbody>
                         </table>
@@ -6170,8 +6194,10 @@
             ];
 
             const tbody = document.getElementById('branchDetailedLobTableBody');
+            const tbodyRatios = document.getElementById('branchDetailedLobRatiosTableBody');
             if (tbody) {
                 tbody.innerHTML = '';
+                if (tbodyRatios) tbodyRatios.innerHTML = '';
 
                 let sum_dt_thuan = 0;
                 let sum_bt_trach_nhiem = 0;
@@ -6221,6 +6247,27 @@
                             <td class="text-right ${hqquClass}">${formatVND(allocated_hqqu)}</td>
                         </tr>
                     `);
+
+                    if (tbodyRatios) {
+                        const ratio_bt = dt_thuan_lob > 0 ? (bt_trach_nhiem_lob / dt_thuan_lob) * 100 : 0;
+                        const ratio_dp = dt_thuan_lob > 0 ? (allocated_dp / dt_thuan_lob) * 100 : 0;
+                        const ratio_cl = dt_thuan_lob > 0 ? (allocated_cl / dt_thuan_lob) * 100 : 0;
+                        const ratio_cp = dt_thuan_lob > 0 ? (allocated_cp / dt_thuan_lob) * 100 : 0;
+                        const ratio_hqqu = dt_thuan_lob > 0 ? (allocated_hqqu / dt_thuan_lob) * 100 : 0;
+
+                        const ratioHqquClass = ratio_hqqu < 0 ? 'text-danger bold' : 'text-bv bold';
+
+                        tbodyRatios.insertAdjacentHTML('beforeend', `
+                            <tr>
+                                <td class="bold">${lob.name}</td>
+                                <td class="text-right">${ratio_bt.toFixed(2)}%</td>
+                                <td class="text-right">${ratio_dp.toFixed(2)}%</td>
+                                <td class="text-right">${ratio_cl.toFixed(2)}%</td>
+                                <td class="text-right">${ratio_cp.toFixed(2)}%</td>
+                                <td class="text-right ${ratioHqquClass}">${ratio_hqqu.toFixed(2)}%</td>
+                            </tr>
+                        `);
+                    }
                 });
 
                 // Add TỔNG CỘNG row
@@ -6235,6 +6282,26 @@
                         <td class="text-right ${branch.hqqu < 0 ? 'text-danger' : 'text-bv'} bold">${formatVND(branch.hqqu)}</td>
                     </tr>
                 `);
+
+                // Add TỔNG CỘNG row for ratios
+                if (tbodyRatios) {
+                    const total_ratio_bt = branch.dt_thuan > 0 ? (branch.bt_trach_nhiem / branch.dt_thuan) * 100 : 0;
+                    const total_ratio_dp = branch.dt_thuan > 0 ? (branch.du_phong_phi / branch.dt_thuan) * 100 : 0;
+                    const total_ratio_cl = branch.dt_thuan > 0 ? (branch.chenh_lech_dpbt / branch.dt_thuan) * 100 : 0;
+                    const total_ratio_cp = branch.dt_thuan > 0 ? (branch.cpdm / branch.dt_thuan) * 100 : 0;
+                    const total_ratio_hqqu = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
+
+                    tbodyRatios.insertAdjacentHTML('beforeend', `
+                        <tr class="total-row" style="border-top: 2px solid rgba(0, 86, 163, 0.15); font-weight: bold; background-color: rgba(0, 86, 163, 0.05);">
+                            <td class="bold">TỔNG CỘNG</td>
+                            <td class="text-right">${total_ratio_bt.toFixed(2)}%</td>
+                            <td class="text-right">${total_ratio_dp.toFixed(2)}%</td>
+                            <td class="text-right">${total_ratio_cl.toFixed(2)}%</td>
+                            <td class="text-right">${total_ratio_cp.toFixed(2)}%</td>
+                            <td class="text-right ${branch.hqqu < 0 ? 'text-danger' : 'text-bv'} bold">${total_ratio_hqqu.toFixed(2)}%</td>
+                        </tr>
+                    `);
+                }
             }
 
             // Draw Chart: Underwriting efficiency waterfall (HQQU breakdown)
@@ -6543,11 +6610,6 @@
                 branch.bt_y_te || 0
             ];
 
-            // Consistent LOB brand colors:
-            // Con người: #0056a3
-            // Du lịch: #0ea5e9
-            // Xe Cơ Giới: #b38f35
-            // Y tế: #10b981
             const colors = ['#0056a3', '#0ea5e9', '#b38f35', '#10b981'];
 
             // Revenue Pie Chart
@@ -6628,7 +6690,15 @@
                                     const value = context.raw;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                     const pct = total > 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
-                                    return ` ${context.label}: ${formatVND(value)} (${pct})`;
+                                    
+                                    const idx = context.dataIndex;
+                                    const dtVal = revData[idx];
+                                    const claimRatio = dtVal > 0 ? ((value / dtVal) * 100).toFixed(2) + '%' : '0.00%';
+                                    
+                                    return [
+                                        ` ${context.label}: ${formatVND(value)} (${pct} cơ cấu bồi thường)`,
+                                        ` Tỷ lệ bồi thường nghiệp vụ này: ${claimRatio}`
+                                    ];
                                 }
                             }
                         }
