@@ -2628,6 +2628,22 @@
         let chartMatrixOperating = null;
         let chartParetoPositive = null;
         let chartParetoNegative = null;
+        let highlightedBranchInMatrices = null;
+
+        function handleBranchClickFromRatioChart(branchName) {
+            if (highlightedBranchInMatrices === branchName) {
+                highlightedBranchInMatrices = null;
+                showToast('Đã bỏ lọc ma trận (Hiển thị tất cả đơn vị)');
+            } else if (branchName === null) {
+                highlightedBranchInMatrices = null;
+                showToast('Đã bỏ lọc ma trận (Hiển thị tất cả đơn vị)');
+            } else {
+                highlightedBranchInMatrices = branchName;
+                showToast('Đang lọc ma trận cho đơn vị: ' + branchName);
+            }
+            drawPerformanceMatrix();
+            drawOperatingMatrix();
+        }
 
         // Clean currency numbers formatting
         function formatVND(value) {
@@ -3764,6 +3780,7 @@
 
         // ================= VIEW 1: OVERVIEW ENGINE =================
         function initOverviewDashboard() {
+            highlightedBranchInMatrices = null;
             // Aggregate totals (including Headquarters)
             let totalRevenue = 0;
             let totalClaims = 0;
@@ -4000,6 +4017,15 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
+                    onClick: (e, activeElements, chart) => {
+                        if (activeElements && activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const label = chart.data.labels[index];
+                            handleBranchClickFromRatioChart(label);
+                        } else {
+                            handleBranchClickFromRatioChart(null);
+                        }
+                    },
                     layout: {
                         padding: {
                             left: 5,
@@ -4697,6 +4723,10 @@
                     label: b.name
                 };
 
+                if (highlightedBranchInMatrices && b.name !== highlightedBranchInMatrices) {
+                    return;
+                }
+
                 if (b.tong_dt >= medianRevenue) {
                     if (b.hqqu >= 0) {
                         stars.push(point);
@@ -4883,6 +4913,10 @@
                     y: expenseRatio,
                     label: b.name
                 };
+
+                if (highlightedBranchInMatrices && b.name !== highlightedBranchInMatrices) {
+                    return;
+                }
 
                 if (claimRatio < medianClaimRatio) {
                     if (expenseRatio < medianExpenseRatio) {
@@ -5172,6 +5206,30 @@
 
             const pareto80LinePlugin = {
                 id: 'pareto80Line',
+                afterEvent(chart, args) {
+                    const { event } = args;
+                    if (event.type !== 'mousemove' && event.type !== 'mouseout') return;
+                    const { scales: { y1 } } = chart;
+                    if (!y1) return;
+                    
+                    if (event.type === 'mouseout') {
+                        if (chart.$pareto80Hovered) {
+                            chart.$pareto80Hovered = false;
+                            chart.canvas.style.cursor = 'default';
+                            args.changed = true;
+                        }
+                        return;
+                    }
+                    
+                    const yPos = y1.getPixelForValue(80);
+                    const isHovered = Math.abs(event.y - yPos) <= 6;
+                    
+                    if (isHovered !== chart.$pareto80Hovered) {
+                        chart.$pareto80Hovered = isHovered;
+                        chart.canvas.style.cursor = isHovered ? 'pointer' : 'default';
+                        args.changed = true;
+                    }
+                },
                 afterDraw: (chart) => {
                     const { ctx, chartArea: { left, right }, scales: { y1 } } = chart;
                     if (!y1) return;
@@ -5185,13 +5243,16 @@
                     ctx.moveTo(left, yPos);
                     ctx.lineTo(right, yPos);
                     ctx.stroke();
-                    
-                    // Draw text label
-                    ctx.fillStyle = '#ef4444';
-                    ctx.font = 'bold 9px Inter';
-                    ctx.textAlign = 'right';
-                    ctx.fillText('Ngưỡng lũy kế 80%', right - 5, yPos - 5);
                     ctx.restore();
+                    
+                    if (chart.$pareto80Hovered) {
+                        ctx.save();
+                        ctx.fillStyle = '#ef4444';
+                        ctx.font = 'bold 9px Inter';
+                        ctx.textAlign = 'right';
+                        ctx.fillText('Ngưỡng lũy kế 80%', right - 5, yPos - 5);
+                        ctx.restore();
+                    }
                 }
             };
 
