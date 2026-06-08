@@ -740,9 +740,21 @@
             gap: 16px;
         }
 
+        .metrics-row-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
         @media (max-width: 1400px) {
             .metrics-row-6 {
                 grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .metrics-row-4 {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -2319,7 +2331,7 @@
                     </div>
                 </div>
 
-                <div class="metrics-row-6" id="branchMetricsRow" style="margin-top: 16px; margin-bottom: 24px;">
+                <div class="metrics-row-6" id="branchMetricsRow" style="margin-top: 16px; margin-bottom: 16px;">
                     <!-- Doanh Thu -->
                     <div class="metric-card">
                         <div class="metric-card-top">
@@ -2424,6 +2436,77 @@
                     </div>
                 </div>
 
+                <div class="metrics-row-4" id="branchRatioMetricsRow" style="margin-bottom: 24px;">
+                    <!-- Tỷ lệ bồi thường -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiClaimsRatio">0%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYClaimsRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQClaimsRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Tỷ lệ CPDM -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ CPDM / DOANH THU THUẦN</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiExpenseRatio">0%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYExpenseRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQExpenseRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Tỷ lệ kết hợp -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ KẾT HỢP (COMBINED RATIO)</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiCombinedRatio">0%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYCombinedRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQCombinedRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Tỷ lệ HQ1 -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ HQ1 / DOANH THU THUẦN</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiHQ1Ratio">0%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYHQ1Ratio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQHQ1Ratio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ================= BRANCH LOB SEASONAL REVENUE ANALYSIS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
@@ -2486,10 +2569,21 @@
                     </div>
                     <div class="panel glass-panel">
                         <div class="panel-header">
-                            <div class="panel-title">Phân tích HQQU & Chi Phí</div>
+                            <div class="panel-title" id="titleBranchBreakdown">PHÂN TÍCH CẤU PHẦN HIỆU QUẢ NGHIỆP VỤ (HQ1)</div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="chartBranchBreakdown"></canvas>
+                        <div class="chart-container" style="display: flex; gap: 16px; flex-wrap: wrap; height: auto; min-height: 320px; align-items: stretch;">
+                            <div style="flex: 1.2; min-width: 280px; display: flex; flex-direction: column;">
+                                <div style="font-size: 10px; font-weight: 600; color: #4b5563; text-align: center; margin-bottom: 8px; letter-spacing: 0.5px;">DIỄN TIẾN HÌNH THÀNH HQ1 (WATERFALL)</div>
+                                <div style="flex: 1; min-height: 280px; position: relative;">
+                                    <canvas id="chartBranchBreakdown"></canvas>
+                                </div>
+                            </div>
+                            <div style="flex: 0.8; min-width: 220px; display: flex; flex-direction: column;">
+                                <div id="branchContributionTitle" style="font-size: 10px; font-weight: 600; color: #4b5563; text-align: center; margin-bottom: 8px; letter-spacing: 0.5px;">TỈ TRỌNG PHÂN BỔ DOANH THU THUẦN</div>
+                                <div style="flex: 1; min-height: 280px; position: relative;">
+                                    <canvas id="chartBranchContribution"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2640,6 +2734,7 @@
         let chartLobComparison = null;
         let chartLobPie = null;
         let chartBranchBreakdown = null;
+        let chartBranchContribution = null;
         let chartMatrixQuadrants = null;
         let chartMatrixOperating = null;
         let chartParetoPositive = null;
@@ -5968,6 +6063,42 @@
             updateTrendBadge('branchYoYRevenue', branch.tong_dt, hist2025.q1, 'YoY');
             updateTrendBadge('branchQoQRevenue', branch.tong_dt, hist2025.q4, 'QoQ');
 
+            // Calculate ratios
+            const claimsRatio = branch.dt_thuan > 0 ? (branch.bt_trach_nhiem / branch.dt_thuan) * 100 : 0;
+            const expenseRatio = branch.dt_thuan > 0 ? (branch.cpdm / branch.dt_thuan) * 100 : 0;
+            const combinedRatio = claimsRatio + expenseRatio;
+            const hq1Ratio = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
+
+            // Render 4 Ratio KPIs
+            document.getElementById('branchKpiClaimsRatio').innerText = claimsRatio.toFixed(2) + '%';
+            document.getElementById('branchKpiExpenseRatio').innerText = expenseRatio.toFixed(2) + '%';
+            
+            const combinedRatioEl = document.getElementById('branchKpiCombinedRatio');
+            combinedRatioEl.innerText = combinedRatio.toFixed(2) + '%';
+            if (combinedRatio > 100) {
+                combinedRatioEl.className = 'metric-value text-danger';
+            } else {
+                combinedRatioEl.className = 'metric-value text-success';
+            }
+
+            const hq1RatioEl = document.getElementById('branchKpiHQ1Ratio');
+            hq1RatioEl.innerText = hq1Ratio.toFixed(2) + '%';
+            if (hq1Ratio < 0) {
+                hq1RatioEl.className = 'metric-value text-danger';
+            } else {
+                hq1RatioEl.className = 'metric-value text-bv';
+            }
+
+            // Trend badges for ratios (set to neutral since no 2025 ratio history exists)
+            updateTrendBadge('branchYoYClaimsRatio', null, null, 'YoY');
+            updateTrendBadge('branchQoQClaimsRatio', null, null, 'QoQ');
+            updateTrendBadge('branchYoYExpenseRatio', null, null, 'YoY');
+            updateTrendBadge('branchQoQExpenseRatio', null, null, 'QoQ');
+            updateTrendBadge('branchYoYCombinedRatio', null, null, 'YoY');
+            updateTrendBadge('branchQoQCombinedRatio', null, null, 'QoQ');
+            updateTrendBadge('branchYoYHQ1Ratio', null, null, 'YoY');
+            updateTrendBadge('branchQoQHQ1Ratio', null, null, 'QoQ');
+
             // Build LOB breakdown rows
             const lobs = [
                 { name: 'Con người', rev: branch.dt_con_nguoi, clm: branch.bt_con_nguoi },
@@ -6112,25 +6243,69 @@
             const ctx = document.getElementById('chartBranchBreakdown').getContext('2d');
             if (chartBranchBreakdown) chartBranchBreakdown.destroy();
 
-            // Waterfall structure: Doanh thu thuần (+) | Bồi thường (-) | Dự phòng phí (-) | Dự phòng BT (-) | CPDM (-) | HQQU (Result)
-            const labels = ['Doanh Thu Thuần', 'Bồi Thường TN', 'Dự Phòng Phí', 'Chênh Lệch DPBT', 'CPDM HQ1', 'HQQU Thực Tế'];
-            const values = [
-                branch.dt_thuan,
-                -branch.bt_trach_nhiem,
-                -branch.du_phong_phi,
-                -branch.chenh_lech_dpbt,
-                -branch.cpdm,
-                branch.hqqu
+            const dt = branch.dt_thuan;
+            const bt = branch.bt_trach_nhiem;
+            const dp = branch.du_phong_phi;
+            const cl = branch.chenh_lech_dpbt;
+            const cp = branch.cpdm;
+            const hq = branch.hqqu;
+
+            // Generate floating ranges: [start, end]
+            let accum = 0;
+            const floatData = [];
+
+            // Doanh Thu Thuần
+            floatData.push([0, dt]);
+            accum = dt;
+
+            // Bồi Thường TN
+            floatData.push([accum, accum - bt]);
+            accum -= bt;
+
+            // Dự Phòng Phí
+            floatData.push([accum, accum - dp]);
+            accum -= dp;
+
+            // Chênh Lệch DPBT
+            floatData.push([accum, accum - cl]);
+            accum -= cl;
+
+            // CPDM HQ1
+            floatData.push([accum, accum - cp]);
+            accum -= cp;
+
+            // HQ1 Thực tế
+            floatData.push([0, hq]);
+
+            // Map colors based on steps
+            const colors = [
+                'rgba(16, 185, 129, 0.75)', // DT: Green
+                'rgba(239, 68, 68, 0.75)',  // BT: Red
+                'rgba(239, 68, 68, 0.75)',  // DP: Red
+                cl < 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)', // CL: Green if gain (negative cl), Red if loss (positive cl)
+                'rgba(239, 68, 68, 0.75)',  // CPDM: Red
+                hq >= 0 ? 'rgba(0, 86, 163, 0.85)' : 'rgba(220, 38, 38, 0.85)' // HQ1: Dark blue if profit, Dark red if loss
             ];
+
+            const borderColors = [
+                '#10b981',
+                '#ef4444',
+                '#ef4444',
+                cl < 0 ? '#10b981' : '#ef4444',
+                '#ef4444',
+                hq >= 0 ? '#0056a3' : '#dc2626'
+            ];
+
+            const labels = ['Doanh Thu Thuần', 'Bồi Thường TN', 'Dự Phòng Phí', 'Chênh Lệch DPBT', 'CPDM HQ1', 'HQQU Thực Tế'];
 
             chartBranchBreakdown = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        data: values,
-                        backgroundColor: values.map(val => val >= 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)'),
-                        borderColor: values.map(val => val >= 0 ? 'var(--success)' : 'var(--danger)'),
+                        data: floatData,
+                        backgroundColor: colors,
+                        borderColor: borderColors,
                         borderWidth: 1,
                         borderRadius: 4
                     }]
@@ -6141,9 +6316,22 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            cornerRadius: 8,
+                            padding: 10,
                             callbacks: {
                                 label: function(context) {
-                                    return context.label + ': ' + formatVND(context.raw);
+                                    const raw = context.raw;
+                                    let val = 0;
+                                    if (Array.isArray(raw)) {
+                                        val = raw[1] - raw[0];
+                                    } else {
+                                        val = raw;
+                                    }
+                                    const sign = val >= 0 ? '+' : '';
+                                    return context.label + ': ' + sign + formatVND(val);
                                 }
                             }
                         }
@@ -6156,7 +6344,105 @@
                                 }
                             }
                         },
-                        x: { ticks: { font: { size: 10, weight: 'bold' } } }
+                        x: { ticks: { font: { size: 9, family: 'Inter' } } }
+                    }
+                }
+            });
+
+            // --- DRAW DONUT CHART FOR CONTRIBUTION BREAKDOWN ---
+            const donutCtx = document.getElementById('chartBranchContribution').getContext('2d');
+            if (chartBranchContribution) chartBranchContribution.destroy();
+
+            const isProfit = hq >= 0;
+            let donutLabels = [];
+            let donutData = [];
+            let donutColors = [];
+            let donutBorders = [];
+            let donutTitle = "";
+
+            if (isProfit) {
+                // Profit: distribute Net Revenue (positive flow) into costs + hq1 profit
+                donutTitle = "TỈ TRỌNG PHÂN BỔ DOANH THU THUẦN";
+                donutLabels = ['Bồi thường TN', 'Dự phòng phí', 'Chênh lệch DPBT', 'CPDM HQ1', 'Lợi nhuận HQ1'];
+                donutData = [
+                    bt,
+                    dp,
+                    cl > 0 ? cl : 0, // only show if it was a cost
+                    cp,
+                    hq
+                ];
+                donutColors = [
+                    'rgba(239, 68, 68, 0.75)',  // BT: Red
+                    'rgba(245, 158, 11, 0.75)',  // DP: Amber
+                    'rgba(251, 146, 60, 0.75)',  // CL: Orange
+                    'rgba(59, 130, 246, 0.75)',  // CPDM: Light Blue
+                    'rgba(16, 185, 129, 0.85)'   // HQ1: Green
+                ];
+                donutBorders = ['#ef4444', '#f59e0b', '#fb923c', '#3b82f6', '#10b981'];
+            } else {
+                // Loss: distribute total expenses to see which expense component contributed how much to the total cost structure
+                donutTitle = "CẤU PHẦN TỈ TRỌNG CHI PHÍ & THÂM HỤT";
+                donutLabels = ['Bồi thường TN', 'Dự phòng phí', 'Chênh lệch DPBT', 'CPDM HQ1'];
+                donutData = [
+                    bt,
+                    dp,
+                    cl > 0 ? cl : 0,
+                    cp
+                ];
+                donutColors = [
+                    'rgba(239, 68, 68, 0.75)',  // BT: Red
+                    'rgba(245, 158, 11, 0.75)',  // DP: Amber
+                    'rgba(251, 146, 60, 0.75)',  // CL: Orange
+                    'rgba(59, 130, 246, 0.75)'   // CPDM: Light Blue
+                ];
+                donutBorders = ['#ef4444', '#f59e0b', '#fb923c', '#3b82f6'];
+            }
+
+            // Update HTML title on-the-fly to reflect mode
+            const titleEl = document.getElementById('branchContributionTitle');
+            if (titleEl) titleEl.innerText = donutTitle;
+
+            // Compute total for percentage calculations in tooltips
+            const totalSum = donutData.reduce((a, b) => a + b, 0);
+
+            chartBranchContribution = new Chart(donutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: donutLabels,
+                    datasets: [{
+                        data: donutData,
+                        backgroundColor: donutColors,
+                        borderColor: donutBorders,
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 8,
+                                padding: 6,
+                                font: { family: 'Inter', size: 9, weight: '500' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 11, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 11 },
+                            cornerRadius: 8,
+                            padding: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const val = context.raw;
+                                    const pct = totalSum > 0 ? ((val / totalSum) * 100).toFixed(1) : '0.0';
+                                    return context.label + ': ' + formatVND(val) + ' (' + pct + '%)';
+                                }
+                            }
+                        }
                     }
                 }
             });
