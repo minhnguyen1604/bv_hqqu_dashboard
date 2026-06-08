@@ -1802,6 +1802,146 @@
                     </div>
                 </div>
 
+
+                <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CÁC TỶ LỆ TÀI CHÍNH</div>
+                        <div class="segmented-control">
+                            <button class="active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
+                                <span class="indicator-dot success"></span> Đơn vị hoạt động có hiệu quả
+                            </button>
+                            <button id="tabUnprofitableCharts" onclick="switchRatioTab('unprofitable')">
+                                <span class="indicator-dot danger"></span> Đơn vị hoạt động không hiệu quả
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Profitable Charts Grid -->
+                    <div id="gridProfitableCharts" class="ratio-charts-grid">
+                        <div class="ratio-chart-col">
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
+                            <div class="ratio-chart-container">
+                                <div class="ratio-chart-scroll-wrapper">
+                                    <canvas id="chartProfClaims"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ratio-chart-col">
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
+                            <div class="ratio-chart-container">
+                                <div class="ratio-chart-scroll-wrapper">
+                                    <canvas id="chartProfCpdm"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ratio-chart-col">
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
+                            <div class="ratio-chart-container">
+                                <div class="ratio-chart-scroll-wrapper">
+                                    <canvas id="chartProfHq1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unprofitable Charts Grid -->
+                    <div id="gridUnprofitableCharts" class="ratio-charts-grid" style="display: none;">
+                        <div class="ratio-chart-col">
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
+                            <div class="ratio-chart-container">
+                                <div class="ratio-chart-scroll-wrapper">
+                                    <canvas id="chartUnprofClaims"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ratio-chart-col">
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
+                            <div class="ratio-chart-container">
+                                <div class="ratio-chart-scroll-wrapper">
+                                    <canvas id="chartUnprofCpdm"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ratio-chart-col">
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
+                            <div class="ratio-chart-container">
+                                <div class="ratio-chart-scroll-wrapper">
+                                    <canvas id="chartUnprofHq1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= NEW PERFORMANCE MATRIX & PARETO CHARTS ================= -->
+                <div class="chart-grid-2x2" style="margin-bottom: 24px;">
+                    <!-- 2x2 Performance Matrix -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">PHÂN NHÓM HQ1</div>
+                            <button id="btnResetZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetMatrixZoom()">
+                                Reset Zoom
+                            </button>
+                        </div>
+                        <div class="chart-container" style="height: 320px; position: relative;">
+                            <canvas id="chartMatrixQuadrants"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 2x2 Operating Performance Matrix -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">MA TRẬN HIỆU QUẢ VẬN HÀNH</div>
+                            <button id="btnResetOpeZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetOpeMatrixZoom()">
+                                Reset Zoom
+                            </button>
+                        </div>
+                        <div class="chart-container" style="height: 320px; position: relative;">
+                            <canvas id="chartMatrixOperating"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Pareto HQ1 Contribution -->
+                    <div class="panel glass-panel" style="grid-column: span 2;">
+                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">ĐÓNG GÓP HIỆU QUẢ NGHIỆP VỤ (PARETO)</div>
+                            <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
+                                <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
+                                    HQ1 > 0
+                                </button>
+                                <button id="tabParetoNegative" onclick="switchParetoTab('negative')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
+                                    HQ1 < 0
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="height: 320px; position: relative;">
+                            <canvas id="chartParetoPositive"></canvas>
+                            <canvas id="chartParetoNegative" style="display: none;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Row 1 -->
+                <div class="chart-grid-2x2">
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">DOANH THU & BỒI THƯỜNG THEO NGHIỆP VỤ (LOB)</div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartLobComparison"></canvas>
+                        </div>
+                    </div>
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">CƠ CẤU DOANH THU LOB</div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartLobPie"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ================= SEASONAL REVENUE ANALYSIS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
@@ -1924,132 +2064,6 @@
                                 <!-- Dynamic LOB rows -->
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
-                <div class="panel glass-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CÁC TỶ LỆ TÀI CHÍNH</div>
-                        <div class="segmented-control">
-                            <button class="active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
-                                <span class="indicator-dot success"></span> Đơn vị hoạt động có hiệu quả
-                            </button>
-                            <button id="tabUnprofitableCharts" onclick="switchRatioTab('unprofitable')">
-                                <span class="indicator-dot danger"></span> Đơn vị hoạt động không hiệu quả
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Profitable Charts Grid -->
-                    <div id="gridProfitableCharts" class="ratio-charts-grid">
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
-                            <div class="ratio-chart-container">
-                                <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartProfClaims"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
-                            <div class="ratio-chart-container">
-                                <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartProfCpdm"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
-                            <div class="ratio-chart-container">
-                                <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartProfHq1"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Unprofitable Charts Grid -->
-                    <div id="gridUnprofitableCharts" class="ratio-charts-grid" style="display: none;">
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
-                            <div class="ratio-chart-container">
-                                <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartUnprofClaims"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
-                            <div class="ratio-chart-container">
-                                <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartUnprofCpdm"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
-                            <div class="ratio-chart-container">
-                                <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartUnprofHq1"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= NEW PERFORMANCE MATRIX & PARETO CHARTS ================= -->
-                <div class="chart-grid-2x2" style="margin-bottom: 24px;">
-                    <!-- 2x2 Performance Matrix -->
-                    <div class="panel glass-panel">
-                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">PHÂN NHÓM HQ1</div>
-                            <button id="btnResetZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetMatrixZoom()">
-                                Reset Zoom
-                            </button>
-                        </div>
-                        <div class="chart-container" style="height: 320px; position: relative;">
-                            <canvas id="chartMatrixQuadrants"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Pareto HQ1 Contribution -->
-                    <div class="panel glass-panel">
-                        <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">ĐÓNG GÓP HIỆU QUẢ NGHIỆP VỤ (PARETO)</div>
-                            <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
-                                <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    HQ1 > 0
-                                </button>
-                                <button id="tabParetoNegative" onclick="switchParetoTab('negative')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    HQ1 < 0
-                                </button>
-                            </div>
-                        </div>
-                        <div class="chart-container" style="height: 320px; position: relative;">
-                            <canvas id="chartParetoPositive"></canvas>
-                            <canvas id="chartParetoNegative" style="display: none;"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart Row 1 -->
-                <div class="chart-grid-2x2">
-                    <div class="panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title">DOANH THU & BỒI THƯỜNG THEO NGHIỆP VỤ (LOB)</div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartLobComparison"></canvas>
-                        </div>
-                    </div>
-                    <div class="panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title">CƠ CẤU DOANH THU LOB</div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartLobPie"></canvas>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -2392,6 +2406,7 @@
         let chartLobPie = null;
         let chartBranchBreakdown = null;
         let chartMatrixQuadrants = null;
+        let chartMatrixOperating = null;
         let chartParetoPositive = null;
         let chartParetoNegative = null;
 
@@ -3579,6 +3594,7 @@
             
             // Draw new 2x2 Matrix & Pareto Charts
             drawPerformanceMatrix();
+            drawOperatingMatrix();
             drawParetoCharts();
             switchParetoTab('positive');
         }
@@ -4126,6 +4142,13 @@
             }
         }
 
+        function resetOpeMatrixZoom() {
+            if (chartMatrixOperating) {
+                chartMatrixOperating.resetZoom();
+                document.getElementById('btnResetOpeZoom').style.display = 'none';
+            }
+        }
+
         const quadrantPlugin = {
             id: 'quadrantLines',
             beforeDraw(chart) {
@@ -4134,10 +4157,12 @@
                 if (!options) return;
                 
                 const xMedianVal = options.xValue;
-                const yZeroVal = options.yValue;
+                const yMedianVal = options.yValue;
+                const xLabelFormat = options.xLabelFormat || (val => `Trung vị: ${val.toFixed(1)} Tỷ`);
+                const yLabelFormat = options.yLabelFormat || null;
                 
                 const xPixel = x.getPixelForValue(xMedianVal);
-                const yPixel = y.getPixelForValue(yZeroVal);
+                const yPixel = y.getPixelForValue(yMedianVal);
                 
                 ctx.save();
                 ctx.strokeStyle = 'rgba(156, 163, 175, 0.4)'; // grey dashed line
@@ -4150,18 +4175,61 @@
                 ctx.lineTo(xPixel, bottom);
                 ctx.stroke();
                 
-                // Draw horizontal 0% line
+                // Draw horizontal median line
                 ctx.beginPath();
                 ctx.moveTo(left, yPixel);
                 ctx.lineTo(right, yPixel);
                 ctx.stroke();
                 
-                // Draw label for the median line
+                // Draw labels
                 ctx.fillStyle = '#4b5563';
                 ctx.font = '600 10px Inter, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'top';
-                ctx.fillText(`Trung vị: ${xMedianVal.toFixed(1)} Tỷ`, xPixel, top + 5);
+                
+                // Vertical label
+                if (xLabelFormat) {
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(xLabelFormat(xMedianVal), xPixel, top + 5);
+                }
+                
+                // Horizontal label
+                if (yLabelFormat) {
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText(yLabelFormat(yMedianVal), right - 5, yPixel - 5);
+                }
+
+                // Draw quadrant background labels if provided
+                if (options.labels) {
+                    ctx.font = 'bold 10px Inter, sans-serif';
+                    ctx.fillStyle = 'rgba(156, 163, 175, 0.35)'; // very faint text
+                    const padding = 12;
+                    
+                    // Top-Left
+                    if (options.labels.topLeft) {
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'top';
+                        ctx.fillText(options.labels.topLeft, left + padding, top + padding);
+                    }
+                    // Top-Right
+                    if (options.labels.topRight) {
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'top';
+                        ctx.fillText(options.labels.topRight, right - padding, top + padding);
+                    }
+                    // Bottom-Left
+                    if (options.labels.bottomLeft) {
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(options.labels.bottomLeft, left + padding, bottom - padding);
+                    }
+                    // Bottom-Right
+                    if (options.labels.bottomRight) {
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(options.labels.bottomRight, right - padding, bottom - padding);
+                    }
+                }
 
                 ctx.restore();
             }
@@ -4278,7 +4346,13 @@
                         },
                         quadrantLines: {
                             xValue: medianRevBln,
-                            yValue: 0
+                            yValue: 0,
+                            labels: {
+                                topLeft: 'TIỀM NĂNG (POTENTIALS)',
+                                topRight: 'NGÔI SAO (STARS)',
+                                bottomLeft: 'CẦN CẢI THIỆN (DOGS)',
+                                bottomRight: 'TRỤ CỘT (CASH COWS)'
+                            }
                         },
                         zoom: {
                             zoom: {
@@ -4325,6 +4399,204 @@
                             title: {
                                 display: true,
                                 text: 'Tỷ suất HQ1 / Doanh thu thuần (%)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.03)'
+                            },
+                            ticks: {
+                                font: { family: 'Inter', size: 10 },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [quadrantPlugin]
+            });
+        }
+
+        function drawOperatingMatrix() {
+            const ctx = document.getElementById('chartMatrixOperating').getContext('2d');
+            if (chartMatrixOperating) chartMatrixOperating.destroy();
+
+            const allItems = [...branchesData];
+            if (headquartersData) allItems.push(headquartersData);
+
+            // Filter out items where dt_thuan <= 0 to avoid division by zero or negative ratio anomalies
+            const validItems = allItems.filter(b => b.dt_thuan > 0);
+
+            // Calculate Claim Ratio & Expense Ratio
+            const claimRatios = validItems.map(b => (b.bt_trach_nhiem / b.dt_thuan) * 100);
+            const expenseRatios = validItems.map(b => (b.cpdm / b.dt_thuan) * 100);
+
+            // Median helper function
+            function getMedian(arr) {
+                if (arr.length === 0) return 0;
+                const sorted = [...arr].sort((a, b) => a - b);
+                const mid = Math.floor(sorted.length / 2);
+                return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+            }
+
+            const medianClaimRatio = getMedian(claimRatios);
+            const medianExpenseRatio = getMedian(expenseRatios);
+
+            const goodMgmt = []; // Quản trị tốt: Claim < Median & Expense < Median (Green)
+            const lobRisk = []; // Rủi ro nghiệp vụ: Claim >= Median & Expense < Median (Blue)
+            const bulky = []; // Cồng kềnh: Claim < Median & Expense >= Median (Yellow/Orange)
+            const poorMgmt = []; // Yếu kém toàn diện: Claim >= Median & Expense >= Median (Red)
+
+            validItems.forEach(b => {
+                const claimRatio = (b.bt_trach_nhiem / b.dt_thuan) * 100;
+                const expenseRatio = (b.cpdm / b.dt_thuan) * 100;
+
+                const point = {
+                    x: claimRatio,
+                    y: expenseRatio,
+                    label: b.name
+                };
+
+                if (claimRatio < medianClaimRatio) {
+                    if (expenseRatio < medianExpenseRatio) {
+                        goodMgmt.push(point);
+                    } else {
+                        bulky.push(point);
+                    }
+                } else {
+                    if (expenseRatio < medianExpenseRatio) {
+                        lobRisk.push(point);
+                    } else {
+                        poorMgmt.push(point);
+                    }
+                }
+            });
+
+            chartMatrixOperating = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Quản trị tốt',
+                            data: goodMgmt,
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Rủi ro nghiệp vụ',
+                            data: lobRisk,
+                            backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Cồng kềnh',
+                            data: bulky,
+                            backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                            borderColor: '#f59e0b',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Yếu kém toàn diện',
+                            data: poorMgmt,
+                            backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                            borderColor: '#ef4444',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                font: { family: 'Inter', size: 10, weight: '500' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            cornerRadius: 8,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.raw.label}: Tỷ lệ Bồi thường = ${context.raw.x.toFixed(1)}%, Tỷ lệ CPDM = ${context.raw.y.toFixed(1)}%`;
+                                }
+                            }
+                        },
+                        quadrantLines: {
+                            xValue: medianClaimRatio,
+                            yValue: medianExpenseRatio,
+                            xLabelFormat: val => `Trung vị: ${val.toFixed(1)}%`,
+                            yLabelFormat: val => `Trung vị: ${val.toFixed(1)}%`,
+                            labels: {
+                                topLeft: 'CỒNG KỀNH',
+                                topRight: 'YẾU KÉM TOÀN DIỆN',
+                                bottomLeft: 'QUẢN TRỊ TỐT',
+                                bottomRight: 'RỦI RO NGHIỆP VỤ'
+                            }
+                        },
+                        zoom: {
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                    speed: 0.05
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'xy',
+                                onZoomComplete: function() {
+                                    const resetBtn = document.getElementById('btnResetOpeZoom');
+                                    if (resetBtn) resetBtn.style.display = 'inline-block';
+                                }
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                                onPanComplete: function() {
+                                    const resetBtn = document.getElementById('btnResetOpeZoom');
+                                    if (resetBtn) resetBtn.style.display = 'inline-block';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ bồi thường / Doanh thu thuần (%)',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.03)'
+                            },
+                            ticks: {
+                                font: { family: 'Inter', size: 10 },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ CPDM / Doanh thu thuần (%)',
                                 font: { family: 'Inter', size: 11, weight: '600' }
                             },
                             grid: {
