@@ -451,6 +451,32 @@
             border: 1px solid #f4f4f5;
             border-radius: 8px;
             padding-right: 4px;
+            scrollbar-width: none; /* Hide scrollbar for Firefox by default */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge by default */
+            transition: all 0.3s ease;
+        }
+
+        .ratio-chart-container:hover {
+            scrollbar-width: thin; /* Show thin scrollbar on hover for Firefox */
+        }
+
+        .ratio-chart-container::-webkit-scrollbar {
+            width: 6px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .ratio-chart-container::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 10px;
+        }
+
+        .ratio-chart-container:hover::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.45); /* gray-400 with opacity */
+        }
+
+        .ratio-chart-container:hover::-webkit-scrollbar {
+            background: rgba(243, 244, 246, 0.4);
         }
 
         .ratio-chart-scroll-wrapper {
@@ -3768,6 +3794,7 @@
                         y: {
                             grid: { display: false },
                             ticks: {
+                                autoSkip: false,
                                 font: { size: 9, family: 'Inter', weight: '600' },
                                 color: '#374151'
                             }
@@ -4727,7 +4754,12 @@
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { family: 'Inter', size: 9, weight: '600' } }
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                font: { family: 'Inter', size: 9, weight: '600' }
+                            }
                         },
                         y: {
                             type: 'linear',
@@ -4836,7 +4868,12 @@
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { family: 'Inter', size: 9, weight: '600' } }
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                font: { family: 'Inter', size: 9, weight: '600' }
+                            }
                         },
                         y: {
                             type: 'linear',
