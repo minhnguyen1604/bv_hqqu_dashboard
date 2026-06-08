@@ -2580,13 +2580,35 @@
                     </div>
                 </div>
 
+                <!-- Side-by-side Pie Charts for LOB Revenue and Claims Q1.2026 -->
+                <div class="chart-grid-2x2" style="margin-bottom: 24px;">
+                    <!-- Left: Revenue Pie Chart -->
+                    <div class="panel glass-panel" style="display: flex; flex-direction: column;">
+                        <div class="panel-header">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU DOANH THU NGHIỆP VỤ Q1.2026</div>
+                        </div>
+                        <div style="flex: 1; min-height: 260px; position: relative; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="chartBranchRevenuePie"></canvas>
+                        </div>
+                    </div>
+                    <!-- Right: Claims Pie Chart -->
+                    <div class="panel glass-panel" style="display: flex; flex-direction: column;">
+                        <div class="panel-header">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU BỒI THƯỜNG NGHIỆP VỤ Q1.2026</div>
+                        </div>
+                        <div style="flex: 1; min-height: 260px; position: relative; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="chartBranchClaimsPie"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Hero Panel: Waterfall Flow -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header">
-                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">PHÂN TÍCH DIỄN TIẾN HÌNH THÀNH HIỆU QUẢ NGHIỆP VỤ (HQ1)</div>
+                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">PHÂN TÍCH DIỄN Biến HÌNH THÀNH HIỆU QUẢ NGHIỆP VỤ (HQ1)</div>
                     </div>
                     <div style="font-size: 11px; font-weight: 500; color: #6b7280; margin-bottom: 12px; letter-spacing: 0.2px;">
-                        DIỄN TIẾN CHI TIẾT CÁC CẤU PHẦN CỘNG/TRỪ TỪ DOANH THU THUẦN ĐẾN HIỆU QUẢ NGHIỆP VỤ THỰC TẾ (WATERFALL)
+                        DIỄN BIẾN CHI TIẾT CÁC CẤU PHẦN CỘNG/TRỪ TỪ DOANH THU THUẦN ĐẾN HIỆU QUẢ NGHIỆP VỤ THỰC TẾ (WATERFALL)
                     </div>
                     <div style="height: 320px; position: relative; width: 100%;">
                         <canvas id="chartBranchBreakdown"></canvas>
@@ -2597,16 +2619,15 @@
                     <!-- Left: LOB structure table -->
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU NGHIỆP VỤ CỦA ĐƠN VỊ</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">BẢNG TỈ TRỌNG DOANH THU NGHIỆP VỤ Q1.2026</div>
                         </div>
                         <div class="table-container" style="flex: 1; margin-top: 0;">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Nghiệp Vụ (LOB)</th>
-                                        <th class="text-right">Doanh Thu (VND)</th>
-                                        <th class="text-right">Bồi Thường (VND)</th>
-                                        <th class="text-right">Tỷ Lệ BT (%)</th>
+                                        <th style="width: 35%; text-align: left;">Nghiệp Vụ (LOB)</th>
+                                        <th style="width: 40%; text-align: right;" class="text-right">Doanh Thu (VND)</th>
+                                        <th style="width: 25%; text-align: right;" class="text-right">Tỉ Trọng (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="branchLobTableBody">
@@ -2619,7 +2640,7 @@
                     <!-- Right: Donut chart -->
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title" id="branchContributionTitle" style="border-left-color: var(--bv-accent);">TÌ TRỌNG PHÂN BỔ DOANH THU THUẦN</div>
+                            <div class="panel-title" id="branchContributionTitle" style="border-left-color: var(--bv-accent);">TỈ TRỌNG PHÂN BỔ DOANH THU THUẦN</div>
                         </div>
                         <div style="flex: 1; min-height: 250px; position: relative; display: flex; align-items: center; justify-content: center;">
                             <canvas id="chartBranchContribution"></canvas>
@@ -2774,6 +2795,8 @@
         let chartLobPie = null;
         let chartBranchBreakdown = null;
         let chartBranchContribution = null;
+        let chartBranchRevenuePie = null;
+        let chartBranchClaimsPie = null;
         let chartMatrixQuadrants = null;
         let chartMatrixOperating = null;
         let chartParetoPositive = null;
@@ -6157,20 +6180,24 @@
             const tbody = document.getElementById('branchLobTableBody');
             tbody.innerHTML = '';
 
+            const totalLOBRevenue = lobs.reduce((sum, item) => sum + item.rev, 0);
+
             lobs.forEach(lob => {
-                const ratio = lob.rev > 0 ? ((lob.clm / lob.rev) * 100).toFixed(1) + '%' : '0.0%';
+                const share = totalLOBRevenue > 0 ? ((lob.rev / totalLOBRevenue) * 100).toFixed(2) + '%' : '0.00%';
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td class="bold">${lob.name}</td>
                         <td class="text-right">${formatVND(lob.rev)}</td>
-                        <td class="text-right">${formatVND(lob.clm)}</td>
-                        <td class="text-right bold text-bv">${ratio}</td>
+                        <td class="text-right bold text-bv">${share}</td>
                     </tr>
                 `);
             });
 
             // Draw Chart: Underwriting efficiency waterfall (HQQU breakdown)
             drawBranchWaterfallChart(branch);
+
+            // Draw Pie Charts for LOB Doanh thu & Bồi thường
+            drawBranchLobPieCharts(branch);
 
             // Render seasonal LOB table for this branch
             renderBranchLobSeasonalTable(branch);
@@ -6542,6 +6569,122 @@
                                     const val = context.raw;
                                     const pct = totalSum > 0 ? ((val / totalSum) * 100).toFixed(1) : '0.0';
                                     return context.label + ': ' + formatVND(val) + ' (' + pct + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- DRAW PIE CHARTS FOR BRANCH LOB REVENUE & CLAIMS ---
+        function drawBranchLobPieCharts(branch) {
+            const revCtx = document.getElementById('chartBranchRevenuePie').getContext('2d');
+            const clmCtx = document.getElementById('chartBranchClaimsPie').getContext('2d');
+
+            if (chartBranchRevenuePie) chartBranchRevenuePie.destroy();
+            if (chartBranchClaimsPie) chartBranchClaimsPie.destroy();
+
+            const labels = ['Con người', 'Du lịch', 'Xe Cơ Giới', 'Y tế'];
+            const revData = [
+                branch.dt_con_nguoi || 0,
+                branch.dt_du_lich || 0,
+                branch.dt_xe_co_gioi || 0,
+                branch.dt_y_te || 0
+            ];
+            const clmData = [
+                branch.bt_con_nguoi || 0,
+                branch.bt_du_lich || 0,
+                branch.bt_xe_co_gioi || 0,
+                branch.bt_y_te || 0
+            ];
+
+            // Consistent LOB brand colors:
+            // Con người: #0056a3
+            // Du lịch: #0ea5e9
+            // Xe Cơ Giới: #b38f35
+            // Y tế: #10b981
+            const colors = ['#0056a3', '#0ea5e9', '#b38f35', '#10b981'];
+
+            // Revenue Pie Chart
+            chartBranchRevenuePie = new Chart(revCtx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: revData,
+                        backgroundColor: colors,
+                        borderWidth: 1.5,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: { family: 'Inter', size: 10, weight: '500' },
+                                boxWidth: 12,
+                                padding: 10
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 11, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 11 },
+                            cornerRadius: 8,
+                            padding: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = total > 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
+                                    return ` ${context.label}: ${formatVND(value)} (${pct})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Claims Pie Chart
+            chartBranchClaimsPie = new Chart(clmCtx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: clmData,
+                        backgroundColor: colors,
+                        borderWidth: 1.5,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: { family: 'Inter', size: 10, weight: '500' },
+                                boxWidth: 12,
+                                padding: 10
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 11, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 11 },
+                            cornerRadius: 8,
+                            padding: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = total > 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
+                                    return ` ${context.label}: ${formatVND(value)} (${pct})`;
                                 }
                             }
                         }
