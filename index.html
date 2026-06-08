@@ -1191,6 +1191,21 @@
             text-align: right;
         }
 
+        .ratio-col {
+            background-color: rgba(0, 86, 163, 0.04) !important;
+            color: #374151;
+            font-style: italic;
+            font-size: 11.5px;
+        }
+        th.ratio-col {
+            background: linear-gradient(180deg, #004a8f 0%, #003870 100%) !important;
+            font-style: italic;
+            opacity: 0.92;
+        }
+        tr:hover td.ratio-col {
+            background-color: rgba(0, 86, 163, 0.08) !important;
+        }
+
         .text-center {
             text-align: center;
         }
@@ -2617,50 +2632,36 @@
 
                 <!-- Detailed LOB Metrics Table -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header">
-                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CHI TIẾT CÁC CẤU PHẦN HIỆU QUẢ NGHIỆP VỤ</div>
+                    <div class="panel-header" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CHI TIẾT CẤU PHẦN & TỶ LỆ HIỆU QUẢ NGHIỆP VỤ</div>
+                            <div style="font-size: 11px; font-weight: 500; color: #6b7280; letter-spacing: 0.2px;">
+                                CÁC CẤU PHẦN (VND) VÀ TỶ LỆ SO VỚI DOANH THU THUẦN (%) CHI TIẾT THEO TỪNG NGHIỆP VỤ
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" id="btnExportBranchLobExcel" style="height: 34px; padding: 0 12px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                            📥 Tải dữ liệu
+                        </button>
                     </div>
-                    <div class="table-container" style="margin-top: 0;">
-                        <table>
+                    <div class="table-container" style="margin-top: 0; overflow-x: auto;">
+                        <table style="width: 100%; min-width: 1100px;">
                             <thead>
                                 <tr>
                                     <th>Nghiệp vụ</th>
-                                    <th class="text-right">Doanh thu thuần</th>
-                                    <th class="text-right">Bồi thường thuộc trách nhiệm</th>
-                                    <th class="text-right">Dự phòng phí</th>
-                                    <th class="text-right">Chênh lệch Dự phòng bồi thường</th>
-                                    <th class="text-right">CPDM_HQ1</th>
+                                    <th class="text-right">DT Thuần</th>
+                                    <th class="text-right">BT thuộc TN</th>
+                                    <th class="text-right ratio-col">TL BT/DT</th>
+                                    <th class="text-right">DP Phí</th>
+                                    <th class="text-right ratio-col">TL DP/DT</th>
+                                    <th class="text-right">CL DPBT</th>
+                                    <th class="text-right ratio-col">TL CL/DT</th>
+                                    <th class="text-right">CPDM</th>
+                                    <th class="text-right ratio-col">TL CPDM/DT</th>
                                     <th class="text-right">HQQU</th>
+                                    <th class="text-right ratio-col">TL HQQU/DT</th>
                                 </tr>
                             </thead>
                             <tbody id="branchDetailedLobTableBody">
-                                <!-- Dynamic rows -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Detailed LOB Ratios Table -->
-                <div class="panel glass-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CÁC TỶ LỆ SO VỚI DOANH THU THUẦN CỦA CÁC NGHIỆP VỤ</div>
-                        <div style="font-size: 11px; font-weight: 500; color: #6b7280; margin-top: 4px; letter-spacing: 0.2px;">
-                            CÁC TỶ LỆ PHẦN TRĂM (%) ĐƯỢC TÍNH TRÊN DOANH THU THUẦN CỦA TỪNG NGHIỆP VỤ TƯƠNG ỨNG
-                        </div>
-                    </div>
-                    <div class="table-container" style="margin-top: 0;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nghiệp vụ</th>
-                                    <th class="text-right">Tỷ lệ Bồi thường thuộc trách nhiệm / DT Thuần</th>
-                                    <th class="text-right">Tỷ lệ Dự phòng phí / DT Thuần</th>
-                                    <th class="text-right">Tỷ lệ Chênh lệch Dự phòng bồi thường / DT Thuần</th>
-                                    <th class="text-right">Tỷ lệ CPDM_HQ1 / DT Thuần</th>
-                                    <th class="text-right">Tỷ lệ HQQU / DT Thuần</th>
-                                </tr>
-                            </thead>
-                            <tbody id="branchDetailedLobRatiosTableBody">
                                 <!-- Dynamic rows -->
                             </tbody>
                         </table>
@@ -6197,10 +6198,8 @@
             ];
 
             const tbody = document.getElementById('branchDetailedLobTableBody');
-            const tbodyRatios = document.getElementById('branchDetailedLobRatiosTableBody');
             if (tbody) {
                 tbody.innerHTML = '';
-                if (tbodyRatios) tbodyRatios.innerHTML = '';
 
                 let sum_dt_thuan = 0;
                 let sum_bt_trach_nhiem = 0;
@@ -6208,6 +6207,9 @@
                 let sum_chenh_lech = 0;
                 let sum_cpdm = 0;
                 let sum_hqqu = 0;
+
+                // Store rows data for export
+                const lobExportData = [];
 
                 lobs.forEach((lob, idx) => {
                     let dt_thuan_lob, bt_trach_nhiem_lob, allocated_dp, allocated_cp, allocated_cl, allocated_hqqu;
@@ -6237,73 +6239,73 @@
                         allocated_hqqu = branch.hqqu - sum_hqqu;
                     }
 
+                    const ratio_bt = dt_thuan_lob > 0 ? (bt_trach_nhiem_lob / dt_thuan_lob) * 100 : 0;
+                    const ratio_dp = dt_thuan_lob > 0 ? (allocated_dp / dt_thuan_lob) * 100 : 0;
+                    const ratio_cl = dt_thuan_lob > 0 ? (allocated_cl / dt_thuan_lob) * 100 : 0;
+                    const ratio_cp = dt_thuan_lob > 0 ? (allocated_cp / dt_thuan_lob) * 100 : 0;
+                    const ratio_hqqu = dt_thuan_lob > 0 ? (allocated_hqqu / dt_thuan_lob) * 100 : 0;
+
                     const hqquClass = allocated_hqqu < 0 ? 'text-danger bold' : 'text-bv bold';
+                    const ratioHqquClass = ratio_hqqu < 0 ? 'text-danger bold' : 'text-bv bold';
+
+                    lobExportData.push({
+                        name: lob.name,
+                        dt_thuan: dt_thuan_lob,
+                        bt: bt_trach_nhiem_lob, ratio_bt,
+                        dp: allocated_dp, ratio_dp,
+                        cl: allocated_cl, ratio_cl,
+                        cpdm: allocated_cp, ratio_cp,
+                        hqqu: allocated_hqqu, ratio_hqqu
+                    });
 
                     tbody.insertAdjacentHTML('beforeend', `
                         <tr>
                             <td class="bold">${lob.name}</td>
                             <td class="text-right">${formatVND(dt_thuan_lob)}</td>
                             <td class="text-right">${formatVND(bt_trach_nhiem_lob)}</td>
+                            <td class="text-right ratio-col">${ratio_bt.toFixed(1)}%</td>
                             <td class="text-right">${formatVND(allocated_dp)}</td>
+                            <td class="text-right ratio-col">${ratio_dp.toFixed(1)}%</td>
                             <td class="text-right">${formatVND(allocated_cl)}</td>
+                            <td class="text-right ratio-col">${ratio_cl.toFixed(1)}%</td>
                             <td class="text-right">${formatVND(allocated_cp)}</td>
+                            <td class="text-right ratio-col">${ratio_cp.toFixed(1)}%</td>
                             <td class="text-right ${hqquClass}">${formatVND(allocated_hqqu)}</td>
+                            <td class="text-right ${ratioHqquClass}">${ratio_hqqu.toFixed(1)}%</td>
                         </tr>
                     `);
-
-                    if (tbodyRatios) {
-                        const ratio_bt = dt_thuan_lob > 0 ? (bt_trach_nhiem_lob / dt_thuan_lob) * 100 : 0;
-                        const ratio_dp = dt_thuan_lob > 0 ? (allocated_dp / dt_thuan_lob) * 100 : 0;
-                        const ratio_cl = dt_thuan_lob > 0 ? (allocated_cl / dt_thuan_lob) * 100 : 0;
-                        const ratio_cp = dt_thuan_lob > 0 ? (allocated_cp / dt_thuan_lob) * 100 : 0;
-                        const ratio_hqqu = dt_thuan_lob > 0 ? (allocated_hqqu / dt_thuan_lob) * 100 : 0;
-
-                        const ratioHqquClass = ratio_hqqu < 0 ? 'text-danger bold' : 'text-bv bold';
-
-                        tbodyRatios.insertAdjacentHTML('beforeend', `
-                            <tr>
-                                <td class="bold">${lob.name}</td>
-                                <td class="text-right">${ratio_bt.toFixed(2)}%</td>
-                                <td class="text-right">${ratio_dp.toFixed(2)}%</td>
-                                <td class="text-right">${ratio_cl.toFixed(2)}%</td>
-                                <td class="text-right">${ratio_cp.toFixed(2)}%</td>
-                                <td class="text-right ${ratioHqquClass}">${ratio_hqqu.toFixed(2)}%</td>
-                            </tr>
-                        `);
-                    }
                 });
 
                 // Add TỔNG CỘNG row
+                const total_ratio_bt = branch.dt_thuan > 0 ? (branch.bt_trach_nhiem / branch.dt_thuan) * 100 : 0;
+                const total_ratio_dp = branch.dt_thuan > 0 ? (branch.du_phong_phi / branch.dt_thuan) * 100 : 0;
+                const total_ratio_cl = branch.dt_thuan > 0 ? (branch.chenh_lech_dpbt / branch.dt_thuan) * 100 : 0;
+                const total_ratio_cp = branch.dt_thuan > 0 ? (branch.cpdm / branch.dt_thuan) * 100 : 0;
+                const total_ratio_hqqu = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
+                const totalHqquClass = branch.hqqu < 0 ? 'text-danger' : 'text-bv';
+
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr class="total-row" style="border-top: 2px solid rgba(0, 86, 163, 0.15); font-weight: bold; background-color: rgba(0, 86, 163, 0.05);">
                         <td class="bold">TỔNG CỘNG</td>
                         <td class="text-right">${formatVND(branch.dt_thuan)}</td>
                         <td class="text-right">${formatVND(branch.bt_trach_nhiem)}</td>
+                        <td class="text-right ratio-col">${total_ratio_bt.toFixed(1)}%</td>
                         <td class="text-right">${formatVND(branch.du_phong_phi)}</td>
+                        <td class="text-right ratio-col">${total_ratio_dp.toFixed(1)}%</td>
                         <td class="text-right">${formatVND(branch.chenh_lech_dpbt)}</td>
+                        <td class="text-right ratio-col">${total_ratio_cl.toFixed(1)}%</td>
                         <td class="text-right">${formatVND(branch.cpdm)}</td>
-                        <td class="text-right ${branch.hqqu < 0 ? 'text-danger' : 'text-bv'} bold">${formatVND(branch.hqqu)}</td>
+                        <td class="text-right ratio-col">${total_ratio_cp.toFixed(1)}%</td>
+                        <td class="text-right ${totalHqquClass} bold">${formatVND(branch.hqqu)}</td>
+                        <td class="text-right ${totalHqquClass} bold">${total_ratio_hqqu.toFixed(1)}%</td>
                     </tr>
                 `);
 
-                // Add TỔNG CỘNG row for ratios
-                if (tbodyRatios) {
-                    const total_ratio_bt = branch.dt_thuan > 0 ? (branch.bt_trach_nhiem / branch.dt_thuan) * 100 : 0;
-                    const total_ratio_dp = branch.dt_thuan > 0 ? (branch.du_phong_phi / branch.dt_thuan) * 100 : 0;
-                    const total_ratio_cl = branch.dt_thuan > 0 ? (branch.chenh_lech_dpbt / branch.dt_thuan) * 100 : 0;
-                    const total_ratio_cp = branch.dt_thuan > 0 ? (branch.cpdm / branch.dt_thuan) * 100 : 0;
-                    const total_ratio_hqqu = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
-
-                    tbodyRatios.insertAdjacentHTML('beforeend', `
-                        <tr class="total-row" style="border-top: 2px solid rgba(0, 86, 163, 0.15); font-weight: bold; background-color: rgba(0, 86, 163, 0.05);">
-                            <td class="bold">TỔNG CỘNG</td>
-                            <td class="text-right">${total_ratio_bt.toFixed(2)}%</td>
-                            <td class="text-right">${total_ratio_dp.toFixed(2)}%</td>
-                            <td class="text-right">${total_ratio_cl.toFixed(2)}%</td>
-                            <td class="text-right">${total_ratio_cp.toFixed(2)}%</td>
-                            <td class="text-right ${branch.hqqu < 0 ? 'text-danger' : 'text-bv'} bold">${total_ratio_hqqu.toFixed(2)}%</td>
-                        </tr>
-                    `);
+                // Attach export data to button for download
+                const exportBtn = document.getElementById('btnExportBranchLobExcel');
+                if (exportBtn) {
+                    exportBtn._lobData = lobExportData;
+                    exportBtn._branchName = branch.name;
                 }
             }
 
@@ -6880,6 +6882,49 @@
             link.click();
             document.body.removeChild(link);
             showToast('Đã xuất báo cáo CSV thành công!');
+        });
+
+        document.getElementById('btnExportBranchLobExcel').addEventListener('click', () => {
+            const btn = document.getElementById('btnExportBranchLobExcel');
+            const lobData = btn._lobData || [];
+            const branchName = btn._branchName || 'Chi nhánh';
+
+            if (lobData.length === 0) {
+                showToast('Chưa có dữ liệu. Vui lòng chọn chi nhánh trước.');
+                return;
+            }
+
+            let csv = '\uFEFF'; // UTF-8 BOM
+            csv += `Chi nhánh: ${branchName}\n\n`;
+            csv += 'Nghiệp vụ,DT Thuần (VND),BT thuộc TN (VND),TL BT/DT (%),DP Phí (VND),TL DP/DT (%),CL DPBT (VND),TL CL/DT (%),CPDM (VND),TL CPDM/DT (%),HQQU (VND),TL HQQU/DT (%)\n';
+            lobData.forEach(r => {
+                csv += `"${r.name}",${Math.round(r.dt_thuan)},${Math.round(r.bt)},${r.ratio_bt.toFixed(2)},${Math.round(r.dp)},${r.ratio_dp.toFixed(2)},${Math.round(r.cl)},${r.ratio_cl.toFixed(2)},${Math.round(r.cpdm)},${r.ratio_cp.toFixed(2)},${Math.round(r.hqqu)},${r.ratio_hqqu.toFixed(2)}\n`;
+            });
+
+            // Add total row from global branchesData
+            const allBranchItems = [...branchesData];
+            if (headquartersData) allBranchItems.push(headquartersData);
+            const bTotal = allBranchItems.find(x => x.name === branchName);
+            if (bTotal) {
+                const b = bTotal;
+                const dt = b.dt_thuan;
+                const tr_bt = dt > 0 ? (b.bt_trach_nhiem/dt*100).toFixed(2) : '0.00';
+                const tr_dp = dt > 0 ? (b.du_phong_phi/dt*100).toFixed(2) : '0.00';
+                const tr_cl = dt > 0 ? (b.chenh_lech_dpbt/dt*100).toFixed(2) : '0.00';
+                const tr_cp = dt > 0 ? (b.cpdm/dt*100).toFixed(2) : '0.00';
+                const tr_hq = dt > 0 ? (b.hqqu/dt*100).toFixed(2) : '0.00';
+                csv += `"TỔNG CỘNG",${Math.round(dt)},${Math.round(b.bt_trach_nhiem)},${tr_bt},${Math.round(b.du_phong_phi)},${tr_dp},${Math.round(b.chenh_lech_dpbt)},${tr_cl},${Math.round(b.cpdm)},${tr_cp},${Math.round(b.hqqu)},${tr_hq}\n`;
+            }
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `BaoViet_LOB_Detail_${branchName.replace(/\s+/g,'_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Đã xuất dữ liệu bảng LOB thành công!');
         });
 
         // ================= NAVIGATION ENGINE =================
