@@ -2436,7 +2436,7 @@
                     </div>
                 </div>
 
-                <div class="metrics-row-4" id="branchRatioMetricsRow" style="margin-bottom: 24px;">
+                <div class="metrics-row-6" id="branchRatioMetricsRow" style="margin-bottom: 24px;">
                     <!-- Tỷ lệ bồi thường -->
                     <div class="metric-card">
                         <div class="metric-card-top">
@@ -2466,6 +2466,40 @@
                                 <span>--% YoY</span>
                             </span>
                             <span class="trend-item neutral" id="branchQoQExpenseRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Tỷ lệ Dự phòng phí -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ DỰ PHÒNG PHÍ / DOANH THU THUẦN</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiReserveRatio">0%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYReserveRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQReserveRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% QoQ</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Tỷ lệ Chênh lệch DPBT -->
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-label">TỶ LỆ CHÊNH LỆCH DPBT / DOANH THU THUẦN</span>
+                        </div>
+                        <span class="metric-value" id="branchKpiReserveDiffRatio">0%</span>
+                        <div class="metric-trend-row">
+                            <span class="trend-item neutral" id="branchYoYReserveDiffRatio">
+                                <span class="trend-arrow">▲</span>
+                                <span>--% YoY</span>
+                            </span>
+                            <span class="trend-item neutral" id="branchQoQReserveDiffRatio">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -6071,12 +6105,16 @@
             // Calculate ratios
             const claimsRatio = branch.dt_thuan > 0 ? (branch.bt_trach_nhiem / branch.dt_thuan) * 100 : 0;
             const expenseRatio = branch.dt_thuan > 0 ? (branch.cpdm / branch.dt_thuan) * 100 : 0;
+            const reserveRatio = branch.dt_thuan > 0 ? (branch.du_phong_phi / branch.dt_thuan) * 100 : 0;
+            const reserveDiffRatio = branch.dt_thuan > 0 ? (branch.chenh_lech_dpbt / branch.dt_thuan) * 100 : 0;
             const combinedRatio = claimsRatio + expenseRatio;
             const hq1Ratio = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
 
-            // Render 4 Ratio KPIs
+            // Render 6 Ratio KPIs
             document.getElementById('branchKpiClaimsRatio').innerText = claimsRatio.toFixed(2) + '%';
             document.getElementById('branchKpiExpenseRatio').innerText = expenseRatio.toFixed(2) + '%';
+            document.getElementById('branchKpiReserveRatio').innerText = reserveRatio.toFixed(2) + '%';
+            document.getElementById('branchKpiReserveDiffRatio').innerText = reserveDiffRatio.toFixed(2) + '%';
             
             const combinedRatioEl = document.getElementById('branchKpiCombinedRatio');
             combinedRatioEl.innerText = combinedRatio.toFixed(2) + '%';
@@ -6099,6 +6137,10 @@
             updateTrendBadge('branchQoQClaimsRatio', null, null, 'QoQ');
             updateTrendBadge('branchYoYExpenseRatio', null, null, 'YoY');
             updateTrendBadge('branchQoQExpenseRatio', null, null, 'QoQ');
+            updateTrendBadge('branchYoYReserveRatio', null, null, 'YoY');
+            updateTrendBadge('branchQoQReserveRatio', null, null, 'QoQ');
+            updateTrendBadge('branchYoYReserveDiffRatio', null, null, 'YoY');
+            updateTrendBadge('branchQoQReserveDiffRatio', null, null, 'QoQ');
             updateTrendBadge('branchYoYCombinedRatio', null, null, 'YoY');
             updateTrendBadge('branchQoQCombinedRatio', null, null, 'QoQ');
             updateTrendBadge('branchYoYHQ1Ratio', null, null, 'YoY');
