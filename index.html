@@ -4803,7 +4803,26 @@
                             padding: 10,
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.raw.label}: DT = ${context.raw.x.toFixed(1)} Tỷ, Tỷ suất HQ1 = ${context.raw.y.toFixed(1)}%`;
+                                    const name = context.raw.label;
+                                    const all = [...branchesData];
+                                    if (headquartersData) all.push(headquartersData);
+                                    const branch = all.find(b => b.name === name);
+                                    let extraText = '';
+                                    if (branch && branch.dt_thuan > 0) {
+                                        const claimRatio = (branch.bt_trach_nhiem / branch.dt_thuan) * 100;
+                                        const expenseRatio = (branch.cpdm / branch.dt_thuan) * 100;
+                                        const combinedRatio = claimRatio + expenseRatio;
+                                        
+                                        if (branch.hqqu >= 0 && combinedRatio > 100) {
+                                            extraText = '⚠️ Lãi kỹ thuật nhờ hoàn dự phòng (Lỗ nghiệp vụ thuần)';
+                                        } else if (branch.hqqu < 0 && combinedRatio <= 100) {
+                                            extraText = '⚠️ Lỗ kỹ thuật do trích lập dự phòng tăng (Nghiệp vụ thuần có lãi)';
+                                        }
+                                    }
+                                    return [
+                                        `${name}: DT = ${context.raw.x.toFixed(1)} Tỷ, Tỷ suất HQ1 = ${context.raw.y.toFixed(1)}%`,
+                                        ...(extraText ? [extraText] : [])
+                                    ];
                                 }
                             }
                         },
@@ -5124,7 +5143,26 @@
                             padding: 10,
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.raw.label}: Tỷ lệ Bồi thường = ${context.raw.x.toFixed(1)}%, Tỷ lệ CPDM = ${context.raw.y.toFixed(1)}%`;
+                                    const name = context.raw.label;
+                                    const all = [...branchesData];
+                                    if (headquartersData) all.push(headquartersData);
+                                    const branch = all.find(b => b.name === name);
+                                    let extraText = '';
+                                    if (branch && branch.dt_thuan > 0) {
+                                        const claimRatio = (branch.bt_trach_nhiem / branch.dt_thuan) * 100;
+                                        const expenseRatio = (branch.cpdm / branch.dt_thuan) * 100;
+                                        const combinedRatio = claimRatio + expenseRatio;
+                                        
+                                        if (branch.hqqu >= 0 && combinedRatio > 100) {
+                                            extraText = '⚠️ Lãi kỹ thuật nhờ hoàn dự phòng (Lỗ nghiệp vụ thuần)';
+                                        } else if (branch.hqqu < 0 && combinedRatio <= 100) {
+                                            extraText = '⚠️ Lỗ kỹ thuật do trích lập dự phòng tăng (Nghiệp vụ thuần có lãi)';
+                                        }
+                                    }
+                                    return [
+                                        `${name}: Tỷ lệ Bồi thường = ${context.raw.x.toFixed(1)}%, Tỷ lệ CPDM = ${context.raw.y.toFixed(1)}%`,
+                                        ...(extraText ? [extraText] : [])
+                                    ];
                                 }
                             }
                         },
