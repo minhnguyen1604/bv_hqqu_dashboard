@@ -2615,36 +2615,28 @@
                     </div>
                 </div>
 
-                <div class="chart-grid-2x2">
-                    <!-- Left: LOB structure table -->
-                    <div class="panel glass-panel" style="display: flex; flex-direction: column;">
-                        <div class="panel-header">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">BẢNG TỈ TRỌNG DOANH THU NGHIỆP VỤ Q1.2026</div>
-                        </div>
-                        <div class="table-container" style="flex: 1; margin-top: 0;">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th style="width: 35%; text-align: left;">Nghiệp Vụ (LOB)</th>
-                                        <th style="width: 40%; text-align: right;" class="text-right">Doanh Thu (VND)</th>
-                                        <th style="width: 25%; text-align: right;" class="text-right">Tỉ Trọng (%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="branchLobTableBody">
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                            </table>
-                        </div>
+                <!-- Detailed LOB Metrics Table -->
+                <div class="panel glass-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header">
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CHI TIẾT CÁC CẤU PHẦN HIỆU QUẢ NGHIỆP VỤ (LOB) Q1.2026</div>
                     </div>
-
-                    <!-- Right: Donut chart -->
-                    <div class="panel glass-panel" style="display: flex; flex-direction: column;">
-                        <div class="panel-header">
-                            <div class="panel-title" id="branchContributionTitle" style="border-left-color: var(--bv-accent);">TỈ TRỌNG PHÂN BỔ DOANH THU THUẦN</div>
-                        </div>
-                        <div style="flex: 1; min-height: 250px; position: relative; display: flex; align-items: center; justify-content: center;">
-                            <canvas id="chartBranchContribution"></canvas>
-                        </div>
+                    <div class="table-container" style="margin-top: 0;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nghiệp vụ</th>
+                                    <th class="text-right">Doanh thu thuần</th>
+                                    <th class="text-right">Bồi thường thuộc trách nghiệm</th>
+                                    <th class="text-right">Dự phòng phí</th>
+                                    <th class="text-right">Chênh lệch Dự phòng bồi thường</th>
+                                    <th class="text-right">CPDM_HQ1</th>
+                                    <th class="text-right">HQQU</th>
+                                </tr>
+                            </thead>
+                            <tbody id="branchDetailedLobTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -6177,21 +6169,73 @@
                 { name: 'Y tế', rev: branch.dt_y_te, clm: branch.bt_y_te }
             ];
 
-            const tbody = document.getElementById('branchLobTableBody');
-            tbody.innerHTML = '';
+            const tbody = document.getElementById('branchDetailedLobTableBody');
+            if (tbody) {
+                tbody.innerHTML = '';
 
-            const totalLOBRevenue = lobs.reduce((sum, item) => sum + item.rev, 0);
+                let sum_dt_thuan = 0;
+                let sum_bt_trach_nhiem = 0;
+                let sum_du_phong = 0;
+                let sum_chenh_lech = 0;
+                let sum_cpdm = 0;
+                let sum_hqqu = 0;
 
-            lobs.forEach(lob => {
-                const share = totalLOBRevenue > 0 ? ((lob.rev / totalLOBRevenue) * 100).toFixed(2) + '%' : '0.00%';
+                lobs.forEach((lob, idx) => {
+                    let dt_thuan_lob, bt_trach_nhiem_lob, allocated_dp, allocated_cp, allocated_cl, allocated_hqqu;
+
+                    if (idx < lobs.length - 1) {
+                        dt_thuan_lob = lob.rev;
+                        bt_trach_nhiem_lob = lob.clm;
+                        allocated_dp = branch.dt_thuan > 0 ? branch.du_phong_phi * (lob.rev / branch.dt_thuan) : 0;
+                        allocated_cp = branch.dt_thuan > 0 ? branch.cpdm * (lob.rev / branch.dt_thuan) : 0;
+                        allocated_cl = branch.bt_trach_nhiem > 0 
+                            ? branch.chenh_lech_dpbt * (lob.clm / branch.bt_trach_nhiem) 
+                            : (branch.dt_thuan > 0 ? branch.chenh_lech_dpbt * (lob.rev / branch.dt_thuan) : 0);
+                        allocated_hqqu = dt_thuan_lob - bt_trach_nhiem_lob - allocated_dp - allocated_cl - allocated_cp;
+
+                        sum_dt_thuan += dt_thuan_lob;
+                        sum_bt_trach_nhiem += bt_trach_nhiem_lob;
+                        sum_du_phong += allocated_dp;
+                        sum_chenh_lech += allocated_cl;
+                        sum_cpdm += allocated_cp;
+                        sum_hqqu += allocated_hqqu;
+                    } else {
+                        dt_thuan_lob = branch.dt_thuan - sum_dt_thuan;
+                        bt_trach_nhiem_lob = branch.bt_trach_nhiem - sum_bt_trach_nhiem;
+                        allocated_dp = branch.du_phong_phi - sum_du_phong;
+                        allocated_cp = branch.cpdm - sum_cpdm;
+                        allocated_cl = branch.chenh_lech_dpbt - sum_chenh_lech;
+                        allocated_hqqu = branch.hqqu - sum_hqqu;
+                    }
+
+                    const hqquClass = allocated_hqqu < 0 ? 'text-danger bold' : 'text-bv bold';
+
+                    tbody.insertAdjacentHTML('beforeend', `
+                        <tr>
+                            <td class="bold">${lob.name}</td>
+                            <td class="text-right">${formatVND(dt_thuan_lob)}</td>
+                            <td class="text-right">${formatVND(bt_trach_nhiem_lob)}</td>
+                            <td class="text-right">${formatVND(allocated_dp)}</td>
+                            <td class="text-right">${formatVND(allocated_cl)}</td>
+                            <td class="text-right">${formatVND(allocated_cp)}</td>
+                            <td class="text-right ${hqquClass}">${formatVND(allocated_hqqu)}</td>
+                        </tr>
+                    `);
+                });
+
+                // Add TỔNG CỘNG row
                 tbody.insertAdjacentHTML('beforeend', `
-                    <tr>
-                        <td class="bold">${lob.name}</td>
-                        <td class="text-right">${formatVND(lob.rev)}</td>
-                        <td class="text-right bold text-bv">${share}</td>
+                    <tr class="total-row" style="border-top: 2px solid rgba(0, 86, 163, 0.15); font-weight: bold; background-color: rgba(0, 86, 163, 0.05);">
+                        <td class="bold">TỔNG CỘNG</td>
+                        <td class="text-right">${formatVND(branch.dt_thuan)}</td>
+                        <td class="text-right">${formatVND(branch.bt_trach_nhiem)}</td>
+                        <td class="text-right">${formatVND(branch.du_phong_phi)}</td>
+                        <td class="text-right">${formatVND(branch.chenh_lech_dpbt)}</td>
+                        <td class="text-right">${formatVND(branch.cpdm)}</td>
+                        <td class="text-right ${branch.hqqu < 0 ? 'text-danger' : 'text-bv'} bold">${formatVND(branch.hqqu)}</td>
                     </tr>
                 `);
-            });
+            }
 
             // Draw Chart: Underwriting efficiency waterfall (HQQU breakdown)
             drawBranchWaterfallChart(branch);
@@ -6474,107 +6518,7 @@
                 }
             });
 
-            // --- DRAW DONUT CHART FOR CONTRIBUTION BREAKDOWN ---
-            const donutCtx = document.getElementById('chartBranchContribution').getContext('2d');
-            if (chartBranchContribution) chartBranchContribution.destroy();
-
-            const isProfit = hq >= 0;
-            let donutLabels = [];
-            let donutData = [];
-            let donutColors = [];
-            let donutBorders = [];
-            let donutTitle = "";
-
-            if (isProfit) {
-                // Profit: distribute Net Revenue (positive flow) into costs + hq1 profit
-                donutTitle = "TỈ TRỌNG PHÂN BỔ DOANH THU THUẦN";
-                donutLabels = ['Bồi thường TN', 'Dự phòng phí', 'Chênh lệch DPBT', 'CPDM HQ1', 'Lợi nhuận HQ1'];
-                donutData = [
-                    bt,
-                    dp,
-                    cl > 0 ? cl : 0, // only show if it was a cost
-                    cp,
-                    hq
-                ];
-                donutColors = [
-                    'rgba(239, 68, 68, 0.75)',  // BT: Red
-                    'rgba(245, 158, 11, 0.75)',  // DP: Amber
-                    'rgba(251, 146, 60, 0.75)',  // CL: Orange
-                    'rgba(59, 130, 246, 0.75)',  // CPDM: Light Blue
-                    'rgba(16, 185, 129, 0.85)'   // HQ1: Green
-                ];
-                donutBorders = ['#ef4444', '#f59e0b', '#fb923c', '#3b82f6', '#10b981'];
-            } else {
-                // Loss: distribute total expenses to see which expense component contributed how much to the total cost structure
-                donutTitle = "CẤU PHẦN TỈ TRỌNG CHI PHÍ & THÂM HỤT";
-                donutLabels = ['Bồi thường TN', 'Dự phòng phí', 'Chênh lệch DPBT', 'CPDM HQ1'];
-                donutData = [
-                    bt,
-                    dp,
-                    cl > 0 ? cl : 0,
-                    cp
-                ];
-                donutColors = [
-                    'rgba(239, 68, 68, 0.75)',  // BT: Red
-                    'rgba(245, 158, 11, 0.75)',  // DP: Amber
-                    'rgba(251, 146, 60, 0.75)',  // CL: Orange
-                    'rgba(59, 130, 246, 0.75)'   // CPDM: Light Blue
-                ];
-                donutBorders = ['#ef4444', '#f59e0b', '#fb923c', '#3b82f6'];
-            }
-
-            // Update HTML title on-the-fly to reflect mode
-            const titleEl = document.getElementById('branchContributionTitle');
-            if (titleEl) titleEl.innerText = donutTitle;
-
-            // Compute total for percentage calculations in tooltips
-            const totalSum = donutData.reduce((a, b) => a + b, 0);
-
-            chartBranchContribution = new Chart(donutCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: donutLabels,
-                    datasets: [{
-                        data: donutData,
-                        backgroundColor: donutColors,
-                        borderColor: donutBorders,
-                        borderWidth: 1.5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '60%',
-                    interaction: {
-                        mode: 'nearest',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                boxWidth: 10,
-                                padding: 10,
-                                font: { family: 'Inter', size: 10, weight: '500' }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#0f172a',
-                            titleFont: { family: 'Inter', size: 11, weight: 'bold' },
-                            bodyFont: { family: 'Inter', size: 11 },
-                            cornerRadius: 8,
-                            padding: 8,
-                            callbacks: {
-                                label: function(context) {
-                                    const val = context.raw;
-                                    const pct = totalSum > 0 ? ((val / totalSum) * 100).toFixed(1) : '0.0';
-                                    return context.label + ': ' + formatVND(val) + ' (' + pct + '%)';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            // Donut chart removed as requested
         }
 
         // --- DRAW PIE CHARTS FOR BRANCH LOB REVENUE & CLAIMS ---
