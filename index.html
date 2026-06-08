@@ -441,6 +441,10 @@
             padding-left: 8px;
             border-left: 3px solid var(--success);
             line-height: 1.2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         .ratio-chart-container {
@@ -1533,6 +1537,76 @@
         .scroll-on-hover:hover::-webkit-scrollbar {
             background: rgba(243, 244, 246, 0.4);
         }
+
+        /* Sorting button styles */
+        .sort-btn {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 6px;
+            padding: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            outline: none;
+            width: 20px;
+            height: 20px;
+        }
+        .sort-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+        .sort-icon-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            color: #9ca3af;
+        }
+        .sort-icon-up, .sort-icon-down {
+            transition: color 0.2s ease;
+            color: #d1d5db; /* default faint gray */
+        }
+        
+        /* Sort States for Ratio Charts */
+        .ratio-chart-col[data-type="profitable"] .sort-btn.asc .sort-icon-up,
+        .ratio-chart-col[data-type="profitable"] .sort-btn.desc .sort-icon-down {
+            color: var(--success);
+        }
+        .ratio-chart-col[data-type="unprofitable"] .sort-btn.asc .sort-icon-up,
+        .ratio-chart-col[data-type="unprofitable"] .sort-btn.desc .sort-icon-down {
+            color: var(--danger);
+        }
+
+        /* Sort States for Tables */
+        #btnSort_profitableTable.asc .sort-icon-up,
+        #btnSort_profitableTable.desc .sort-icon-down {
+            color: var(--success);
+        }
+        #btnSort_unprofitableTable.asc .sort-icon-up,
+        #btnSort_unprofitableTable.desc .sort-icon-down {
+            color: var(--danger);
+        }
+
+        .table-sort-btn {
+            background: transparent;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            width: 16px;
+            height: 16px;
+            margin-left: 2px;
+        }
+        .table-sort-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -1815,7 +1889,17 @@
                                     <tr>
                                         <th style="width: 100px; text-align: center;">Xếp hạng</th>
                                         <th>Đơn Vị</th>
-                                        <th class="text-right">HQ1</th>
+                                        <th class="text-right" style="padding-right: 8px;">
+                                            <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; width: 100%;">
+                                                <span>HQ1</span>
+                                                <button class="table-sort-btn" id="btnSort_profitableTable" onclick="toggleTableSort('profitableTable')" title="Sắp xếp">
+                                                    <span class="sort-icon-wrapper">
+                                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="profitableTableBody">
@@ -1844,7 +1928,17 @@
                                     <tr>
                                         <th style="width: 100px; text-align: center;">Xếp hạng</th>
                                         <th>Đơn Vị</th>
-                                        <th class="text-right">HQ1</th>
+                                        <th class="text-right" style="padding-right: 8px;">
+                                            <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; width: 100%;">
+                                                <span>HQ1</span>
+                                                <button class="table-sort-btn" id="btnSort_unprofitableTable" onclick="toggleTableSort('unprofitableTable')" title="Sắp xếp">
+                                                    <span class="sort-icon-wrapper">
+                                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="unprofitableTableBody">
@@ -1872,24 +1966,48 @@
 
                     <!-- Profitable Charts Grid -->
                     <div id="gridProfitableCharts" class="ratio-charts-grid">
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
+                        <div class="ratio-chart-col" data-type="profitable">
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">
+                                <span>TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartProfClaims" onclick="toggleRatioChartSort('chartProfClaims')" title="Sắp xếp">
+                                    <span class="sort-icon-wrapper">
+                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                    </span>
+                                </button>
+                            </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartProfClaims"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
+                        <div class="ratio-chart-col" data-type="profitable">
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">
+                                <span>TỶ LỆ CPDM / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartProfCpdm" onclick="toggleRatioChartSort('chartProfCpdm')" title="Sắp xếp">
+                                    <span class="sort-icon-wrapper">
+                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                    </span>
+                                </button>
+                            </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartProfCpdm"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--success);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
+                        <div class="ratio-chart-col" data-type="profitable">
+                            <div class="ratio-chart-header" style="border-left-color: var(--success);">
+                                <span>TỶ LỆ HQ1 / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartProfHq1" onclick="toggleRatioChartSort('chartProfHq1')" title="Sắp xếp">
+                                    <span class="sort-icon-wrapper">
+                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                    </span>
+                                </button>
+                            </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartProfHq1"></canvas>
@@ -1900,24 +2018,48 @@
 
                     <!-- Unprofitable Charts Grid -->
                     <div id="gridUnprofitableCharts" class="ratio-charts-grid" style="display: none;">
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</div>
+                        <div class="ratio-chart-col" data-type="unprofitable">
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">
+                                <span>TỶ LỆ BỒI THƯỜNG / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartUnprofClaims" onclick="toggleRatioChartSort('chartUnprofClaims')" title="Sắp xếp">
+                                    <span class="sort-icon-wrapper">
+                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                    </span>
+                                </button>
+                            </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartUnprofClaims"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ CPDM / DOANH THU THUẦN</div>
+                        <div class="ratio-chart-col" data-type="unprofitable">
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">
+                                <span>TỶ LỆ CPDM / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartUnprofCpdm" onclick="toggleRatioChartSort('chartUnprofCpdm')" title="Sắp xếp">
+                                    <span class="sort-icon-wrapper">
+                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                    </span>
+                                </button>
+                            </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartUnprofCpdm"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="ratio-chart-col">
-                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">TỶ LỆ HQ1 / DOANH THU THUẦN</div>
+                        <div class="ratio-chart-col" data-type="unprofitable">
+                            <div class="ratio-chart-header" style="border-left-color: var(--danger);">
+                                <span>TỶ LỆ HQ1 / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartUnprofHq1" onclick="toggleRatioChartSort('chartUnprofHq1')" title="Sắp xếp">
+                                    <span class="sort-icon-wrapper">
+                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
+                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
+                                    </span>
+                                </button>
+                            </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
                                     <canvas id="chartUnprofHq1"></canvas>
@@ -3804,6 +3946,72 @@
             });
         }
 
+        // Ratio Charts Sorting States
+        let ratioChartsSortStates = {
+            chartProfClaims: 'default',
+            chartProfCpdm: 'default',
+            chartProfHq1: 'default',
+            chartUnprofClaims: 'default',
+            chartUnprofCpdm: 'default',
+            chartUnprofHq1: 'default'
+        };
+
+        function getSortedData(canvasId, defaultNames, defaultVals) {
+            const state = ratioChartsSortStates[canvasId] || 'default';
+            if (state === 'default') {
+                return { names: defaultNames, vals: defaultVals };
+            }
+            
+            // Zip names and values
+            const zipped = defaultNames.map((name, i) => ({
+                name: name,
+                val: defaultVals[i]
+            }));
+            
+            // Sort
+            if (state === 'asc') {
+                zipped.sort((a, b) => a.val - b.val);
+            } else if (state === 'desc') {
+                zipped.sort((a, b) => b.val - a.val);
+            }
+            
+            return {
+                names: zipped.map(item => item.name),
+                vals: zipped.map(item => item.val)
+            };
+        }
+
+        function toggleRatioChartSort(canvasId) {
+            const currentState = ratioChartsSortStates[canvasId] || 'default';
+            let nextState = 'default';
+            if (currentState === 'default') {
+                nextState = 'asc';
+            } else if (currentState === 'asc') {
+                nextState = 'desc';
+            } else if (currentState === 'desc') {
+                nextState = 'default';
+            }
+            ratioChartsSortStates[canvasId] = nextState;
+            
+            // Update sort icon UI
+            updateSortIconUI(canvasId, nextState);
+            
+            // Re-render ratio charts
+            initRatioCharts();
+        }
+
+        function updateSortIconUI(id, state) {
+            const btn = document.getElementById('btnSort_' + id);
+            if (!btn) return;
+            
+            btn.classList.remove('asc', 'desc');
+            if (state === 'asc') {
+                btn.classList.add('asc');
+            } else if (state === 'desc') {
+                btn.classList.add('desc');
+            }
+        }
+
         function initRatioCharts() {
             if (!branchesData || branchesData.length === 0) return;
 
@@ -3830,10 +4038,15 @@
             const profCpdmVals = profitable.map(b => b.dt_thuan > 0 ? (b.cpdm / b.dt_thuan) : 0);
             const profHq1Vals = profitable.map(b => b.dt_thuan > 0 ? (b.hqqu / b.dt_thuan) : 0);
 
+            // Apply sort states
+            const sortedProfClaims = getSortedData('chartProfClaims', profNames, profClaimsVals);
+            const sortedProfCpdm = getSortedData('chartProfCpdm', profNames, profCpdmVals);
+            const sortedProfHq1 = getSortedData('chartProfHq1', profNames, profHq1Vals);
+
             // Create Profitable Charts
-            createRatioChart('chartProfClaims', 'Tỷ lệ Bồi thường', profNames, profClaimsVals, avgProfClaimsRatio, true);
-            createRatioChart('chartProfCpdm', 'Tỷ lệ CPDM', profNames, profCpdmVals, avgProfCpdmRatio, true);
-            createRatioChart('chartProfHq1', 'Tỷ lệ HQ1', profNames, profHq1Vals, avgProfHq1Ratio, true);
+            createRatioChart('chartProfClaims', 'Tỷ lệ Bồi thường', sortedProfClaims.names, sortedProfClaims.vals, avgProfClaimsRatio, true);
+            createRatioChart('chartProfCpdm', 'Tỷ lệ CPDM', sortedProfCpdm.names, sortedProfCpdm.vals, avgProfCpdmRatio, true);
+            createRatioChart('chartProfHq1', 'Tỷ lệ HQ1', sortedProfHq1.names, sortedProfHq1.vals, avgProfHq1Ratio, true);
 
             // 2. Calculate Averages for Unprofitable group
             let unprofTotalRev = 0, unprofTotalClaims = 0, unprofTotalCpdm = 0, unprofTotalHq1 = 0;
@@ -3853,10 +4066,40 @@
             const unprofCpdmVals = unprofitable.map(b => b.dt_thuan > 0 ? (b.cpdm / b.dt_thuan) : 0);
             const unprofHq1Vals = unprofitable.map(b => b.dt_thuan > 0 ? (b.hqqu / b.dt_thuan) : 0);
 
+            // Apply sort states
+            const sortedUnprofClaims = getSortedData('chartUnprofClaims', unprofNames, unprofClaimsVals);
+            const sortedUnprofCpdm = getSortedData('chartUnprofCpdm', unprofNames, unprofCpdmVals);
+            const sortedUnprofHq1 = getSortedData('chartUnprofHq1', unprofNames, unprofHq1Vals);
+
             // Create Unprofitable Charts
-            createRatioChart('chartUnprofClaims', 'Tỷ lệ Bồi thường', unprofNames, unprofClaimsVals, avgUnprofClaimsRatio, false);
-            createRatioChart('chartUnprofCpdm', 'Tỷ lệ CPDM', unprofNames, unprofCpdmVals, avgUnprofCpdmRatio, false);
-            createRatioChart('chartUnprofHq1', 'Tỷ lệ HQ1', unprofNames, unprofHq1Vals, avgUnprofHq1Ratio, false);
+            createRatioChart('chartUnprofClaims', 'Tỷ lệ Bồi thường', sortedUnprofClaims.names, sortedUnprofClaims.vals, avgUnprofClaimsRatio, false);
+            createRatioChart('chartUnprofCpdm', 'Tỷ lệ CPDM', sortedUnprofCpdm.names, sortedUnprofCpdm.vals, avgUnprofCpdmRatio, false);
+            createRatioChart('chartUnprofHq1', 'Tỷ lệ HQ1', sortedUnprofHq1.names, sortedUnprofHq1.vals, avgUnprofHq1Ratio, false);
+        }
+
+        // Table Sorting States
+        let tableSortStates = {
+            profitableTable: 'default',
+            unprofitableTable: 'default'
+        };
+
+        function toggleTableSort(tableId) {
+            const currentState = tableSortStates[tableId] || 'default';
+            let nextState = 'default';
+            if (currentState === 'default') {
+                nextState = 'asc';
+            } else if (currentState === 'asc') {
+                nextState = 'desc';
+            } else if (currentState === 'desc') {
+                nextState = 'default';
+            }
+            tableSortStates[tableId] = nextState;
+            
+            // Update sort icon UI
+            updateSortIconUI(tableId, nextState);
+            
+            // Re-populate tables
+            populateProfitableTables();
         }
 
         // ================= VIEW 1.5: PROFITABLE & UNPROFITABLE TABLES ENGINE =================
@@ -3873,9 +4116,32 @@
             const profitableBranches = allItems.filter(b => b.hqqu > 0);
             const unprofitableBranches = allItems.filter(b => b.hqqu <= 0);
 
-            // Sort: Profitable DESC, Unprofitable ASC (highest loss first)
+            // Sort default Rank: Profitable DESC, Unprofitable ASC (highest loss first)
             profitableBranches.sort((a, b) => b.hqqu - a.hqqu);
             unprofitableBranches.sort((a, b) => a.hqqu - b.hqqu);
+
+            // Assign official rank based on default sort
+            profitableBranches.forEach((b, idx) => {
+                b.officialRank = idx + 1;
+            });
+            unprofitableBranches.forEach((b, idx) => {
+                b.officialRank = idx + 1;
+            });
+
+            // Now apply sorting based on current sort state
+            const profState = tableSortStates.profitableTable || 'default';
+            if (profState === 'asc') {
+                profitableBranches.sort((a, b) => a.hqqu - b.hqqu);
+            } else if (profState === 'desc') {
+                profitableBranches.sort((a, b) => b.hqqu - a.hqqu);
+            }
+
+            const unprofState = tableSortStates.unprofitableTable || 'default';
+            if (unprofState === 'asc') {
+                unprofitableBranches.sort((a, b) => a.hqqu - b.hqqu);
+            } else if (unprofState === 'desc') {
+                unprofitableBranches.sort((a, b) => b.hqqu - a.hqqu);
+            }
 
             // Update count badges
             const profBadge = document.getElementById('profitableCountBadge');
@@ -3887,10 +4153,10 @@
             if (profitableBranches.length === 0) {
                 profitableBody.innerHTML = '<tr><td colspan="3" class="text-center" style="color: var(--text-secondary); padding: 12px;">Không có đơn vị nào</td></tr>';
             } else {
-                profitableBranches.forEach((b, index) => {
+                profitableBranches.forEach((b) => {
                     profitableBody.insertAdjacentHTML('beforeend', `
                         <tr class="clickable" onclick="openBranchModal('${b.name}')">
-                            <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${index + 1}</td>
+                            <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${b.officialRank}</td>
                             <td class="bold" style="font-weight: 500;"><span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10b981; margin-right:8px; box-shadow:0 0 6px rgba(16,185,129,0.6); vertical-align:middle;"></span>${b.name}</td>
                             <td class="text-right bold" style="color: var(--success); font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
                         </tr>
@@ -3902,10 +4168,10 @@
             if (unprofitableBranches.length === 0) {
                 unprofitableBody.innerHTML = '<tr><td colspan="3" class="text-center" style="color: var(--text-secondary); padding: 12px;">Không có đơn vị nào</td></tr>';
             } else {
-                unprofitableBranches.forEach((b, index) => {
+                unprofitableBranches.forEach((b) => {
                     unprofitableBody.insertAdjacentHTML('beforeend', `
                         <tr class="clickable" onclick="openBranchModal('${b.name}')">
-                            <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${index + 1}</td>
+                            <td class="text-center" style="color: var(--text-secondary); font-weight: 500;">${b.officialRank}</td>
                             <td class="bold" style="font-weight: 500;"><span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ef4444; margin-right:8px; box-shadow:0 0 6px rgba(239,68,68,0.6); vertical-align:middle;"></span>${b.name}</td>
                             <td class="text-right bold" style="color: var(--danger); font-variant-numeric: tabular-nums;">${formatVND(b.hqqu)}</td>
                         </tr>
@@ -4405,13 +4671,7 @@
                         },
                         quadrantLines: {
                             xValue: medianRevBln,
-                            yValue: 0,
-                            labels: {
-                                topLeft: 'TIỀM NĂNG (POTENTIALS)',
-                                topRight: 'NGÔI SAO (STARS)',
-                                bottomLeft: 'CẦN CẢI THIỆN (DOGS)',
-                                bottomRight: 'TRỤ CỘT (CASH COWS)'
-                            }
+                            yValue: 0
                         },
                         zoom: {
                             zoom: {
@@ -4536,7 +4796,7 @@
                 data: {
                     datasets: [
                         {
-                            label: 'Quản trị tốt',
+                            label: 'Hiệu quả Toàn diện',
                             data: goodMgmt,
                             backgroundColor: 'rgba(16, 185, 129, 0.85)',
                             borderColor: '#10b981',
@@ -4545,7 +4805,7 @@
                             pointHoverRadius: 8
                         },
                         {
-                            label: 'Rủi ro nghiệp vụ',
+                            label: 'Vận hành Tinh gọn / Áp lực Bồi thường',
                             data: lobRisk,
                             backgroundColor: 'rgba(59, 130, 246, 0.85)',
                             borderColor: '#3b82f6',
@@ -4554,7 +4814,7 @@
                             pointHoverRadius: 8
                         },
                         {
-                            label: 'Cồng kềnh',
+                            label: 'Dư địa Tối ưu Chi phí',
                             data: bulky,
                             backgroundColor: 'rgba(245, 158, 11, 0.85)',
                             borderColor: '#f59e0b',
@@ -4563,7 +4823,7 @@
                             pointHoverRadius: 8
                         },
                         {
-                            label: 'Yếu kém toàn diện',
+                            label: 'Trọng điểm Cải tổ',
                             data: poorMgmt,
                             backgroundColor: 'rgba(239, 68, 68, 0.85)',
                             borderColor: '#ef4444',
@@ -4600,13 +4860,7 @@
                             xValue: medianClaimRatio,
                             yValue: medianExpenseRatio,
                             xLabelFormat: val => `Trung vị: ${val.toFixed(1)}%`,
-                            yLabelFormat: val => `Trung vị: ${val.toFixed(1)}%`,
-                            labels: {
-                                topLeft: 'CỒNG KỀNH',
-                                topRight: 'YẾU KÉM TOÀN DIỆN',
-                                bottomLeft: 'QUẢN TRỊ TỐT',
-                                bottomRight: 'RỦI RO NGHIỆP VỤ'
-                            }
+                            yLabelFormat: val => `Trung vị: ${val.toFixed(1)}%`
                         },
                         zoom: {
                             zoom: {
