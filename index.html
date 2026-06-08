@@ -6303,6 +6303,40 @@
 
             const labels = ['Doanh Thu Thuần', 'Bồi Thường TN', 'Dự Phòng Phí', 'Chênh Lệch DPBT', 'CPDM HQ1', 'HQQU Thực Tế'];
 
+            // Calculate min/max bounds manually for proper Y-axis scaling
+            let allBounds = [];
+            floatData.forEach(item => {
+                if (Array.isArray(item)) {
+                    allBounds.push(item[0]);
+                    allBounds.push(item[1]);
+                } else {
+                    allBounds.push(item);
+                }
+            });
+            let maxVal = Math.max(...allBounds);
+            let minVal = Math.min(...allBounds, 0); // Always include 0
+            let range = maxVal - minVal;
+
+            // Choose a nice step size
+            let step = 10000 * 1e6; // 10,000 Tr (10B)
+            if (range < 20000 * 1e6) {
+                step = 2000 * 1e6; // 2,000 Tr (2B)
+            } else if (range < 50000 * 1e6) {
+                step = 5000 * 1e6; // 5,000 Tr (5B)
+            } else if (range > 150000 * 1e6) {
+                step = 20000 * 1e6; // 20,000 Tr (20B)
+            }
+
+            let yMin = Math.floor(minVal / step) * step;
+            let yMax = Math.ceil(maxVal / step) * step;
+            // Pad if too close to limits
+            if (maxVal > yMax - (step * 0.2)) {
+                yMax += step;
+            }
+            if (minVal < yMin + (step * 0.2)) {
+                yMin -= step;
+            }
+
             chartBranchBreakdown = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -6343,13 +6377,30 @@
                     },
                     scales: {
                         y: {
+                            min: yMin,
+                            max: yMax,
+                            grid: {
+                                color: function(context) {
+                                    return (context.tick && context.tick.value === 0) ? '#64748b' : '#f1f5f9';
+                                },
+                                lineWidth: function(context) {
+                                    return (context.tick && context.tick.value === 0) ? 2 : 1;
+                                },
+                                drawBorder: false
+                            },
                             ticks: {
+                                stepSize: step,
                                 callback: function(value) {
                                     return (value / 1e6) + ' Tr';
                                 }
                             }
                         },
-                        x: { ticks: { font: { size: 10, family: 'Inter', weight: '500' } } }
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: { font: { size: 10, family: 'Inter', weight: '500' } }
+                        }
                     }
                 }
             });
@@ -6425,6 +6476,10 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: '60%',
+                    interaction: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
                     plugins: {
                         legend: {
                             position: 'right',
