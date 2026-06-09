@@ -191,7 +191,8 @@
             min-width: 0;
         }
 
-        .sidebar.collapsed .nav-text {
+        .sidebar.collapsed .nav-text,
+        .sidebar.collapsed .nav-badge {
             display: none;
         }
 
@@ -1681,11 +1682,13 @@
         <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="showToast('Tính năng HQ2 Dashboard đang được phát triển!', 'error')" style="opacity: 0.6; cursor: not-allowed;">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
                 </svg>
             </span>
             <span class="nav-text">HQ2 Dashboard</span>
-            <span style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#9ca3af;letter-spacing:0.05em;flex-shrink:0;">SOON</span>
+            <span class="nav-badge" style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#9ca3af;letter-spacing:0.05em;flex-shrink:0;">SOON</span>
         </div>
 
         <div class="nav-item" id="settingsNavItem" data-tooltip="Cài đặt" onclick="switchSubTab('settings')">
