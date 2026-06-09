@@ -612,29 +612,7 @@
             z-index: 10;
         }
 
-        /* Top header section */
-        .header {
-            height: 64px;
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            flex-shrink: 0;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-        }
 
-        .header-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
 
         /* Content panels container */
         .content {
@@ -1299,27 +1277,7 @@
             100% { transform: scale(1); opacity: 0.7; }
         }
 
-        @keyframes dot-pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-            }
-        }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            display: inline-block;
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-            animation: dot-pulse 2s infinite;
-        }
 
         .status-badge.hq {
             background: rgba(0, 86, 163, 0.08);
@@ -1748,18 +1706,7 @@
 
     <!-- Main Workspace -->
     <main class="workspace">
-        <header class="header">
-            <div class="header-title">
-                <span id="headerTitleText">Phân tích tổng quan</span>
-                <span id="headerPeriodBadge" style="font-size:12px;font-weight:600;color:var(--text-secondary);background:rgba(0,0,0,0.06);padding:2px 8px;border-radius:12px;margin-left:8px;border: 1px solid rgba(0,0,0,0.04);">Q1.2026</span>
-            </div>
-            <div class="header-actions" style="display:flex;align-items:center;gap:16px;">
-                <span id="dataStatusIndicator" style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;font-weight:500;">
-                    <span class="status-dot"></span>
-                    Dữ liệu đã sẵn sàng
-                </span>
-            </div>
-        </header>
+
 
         <!-- Dynamic Content Area -->
         <div class="content">
@@ -2214,25 +2161,7 @@
                     </div>
                 </div>
 
-                <!-- Chart Row 1 -->
-                <div class="chart-grid-2x2">
-                    <div class="panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title">Doanh thu & Bồi thường theo nghiệp vụ (LOB)</div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartLobComparison"></canvas>
-                        </div>
-                    </div>
-                    <div class="panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title">Tỷ lệ bồi thường theo nghiệp vụ (LOB)</div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartLobPie"></canvas>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- ================= SEASONAL REVENUE ANALYSIS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
@@ -4185,11 +4114,7 @@
                 lobData.claims[3] += b.bt_y_te;
             });
 
-            // Draw Chart 1: LOB Comparison Chart
-            drawLobComparisonChart(lobData);
-
-            // Draw Chart 2: LOB Claim Ratio Chart
-            drawLobPieChart(lobData);
+            // (LOB charts removed as per request)
 
 
 
@@ -4601,259 +4526,9 @@
             }
         }
 
-        function drawLobComparisonChart(lobData) {
-            const ctx = document.getElementById('chartLobComparison').getContext('2d');
-            if (chartLobComparison) chartLobComparison.destroy();
 
-            // Distinct colors for LOBs: Con người (#0056a3), Du lịch (#0ea5e9), Xe Cơ Giới (#b38f35), Y tế (#10b981)
-            const revenueColors = [
-                'rgba(0, 86, 163, 0.85)',
-                'rgba(14, 165, 233, 0.85)',
-                'rgba(179, 143, 53, 0.85)',
-                'rgba(16, 185, 129, 0.85)'
-            ];
-            const revenueBorders = [
-                '#0056a3',
-                '#0ea5e9',
-                '#b38f35',
-                '#10b981'
-            ];
 
-            const claimsColors = [
-                'rgba(0, 86, 163, 0.35)',
-                'rgba(14, 165, 233, 0.35)',
-                'rgba(179, 143, 53, 0.35)',
-                'rgba(16, 185, 129, 0.35)'
-            ];
-            const claimsBorders = [
-                '#0056a3',
-                '#0ea5e9',
-                '#b38f35',
-                '#10b981'
-            ];
 
-            chartLobComparison = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Con người', 'Du lịch', 'Xe Cơ Giới', 'Y tế'],
-                    datasets: [
-                        {
-                            label: 'Doanh Thu',
-                            data: lobData.revenue,
-                            backgroundColor: revenueColors,
-                            borderColor: revenueBorders,
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        },
-                        {
-                            label: 'Bồi Thường',
-                            data: lobData.claims,
-                            backgroundColor: claimsColors,
-                            borderColor: claimsBorders,
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { family: 'Inter', size: 11, weight: '500' },
-                                generateLabels: (chart) => {
-                                    return [
-                                        {
-                                            text: 'Doanh Thu (Cột đậm)',
-                                            fillStyle: 'rgba(75, 85, 99, 0.85)',
-                                            strokeStyle: '#4b5563',
-                                            lineWidth: 1.5,
-                                            datasetIndex: 0
-                                        },
-                                        {
-                                            text: 'Bồi Thường (Cột nhạt)',
-                                            fillStyle: 'rgba(75, 85, 99, 0.35)',
-                                            strokeStyle: '#4b5563',
-                                            lineWidth: 1.5,
-                                            datasetIndex: 1
-                                        }
-                                    ];
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#0f172a',
-                            titleFont: { family: 'Inter', size: 12, weight: 'bold' },
-                            bodyFont: { family: 'Inter', size: 12 },
-                            cornerRadius: 8,
-                            padding: 10,
-                            boxPadding: 6,
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + formatVND(context.raw);
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.03)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return (value / 1e9) + ' Tỷ';
-                                },
-                                font: { size: 10 }
-                            }
-                        },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { font: { family: 'Inter', size: 11, weight: '600' } } 
-                        }
-                    }
-                }
-            });
-        }
-
-        function drawLobPieChart(lobData) {
-            const ctx = document.getElementById('chartLobPie').getContext('2d');
-            if (chartLobPie) chartLobPie.destroy();
-
-            const labels = ['Con người', 'Du lịch', 'Xe Cơ Giới', 'Y tế'];
-            const claimRatios = [];
-            for (let i = 0; i < 4; i++) {
-                const ratio = lobData.revenue[i] > 0 ? (lobData.claims[i] / lobData.revenue[i]) * 100 : 0;
-                claimRatios.push(ratio);
-            }
-
-            // Calculate system average claim ratio
-            const totalRev = lobData.revenue.reduce((a, b) => a + b, 0);
-            const totalClm = lobData.claims.reduce((a, b) => a + b, 0);
-            const systemAvgClaimRatio = totalRev > 0 ? (totalClm / totalRev) * 100 : 0;
-
-            const systemAvgLinePlugin = {
-                id: 'systemAvgLine',
-                beforeDraw(chart) {
-                    const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
-                    const xPixel = x.getPixelForValue(systemAvgClaimRatio);
-                    
-                    ctx.save();
-                    ctx.strokeStyle = 'rgba(220, 38, 38, 0.85)'; // Red dashed line
-                    ctx.lineWidth = 1.5;
-                    ctx.setLineDash([4, 4]);
-                    
-                    // Draw vertical line
-                    ctx.beginPath();
-                    ctx.moveTo(xPixel, top);
-                    ctx.lineTo(xPixel, bottom);
-                    ctx.stroke();
-                    
-                    // Draw label text at the top of the line
-                    ctx.fillStyle = '#dc2626';
-                    ctx.font = 'bold 9px Inter, sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottom';
-                    ctx.fillText(`TB hệ thống: ${systemAvgClaimRatio.toFixed(1)}%`, xPixel, top - 4);
-                    ctx.restore();
-                }
-            };
-
-            const horizontalBarLabelsPlugin = {
-                id: 'horizontalBarLabels',
-                afterDatasetsDraw(chart) {
-                    const { ctx } = chart;
-                    chart.data.datasets.forEach((dataset, datasetIndex) => {
-                        const meta = chart.getDatasetMeta(datasetIndex);
-                        meta.data.forEach((bar, index) => {
-                            const val = dataset.data[index];
-                            const xPixel = bar.x;
-                            const yPixel = bar.y;
-                            ctx.save();
-                            ctx.fillStyle = '#1e293b';
-                            ctx.font = '600 10px Inter, sans-serif';
-                            ctx.textAlign = 'left';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText(val.toFixed(1) + '%', xPixel + 6, yPixel);
-                            ctx.restore();
-                        });
-                    });
-                }
-            };
-
-            chartLobPie = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Tỷ lệ Bồi thường (%)',
-                        data: claimRatios,
-                        backgroundColor: [
-                            'rgba(0, 86, 163, 0.85)', // Con người
-                            'rgba(14, 165, 233, 0.85)', // Du lịch
-                            'rgba(179, 143, 53, 0.85)', // Xe Cơ Giới
-                            'rgba(16, 185, 129, 0.85)'  // Y tế
-                        ],
-                        borderColor: [
-                            '#0056a3',
-                            '#0ea5e9',
-                            '#b38f35',
-                            '#10b981'
-                        ],
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            top: 15 // Leave space for average line label
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0f172a',
-                            titleFont: { family: 'Inter', size: 11, weight: 'bold' },
-                            bodyFont: { family: 'Inter', size: 11 },
-                            cornerRadius: 8,
-                            padding: 8,
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw.toFixed(2) + '%';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grace: '12%', // Leave space for value labels on horizontal bars
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toFixed(0) + '%';
-                                },
-                                font: { size: 9, family: 'Inter' }
-                            },
-                            grid: { color: 'rgba(0, 0, 0, 0.03)' }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { font: { size: 9, family: 'Inter', weight: '600' } }
-                        }
-                    }
-                },
-                plugins: [systemAvgLinePlugin, horizontalBarLabelsPlugin]
-            });
-        }
 
         function drawTopRevenueChart() {
             // Sort branches (excluding headquarters) descending by revenue, take top 10
@@ -7056,17 +6731,7 @@
                 document.getElementById('hqqu-submenu').classList.remove('expanded');
             }
 
-            // Update top header title dynamically
-            const titleMap = {
-                'overview': 'Phân tích tổng quan',
-                'branch': 'Phân tích chi nhánh chi tiết',
-                'table': 'Bảng tổng hợp chi tiết',
-                'settings': 'Cài đặt hệ thống'
-            };
-            const headerTitleEl = document.getElementById('headerTitleText');
-            if (headerTitleEl && titleMap[subTabId]) {
-                headerTitleEl.textContent = titleMap[subTabId];
-            }
+
         }
 
         // Submenu expanding/collapsing toggle
