@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BaoViet Actuarial Intelligence - HQQU Dashboard</title>
+    <title>Baoviet HQQU Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -26,12 +27,12 @@
             --sidebar-width: 280px;
             
             /* Option B theme variables (Sáng kính mờ) */
-            --bg-canvas: #f8fafc;
-            --bg-sidebar: #f3f4f6; /* Smoke gray */
+            --bg-canvas: #f5f5f5;
+            --bg-sidebar: #efefef; /* Neutral gray */
             --sidebar-text: #4b5563;
             --sidebar-text-active: var(--bv-blue);
             --sidebar-hover-bg: rgba(0, 0, 0, 0.04);
-            --sidebar-border: #e5e7eb;
+            --sidebar-border: #e4e4e4;
             --sidebar-active-indicator: var(--bv-blue);
             --text-primary: #111827;
             --text-secondary: #4b5563;
@@ -68,11 +69,11 @@
 
         /* Modern Glassmorphic Core (Option B styling) */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.75) !important;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.6) !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 28px rgba(0,0,0,0.07) !important;
         }
 
         /* Sidebar styling identical to reference index_upr_calculation.html */
@@ -280,7 +281,7 @@
         .nav-sub-item {
             display: flex;
             align-items: center;
-            padding: 8px 14px 8px 44px;
+            padding: 8px 14px 8px 40px;
             margin-bottom: 4px;
             border-radius: 10px;
             cursor: pointer;
@@ -294,7 +295,7 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            opacity: 0.8;
+            gap: 8px;
         }
 
         .nav-sub-item:hover {
@@ -360,7 +361,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: var(--bv-blue);
+            background: linear-gradient(135deg, #0068c4 0%, #003f7a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -369,8 +370,9 @@
             font-weight: 700;
             margin-right: 12px;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0, 86, 163, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 86, 163, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
             transition: margin 0.3s;
+            letter-spacing: 0;
         }
 
         .sidebar.collapsed .user-profile {
@@ -490,11 +492,11 @@
 
         .segmented-control {
             display: inline-flex;
-            background: #f3f4f6;
+            background: rgba(0, 0, 0, 0.05);
             padding: 3px;
             border-radius: 20px;
-            border: 1px solid #e5e7eb;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
         }
 
         .segmented-control button {
@@ -612,15 +614,17 @@
 
         /* Top header section */
         .header {
-            height: 70px;
+            height: 64px;
             padding: 0 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             flex-shrink: 0;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
         }
 
         .header-title {
@@ -665,12 +669,12 @@
         }
 
         .panel {
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 24px;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -2px rgba(0,0,0,0.01);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.05);
             background: #ffffff;
         }
 
@@ -822,21 +826,21 @@
         }
 
         .metric-card {
-            border-radius: 16px;
+            border-radius: 14px;
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 6px -2px rgba(0,0,0,0.01);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
             background: #ffffff;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .metric-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-            border-color: rgba(0, 86, 163, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 16px 32px rgba(0,0,0,0.08);
+            border-color: rgba(0, 86, 163, 0.18);
         }
 
         .metric-label {
@@ -848,14 +852,14 @@
         }
 
         .metric-value {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: 700;
             color: var(--bv-blue);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
         }
 
         .metric-trend {
@@ -896,9 +900,9 @@
 
         /* Simple table styling for side-by-side lists */
         .table-simple th {
-            background: #f3f4f6 !important;
+            background: #f0f0f0 !important;
             color: #374151 !important;
-            border-bottom: 1px solid #e5e7eb !important;
+            border-bottom: 1px solid #e0e0e0 !important;
             border-right: none !important;
             letter-spacing: normal !important;
             text-transform: uppercase;
@@ -908,17 +912,17 @@
 
         .table-simple td {
             border-right: none !important;
-            border-bottom: 1px solid #f3f4f6 !important;
+            border-bottom: 1px solid #f0f0f0 !important;
             padding: 10px 14px !important;
             background: #ffffff !important;
         }
 
         .table-simple tr:hover td {
-            background: rgba(0, 86, 163, 0.04) !important;
+            background: rgba(0, 0, 0, 0.03) !important;
         }
 
         .table-simple tr:nth-child(even) td {
-            background: #fafbfe !important; /* Soft brand-tinted zebra rows */
+            background: #fafafa !important;
         }
 
         .table-filter-input {
@@ -1131,8 +1135,8 @@
 
         th, td {
             padding: 12px 16px;
-            border-bottom: 1px solid rgba(0, 86, 163, 0.06);
-            border-right: 1px solid rgba(0, 86, 163, 0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            border-right: 1px solid rgba(0, 0, 0, 0.06);
             white-space: nowrap;
             vertical-align: middle;
         }
@@ -1180,7 +1184,7 @@
         }
 
         tr:hover td {
-            background: rgba(0, 86, 163, 0.04) !important;
+            background: rgba(0, 0, 0, 0.02) !important;
         }
 
         tr.clickable {
@@ -1192,18 +1196,13 @@
         }
 
         .ratio-col {
-            background-color: rgba(0, 86, 163, 0.04) !important;
-            color: #374151;
-            font-style: italic;
-            font-size: 11.5px;
+            background-color: rgba(0, 0, 0, 0.015) !important;
         }
         th.ratio-col {
             background: linear-gradient(180deg, #004a8f 0%, #003870 100%) !important;
-            font-style: italic;
-            opacity: 0.92;
         }
         tr:hover td.ratio-col {
-            background-color: rgba(0, 86, 163, 0.08) !important;
+            background-color: rgba(0, 0, 0, 0.035) !important;
         }
 
         .text-center {
@@ -1300,23 +1299,52 @@
             100% { transform: scale(1); opacity: 0.7; }
         }
 
+        @keyframes dot-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            display: inline-block;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+            animation: dot-pulse 2s infinite;
+        }
+
+        .status-badge.hq {
+            background: rgba(0, 86, 163, 0.08);
+            color: var(--bv-blue);
+            border: 1px solid rgba(0, 86, 163, 0.18);
+        }
+
         .toast-notification {
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 86, 163, 0.2);
-            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 12px 20px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             z-index: 10000;
             display: flex;
             align-items: center;
-            gap: 10px;
-            transform: translateY(100px);
+            gap: 12px;
+            transform: translateY(20px);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             pointer-events: none;
         }
 
@@ -1324,6 +1352,20 @@
             transform: translateY(0);
             opacity: 1;
             pointer-events: auto;
+        }
+
+        .toast-notification.success {
+            border-left: 4px solid var(--success);
+            border-right: 1px solid rgba(16, 185, 129, 0.15);
+            border-top: 1px solid rgba(16, 185, 129, 0.15);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .toast-notification.error {
+            border-left: 4px solid var(--danger);
+            border-right: 1px solid rgba(239, 68, 68, 0.15);
+            border-top: 1px solid rgba(239, 68, 68, 0.15);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.15);
         }
 
         /* Modal windows */
@@ -1665,26 +1707,27 @@
         </div>
         <div id="hqqu-submenu" class="submenu-container expanded">
             <div class="nav-sub-item active" id="subitemOverview" onclick="switchSubTab('overview')">
-                <span style="margin-right: 10px; font-size: 12px; opacity: 0.5;">↳</span>
+                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.5;"></span>
                 Phân tích tổng quan
             </div>
             <div class="nav-sub-item" id="subitemBranch" onclick="switchSubTab('branch')">
-                <span style="margin-right: 10px; font-size: 12px; opacity: 0.5;">↳</span>
+                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
                 Phân tích chi tiết
             </div>
             <div class="nav-sub-item" id="subitemTable" onclick="switchSubTab('table')">
-                <span style="margin-right: 10px; font-size: 12px; opacity: 0.5;">↳</span>
+                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
                 Bảng tổng hợp chi tiết
             </div>
         </div>
 
-        <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="showToast('Tính năng HQ2 Dashboard đang được phát triển!', 'error')">
+        <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="showToast('Tính năng HQ2 Dashboard đang được phát triển!', 'error')" style="opacity: 0.6; cursor: not-allowed;">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                 </svg>
             </span>
             <span class="nav-text">HQ2 Dashboard</span>
+            <span style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#9ca3af;letter-spacing:0.05em;flex-shrink:0;">SOON</span>
         </div>
 
         <div class="nav-item" id="settingsNavItem" data-tooltip="Cài đặt" onclick="switchSubTab('settings')">
@@ -1705,7 +1748,18 @@
 
     <!-- Main Workspace -->
     <main class="workspace">
-
+        <header class="header">
+            <div class="header-title">
+                <span id="headerTitleText">Phân tích tổng quan</span>
+                <span id="headerPeriodBadge" style="font-size:12px;font-weight:600;color:var(--text-secondary);background:rgba(0,0,0,0.06);padding:2px 8px;border-radius:12px;margin-left:8px;border: 1px solid rgba(0,0,0,0.04);">Q1.2026</span>
+            </div>
+            <div class="header-actions" style="display:flex;align-items:center;gap:16px;">
+                <span id="dataStatusIndicator" style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;font-weight:500;">
+                    <span class="status-dot"></span>
+                    Dữ liệu đã sẵn sàng
+                </span>
+            </div>
+        </header>
 
         <!-- Dynamic Content Area -->
         <div class="content">
@@ -1916,7 +1970,7 @@
                     <div class="panel glass-panel" style="padding: 20px;">
                         <div class="panel-header" style="margin-bottom: 12px; align-items: center; display: flex; justify-content: space-between;">
                             <div class="panel-title" style="border-left-color: var(--success);">
-                                CÁC ĐƠN VỊ HOẠT ĐỘNG CÓ HIỆU QUẢ
+                                Các đơn vị hoạt động có hiệu quả
                             </div>
                             <button class="btn-download-icon" onclick="downloadEfficiencyReport()" title="Tải báo cáo hiệu quả đơn vị (1 file 2 sheets)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1955,7 +2009,7 @@
                     <div class="panel glass-panel" style="padding: 20px;">
                         <div class="panel-header" style="margin-bottom: 12px; align-items: center; display: flex; justify-content: space-between;">
                             <div class="panel-title" style="border-left-color: var(--danger);">
-                                CÁC ĐƠN VỊ HOẠT ĐỘNG KHÔNG HIỆU QUẢ
+                                Các đơn vị hoạt động không hiệu quả
                             </div>
                             <button class="btn-download-icon" onclick="downloadEfficiencyReport()" title="Tải báo cáo hiệu quả đơn vị (1 file 2 sheets)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1996,7 +2050,7 @@
                 <!-- ================= DIAGNOSTIC RATIO CHARTS ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f4f4f5; padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                        <div class="panel-title" style="border-left-color: var(--bv-accent);">CÁC TỶ LỆ TÀI CHÍNH</div>
+                        <div class="panel-title" style="border-left-color: var(--bv-accent);">Các tỷ lệ tài chính</div>
                         <div class="segmented-control">
                             <button class="active" id="tabProfitableCharts" onclick="switchRatioTab('profitable')">
                                 <span class="indicator-dot success"></span> Đơn vị hoạt động có hiệu quả
@@ -2117,7 +2171,7 @@
                     <!-- 2x2 Performance Matrix -->
                     <div class="panel glass-panel">
                         <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">MA TRẬN HIỆU QUẢ HOẠT ĐỘNG</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">Ma trận hiệu quả hoạt động</div>
                             <button id="btnResetZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetMatrixZoom()">
                                 Reset Zoom
                             </button>
@@ -2130,7 +2184,7 @@
                     <!-- 2x2 Operating Performance Matrix -->
                     <div class="panel glass-panel">
                         <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">MA TRẬN HIỆU QUẢ VẬN HÀNH</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">Ma trận hiệu quả vận hành</div>
                             <button id="btnResetOpeZoom" class="btn" style="padding: 4px 10px; font-size: 11px; display: none; background: #ffffff; border: 1px solid #e2e8f0; color: #4b5563; font-weight: 600; cursor: pointer; border-radius: 6px;" onclick="resetOpeMatrixZoom()">
                                 Reset Zoom
                             </button>
@@ -2143,7 +2197,7 @@
                     <!-- Pareto HQ1 Contribution -->
                     <div class="panel glass-panel" style="grid-column: span 2;">
                         <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">ĐÓNG GÓP HIỆU QUẢ NGHIỆP VỤ (PARETO)</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">Đóng góp hiệu quả nghiệp vụ (Pareto)</div>
                             <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
                                 <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
                                     HQ1 > 0
@@ -2164,7 +2218,7 @@
                 <div class="chart-grid-2x2">
                     <div class="panel glass-panel">
                         <div class="panel-header">
-                            <div class="panel-title">DOANH THU & BỒI THƯỜNG THEO NGHIỆP VỤ (LOB)</div>
+                            <div class="panel-title">Doanh thu & Bồi thường theo nghiệp vụ (LOB)</div>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartLobComparison"></canvas>
@@ -2172,7 +2226,7 @@
                     </div>
                     <div class="panel glass-panel">
                         <div class="panel-header">
-                            <div class="panel-title">TỶ LỆ BỒI THƯỜNG THEO NGHIỆP VỤ (LOB)</div>
+                            <div class="panel-title">Tỷ lệ bồi thường theo nghiệp vụ (LOB)</div>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartLobPie"></canvas>
@@ -2184,7 +2238,7 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
                         <div class="panel-title" id="titleSeasonalUnit" style="border-left-color: var(--bv-accent);">
-                            PHÂN TÍCH MÙA VỤ DOANH THU & BỒI THƯỜNG CHI TIẾT THEO ĐƠN VỊ
+                            Phân tích mùa vụ doanh thu & bồi thường chi tiết theo đơn vị
                         </div>
                         <div class="segmented-control" style="margin-left: auto; margin-right: 16px;">
                             <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
@@ -2280,7 +2334,7 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
                         <div class="panel-title" id="titleSeasonalLob" style="border-left-color: var(--bv-accent);">
-                            PHÂN TÍCH MÙA VỤ DOANH THU & BỒI THƯỜNG CHI TIẾT THEO NGHIỆP VỤ
+                            Phân tích mùa vụ doanh thu & bồi thường chi tiết theo nghiệp vụ
                         </div>
                         <div class="segmented-control" style="margin-left: auto; margin-right: 16px;">
                             <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
@@ -2326,7 +2380,7 @@
             <div id="viewBranch" class="view-panel">
                 <div class="panel glass-panel" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; z-index: 100; overflow: visible !important;">
                     <div class="panel-header" style="margin-bottom: 0;">
-                        <div class="panel-title">LỰA CHỌN ĐƠN VỊ PHÂN TÍCH</div>
+                        <div class="panel-title">Lựa chọn đơn vị phân tích</div>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
                         <div class="custom-select-container" id="branchSelectContainer">
@@ -2560,7 +2614,7 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
                         <div class="panel-title" id="titleSeasonalBranchLob" style="border-left-color: var(--bv-accent);">
-                            PHÂN TÍCH MÙA VỤ DOANH THU & BỒI THƯỜNG CHI TIẾT THEO NGHIỆP VỤ (ĐƠN VỊ ĐANG CHỌN)
+                            Phân tích mùa vụ doanh thu & bồi thường chi tiết theo nghiệp vụ (đơn vị đang chọn)
                         </div>
                         <div class="segmented-control" style="margin-left: auto;">
                             <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
@@ -2600,7 +2654,7 @@
                     <!-- Left: Revenue Pie Chart -->
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU DOANH THU NGHIỆP VỤ</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">Cơ cấu doanh thu nghiệp vụ</div>
                         </div>
                         <div style="flex: 1; min-height: 260px; position: relative; display: flex; align-items: center; justify-content: center;">
                             <canvas id="chartBranchRevenuePie"></canvas>
@@ -2609,7 +2663,7 @@
                     <!-- Right: Claims Pie Chart -->
                     <div class="panel glass-panel" style="display: flex; flex-direction: column;">
                         <div class="panel-header">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CƠ CẤU BỒI THƯỜNG NGHIỆP VỤ</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">Cơ cấu bồi thường nghiệp vụ</div>
                         </div>
                         <div style="flex: 1; min-height: 260px; position: relative; display: flex; align-items: center; justify-content: center;">
                             <canvas id="chartBranchClaimsPie"></canvas>
@@ -2620,10 +2674,10 @@
                 <!-- Hero Panel: Waterfall Flow -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header">
-                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">PHÂN TÍCH DIỄN BIẾN HÌNH THÀNH HIỆU QUẢ NGHIỆP VỤ (HQ1)</div>
+                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">Phân tích diễn biến hình thành hiệu quả nghiệp vụ (HQ1)</div>
                     </div>
                     <div style="font-size: 11px; font-weight: 500; color: #6b7280; margin-bottom: 12px; letter-spacing: 0.2px;">
-                        DIỄN BIẾN CHI TIẾT CÁC CẤU PHẦN CỘNG/TRỪ TỪ DOANH THU THUẦN ĐẾN HIỆU QUẢ NGHIỆP VỤ THỰC TẾ (WATERFALL)
+                        Diễn biến chi tiết các cấu phần cộng/trừ từ doanh thu thuần đến hiệu quả nghiệp vụ thực tế (Waterfall)
                     </div>
                     <div style="height: 320px; position: relative; width: 100%;">
                         <canvas id="chartBranchBreakdown"></canvas>
@@ -2634,13 +2688,16 @@
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <div class="panel-title" style="border-left-color: var(--bv-accent);">CHI TIẾT CẤU PHẦN & TỶ LỆ HIỆU QUẢ NGHIỆP VỤ</div>
+                            <div class="panel-title" style="border-left-color: var(--bv-accent);">Chi tiết cấu phần & tỷ lệ hiệu quả nghiệp vụ</div>
                             <div style="font-size: 11px; font-weight: 500; color: #6b7280; letter-spacing: 0.2px;">
-                                CÁC CẤU PHẦN (VND) VÀ TỶ LỆ SO VỚI DOANH THU THUẦN (%) CHI TIẾT THEO TỪNG NGHIỆP VỤ
+                                Các cấu phần (VND) và tỷ lệ so với doanh thu thuần (%) chi tiết theo từng nghiệp vụ
                             </div>
                         </div>
-                        <button class="btn btn-outline" id="btnExportBranchLobExcel" style="height: 34px; padding: 0 12px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
-                            📥 Tải dữ liệu
+                        <button class="btn btn-outline" id="btnExportBranchLobExcel" title="Tải dữ liệu bảng LOB" style="height: 36px; width: 36px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1.5px solid #cbd5e1; background: #fff; cursor: pointer; transition: box-shadow 0.18s, border-color 0.18s; flex-shrink: 0;">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 3v9m0 0l-3-3m3 3l3-3" stroke="#3b82f6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4 14v1.5A1.5 1.5 0 005.5 17h9a1.5 1.5 0 001.5-1.5V14" stroke="#3b82f6" stroke-width="1.7" stroke-linecap="round"/>
+                            </svg>
                         </button>
                     </div>
                     <div class="table-container" style="margin-top: 0; overflow-x: auto;">
@@ -2650,15 +2707,15 @@
                                     <th>Nghiệp vụ</th>
                                     <th class="text-right">DT Thuần</th>
                                     <th class="text-right">BT thuộc TN</th>
-                                    <th class="text-right ratio-col">TL BT/DT</th>
+                                    <th class="text-right ratio-col">TL BT/DT Thuần</th>
                                     <th class="text-right">DP Phí</th>
-                                    <th class="text-right ratio-col">TL DP/DT</th>
+                                    <th class="text-right ratio-col">TL DP/DT Thuần</th>
                                     <th class="text-right">CL DPBT</th>
-                                    <th class="text-right ratio-col">TL CL/DT</th>
+                                    <th class="text-right ratio-col">TL CL/DT Thuần</th>
                                     <th class="text-right">CPDM</th>
-                                    <th class="text-right ratio-col">TL CPDM/DT</th>
+                                    <th class="text-right ratio-col">TL CPDM/DT Thuần</th>
                                     <th class="text-right">HQQU</th>
-                                    <th class="text-right ratio-col">TL HQQU/DT</th>
+                                    <th class="text-right ratio-col">TL HQQU/DT Thuần</th>
                                 </tr>
                             </thead>
                             <tbody id="branchDetailedLobTableBody">
@@ -2717,12 +2774,12 @@
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 600; color: var(--text-primary); font-size: 14px;">Ngôn ngữ</label>
-                            <select class="form-control" style="max-width: 200px; height: 38px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0 12px; font-size: 13px; font-weight: 500;">
+                            <select class="form-control" style="max-width: 200px; height: 38px; padding: 0 12px; font-size: 13px;">
                                 <option value="vi">Tiếng Việt</option>
                                 <option value="en" disabled>English (Soon)</option>
                             </select>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 20px; margin-top: 10px;">
+                        <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid rgba(0, 0, 0, 0.06); padding-top: 20px; margin-top: 10px;">
                             <label style="font-weight: 600; color: var(--text-primary); font-size: 14px;">Phiên bản</label>
                             <span style="color: var(--text-secondary); font-size: 13px; font-weight: 500;">BaoViet Underwriting Efficiency Dashboard v1.1.0</span>
                         </div>
@@ -2872,11 +2929,29 @@
             const icon = document.getElementById('toastIcon');
             const msg = document.getElementById('toastMessage');
             
-            icon.textContent = type === 'success' ? '✅' : '❌';
+            if (type === 'success') {
+                icon.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                `;
+                toast.className = 'toast-notification success show';
+            } else {
+                icon.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                `;
+                toast.className = 'toast-notification error show';
+            }
             msg.textContent = message;
             
-            toast.className = 'toast-notification show';
-            setTimeout(() => {
+            if (toast._timeoutId) {
+                clearTimeout(toast._timeoutId);
+            }
+            toast._timeoutId = setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
         }
@@ -6285,7 +6360,7 @@
                 const totalHqquClass = branch.hqqu < 0 ? 'text-danger' : 'text-bv';
 
                 tbody.insertAdjacentHTML('beforeend', `
-                    <tr class="total-row" style="border-top: 2px solid rgba(0, 86, 163, 0.15); font-weight: bold; background-color: rgba(0, 86, 163, 0.05);">
+                    <tr class="total-row" style="border-top: 2px solid rgba(0, 0, 0, 0.12); font-weight: bold; background-color: rgba(0, 0, 0, 0.035);">
                         <td class="bold">TỔNG CỘNG</td>
                         <td class="text-right">${formatVND(branch.dt_thuan)}</td>
                         <td class="text-right">${formatVND(branch.bt_trach_nhiem)}</td>
@@ -6773,7 +6848,7 @@
             // Append Headquarters "Trụ sở chính" at the bottom as a special static row (doesn't sort)
             if (headquartersData && headquartersData.name.toLowerCase().includes(query)) {
                 tbody.insertAdjacentHTML('beforeend', `
-                    <tr class="clickable" onclick="openBranchModal('${headquartersData.name}')" style="background: rgba(0, 86, 163, 0.05); border-top: 2px solid var(--bv-blue);">
+                    <tr class="clickable" onclick="openBranchModal('${headquartersData.name}')" style="background: rgba(0, 0, 0, 0.035); border-top: 2px solid var(--bv-blue);">
                         <td class="text-center bold">★</td>
                         <td class="bold text-bv">${headquartersData.name}</td>
                         <td class="text-right bold">${formatVND(headquartersData.tong_dt)}</td>
@@ -6782,7 +6857,7 @@
                         <td class="text-right bold">${formatVND(headquartersData.cpdm)}</td>
                         <td class="text-right bold" style="color: ${headquartersData.hqqu >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatVND(headquartersData.hqqu)}</td>
                         <td class="text-center">
-                            <span class="status-badge" style="background: rgba(0, 86, 163, 0.1); color: var(--bv-blue); border: 1px solid rgba(0, 86, 163, 0.25)">Trụ Sở</span>
+                            <span class="status-badge hq">Trụ Sở</span>
                         </td>
                     </tr>
                 `);
@@ -6979,6 +7054,18 @@
                 document.getElementById('dashboardNavItem').classList.remove('active');
                 // Auto collapse submenu when Settings is active
                 document.getElementById('hqqu-submenu').classList.remove('expanded');
+            }
+
+            // Update top header title dynamically
+            const titleMap = {
+                'overview': 'Phân tích tổng quan',
+                'branch': 'Phân tích chi nhánh chi tiết',
+                'table': 'Bảng tổng hợp chi tiết',
+                'settings': 'Cài đặt hệ thống'
+            };
+            const headerTitleEl = document.getElementById('headerTitleText');
+            if (headerTitleEl && titleMap[subTabId]) {
+                headerTitleEl.textContent = titleMap[subTabId];
             }
         }
 
