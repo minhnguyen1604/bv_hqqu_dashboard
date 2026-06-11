@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baoviet HQQU Dashboard</title>
+    <title>Baoviet HQ2 Dashboard</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1653,7 +1653,7 @@
 
         <div class="nav-label">Modules</div>
         
-        <div class="nav-item" id="dashboardNavItem" data-tooltip="HQ1 Dashboard" onclick="toggleSubmenu('hqqu-submenu', this)">
+        <div class="nav-item" id="dashboardNavItem" data-tooltip="HQ2 Dashboard" onclick="toggleSubmenu('hqqu-submenu', this)">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="9" rx="1"></rect>
@@ -1662,7 +1662,7 @@
                     <rect x="3" y="16" width="7" height="5" rx="1"></rect>
                 </svg>
             </span>
-            <span class="nav-text">HQ1 Dashboard</span>
+            <span class="nav-text">HQ2 Dashboard</span>
         </div>
         <div id="hqqu-submenu" class="submenu-container expanded">
             <div class="nav-sub-item active" id="subitemOverview" onclick="switchSubTab('overview')">
@@ -1679,7 +1679,7 @@
             </div>
         </div>
 
-        <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="window.location.href='hq2.html'">
+        <div class="nav-item" id="hq1NavItem" data-tooltip="HQ1 Dashboard" onclick="window.location.href='index.html'">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -1687,8 +1687,7 @@
                     <polyline points="2 12 12 17 22 12"></polyline>
                 </svg>
             </span>
-            <span class="nav-text">HQ2 Dashboard</span>
-            <span class="nav-badge" style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#9ca3af;letter-spacing:0.05em;flex-shrink:0;">SOON</span>
+            <span class="nav-text">HQ1 Dashboard</span>
         </div>
 
         <div class="nav-item" id="settingsNavItem" data-tooltip="Cài đặt" onclick="switchSubTab('settings')">
@@ -1800,9 +1799,9 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">Tổng HQ1</span>
+                            <span class="metric-label">Tổng HQ2</span>
                         </div>
-                        <span class="metric-value text-bv" id="kpiTotalHQ1">0 ₫</span>
+                        <span class="metric-value text-bv" id="kpiTotalHQ2">0 ₫</span>
                         <div class="metric-trend-row">
                             <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
@@ -1899,9 +1898,9 @@
                     </div>
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">TỶ LỆ HQ1 / DOANH THU THUẦN</span>
+                            <span class="metric-label">Tỷ lệ HQ2 / DOANH THU THUẦN</span>
                         </div>
-                        <span class="metric-value text-bv" id="kpiHQ1Ratio">0.00%</span>
+                        <span class="metric-value text-bv" id="kpiHQ2Ratio">0.00%</span>
                         <div class="metric-trend-row">
                             <span class="trend-item neutral">
                                 <span class="trend-arrow">▲</span>
@@ -1938,7 +1937,7 @@
                                         <th>Đơn Vị</th>
                                         <th class="text-right" style="padding-right: 8px;">
                                             <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; width: 100%;">
-                                                <span>HQ1</span>
+                                                <span>HQ2</span>
                                                 <button class="table-sort-btn" id="btnSort_profitableTable" onclick="toggleTableSort('profitableTable')" title="Sắp xếp">
                                                     <span class="sort-icon-wrapper">
                                                         <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
@@ -1977,7 +1976,7 @@
                                         <th>Đơn Vị</th>
                                         <th class="text-right" style="padding-right: 8px;">
                                             <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; width: 100%;">
-                                                <span>HQ1</span>
+                                                <span>HQ2</span>
                                                 <button class="table-sort-btn" id="btnSort_unprofitableTable" onclick="toggleTableSort('unprofitableTable')" title="Sắp xếp">
                                                     <span class="sort-icon-wrapper">
                                                         <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
@@ -2047,8 +2046,8 @@
                         </div>
                         <div class="ratio-chart-col" data-type="profitable">
                             <div class="ratio-chart-header" style="border-left-color: var(--success);">
-                                <span>TỶ LỆ HQ1 / DOANH THU THUẦN</span>
-                                <button class="sort-btn" id="btnSort_chartProfHq1" onclick="toggleRatioChartSort('chartProfHq1')" title="Sắp xếp">
+                                <span>Tỷ lệ HQ2 / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartProfHq2" onclick="toggleRatioChartSort('chartProfHq2')" title="Sắp xếp">
                                     <span class="sort-icon-wrapper">
                                         <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
                                         <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
@@ -2057,7 +2056,7 @@
                             </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartProfHq1"></canvas>
+                                    <canvas id="chartProfHq2"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -2099,8 +2098,8 @@
                         </div>
                         <div class="ratio-chart-col" data-type="unprofitable">
                             <div class="ratio-chart-header" style="border-left-color: var(--danger);">
-                                <span>TỶ LỆ HQ1 / DOANH THU THUẦN</span>
-                                <button class="sort-btn" id="btnSort_chartUnprofHq1" onclick="toggleRatioChartSort('chartUnprofHq1')" title="Sắp xếp">
+                                <span>Tỷ lệ HQ2 / DOANH THU THUẦN</span>
+                                <button class="sort-btn" id="btnSort_chartUnprofHq2" onclick="toggleRatioChartSort('chartUnprofHq2')" title="Sắp xếp">
                                     <span class="sort-icon-wrapper">
                                         <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
                                         <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
@@ -2109,7 +2108,7 @@
                             </div>
                             <div class="ratio-chart-container">
                                 <div class="ratio-chart-scroll-wrapper">
-                                    <canvas id="chartUnprofHq1"></canvas>
+                                    <canvas id="chartUnprofHq2"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -2144,16 +2143,16 @@
                         </div>
                     </div>
 
-                    <!-- Pareto HQ1 Contribution -->
+                    <!-- Pareto HQ2 Contribution -->
                     <div class="panel glass-panel" style="grid-column: span 2;">
                         <div class="panel-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                             <div class="panel-title" style="border-left-color: var(--bv-accent);">Đóng góp hiệu quả nghiệp vụ (Pareto)</div>
                             <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
                                 <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    HQ1 > 0
+                                    HQ2 > 0
                                 </button>
                                 <button id="tabParetoNegative" onclick="switchParetoTab('negative')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    HQ1 < 0
+                                    HQ2 < 0
                                 </button>
                             </div>
                         </div>
@@ -2418,18 +2417,18 @@
                             </span>
                         </div>
                     </div>
-                    <!-- HQ1 -->
+                    <!-- HQ2 -->
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">TỔNG HQ1</span>
+                            <span class="metric-label">Tổng HQ2</span>
                         </div>
-                        <span class="metric-value text-bv" id="branchKpiHQ1">0 ₫</span>
+                        <span class="metric-value text-bv" id="branchKpiHQ2">0 ₫</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item neutral" id="branchYoYHQ1">
+                            <span class="trend-item neutral" id="branchYoYHQ2">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item neutral" id="branchQoQHQ1">
+                            <span class="trend-item neutral" id="branchQoQHQ2">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -2523,18 +2522,18 @@
                             </span>
                         </div>
                     </div>
-                    <!-- Tỷ lệ HQ1 -->
+                    <!-- Tỷ lệ HQ2 -->
                     <div class="metric-card">
                         <div class="metric-card-top">
-                            <span class="metric-label">TỶ LỆ HQ1 / DOANH THU THUẦN</span>
+                            <span class="metric-label">Tỷ lệ HQ2 / DOANH THU THUẦN</span>
                         </div>
-                        <span class="metric-value" id="branchKpiHQ1Ratio">0%</span>
+                        <span class="metric-value" id="branchkpiHQ2Ratio">0%</span>
                         <div class="metric-trend-row">
-                            <span class="trend-item neutral" id="branchYoYHQ1Ratio">
+                            <span class="trend-item neutral" id="branchYoYHQ2Ratio">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% YoY</span>
                             </span>
-                            <span class="trend-item neutral" id="branchQoQHQ1Ratio">
+                            <span class="trend-item neutral" id="branchQoQHQ2Ratio">
                                 <span class="trend-arrow">▲</span>
                                 <span>--% QoQ</span>
                             </span>
@@ -2606,7 +2605,7 @@
                 <!-- Hero Panel: Waterfall Flow -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
                     <div class="panel-header">
-                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">Phân tích diễn biến hình thành hiệu quả nghiệp vụ (HQ1)</div>
+                        <div class="panel-title" id="titleBranchBreakdown" style="border-left-color: var(--bv-accent);">Phân tích diễn biến hình thành hiệu quả nghiệp vụ (HQ2)</div>
                     </div>
                     <div style="font-size: 11px; font-weight: 500; color: #6b7280; margin-bottom: 12px; letter-spacing: 0.2px;">
                         Diễn biến chi tiết các cấu phần cộng/trừ từ doanh thu thuần đến hiệu quả nghiệp vụ thực tế (Waterfall)
@@ -2680,7 +2679,7 @@
                                     <th class="sortable text-right" data-sort="revenue">Doanh Thu (VND)</th>
                                     <th class="sortable text-right" data-sort="claims">Bồi Thường (VND)</th>
                                     <th class="sortable text-right" data-sort="net_revenue">Doanh Thu Thuần (VND)</th>
-                                    <th class="sortable text-right" data-sort="cpdm">CPDM HQ1 (VND)</th>
+                                    <th class="sortable text-right" data-sort="cpdm">CPDM HQ2 (VND)</th>
                                     <th class="sortable text-right" data-sort="hqqu">HQQU (VND)</th>
                                     <th class="text-center" style="width: 100px;">Chi tiết</th>
                                 </tr>
@@ -2728,7 +2727,7 @@
             <div class="upload-icon">📊</div>
             <h3 style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Đang tải Dữ liệu HQQU</h3>
             <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;" id="uploadStatusText">
-                Ứng dụng đang cố gắng đồng bộ trực tiếp tệp <strong>HQ1_Q1_2026.xlsx</strong> từ máy chủ cục bộ...
+                Ứng dụng đang cố gắng đồng bộ trực tiếp tệp <strong>HQ2_Q1_2026.xlsx</strong> từ máy chủ cục bộ...
             </p>
             <div id="manualUploadArea" style="display: none;">
                 <button class="btn btn-primary" onclick="document.getElementById('fileUploadInput').click()">
@@ -2736,7 +2735,7 @@
                 </button>
                 <input type="file" id="fileUploadInput" style="display: none;" accept=".xlsx, .xlsm">
                 <p style="font-size: 12px; color: var(--text-secondary); margin-top: 12px;">
-                    Hoặc kéo và thả tệp Excel <strong>HQ1_Q1_2026.xlsx</strong> vào vùng này.
+                    Hoặc kéo và thả tệp Excel <strong>HQ2_Q1_2026.xlsx</strong> vào vùng này.
                 </p>
             </div>
         </div>
@@ -2904,7 +2903,7 @@
                 'Doanh Thu (VND)': b.tong_dt,
                 'Bồi Thường (VND)': b.bt_trach_nhiem,
                 'CPDM (VND)': b.cpdm,
-                'Hiệu Quả HQ1 (VND)': b.hqqu
+                'Hiệu Quả HQ2 (VND)': b.hqqu
             }));
 
             // Prepare data for Sheet 2 (Unprofitable)
@@ -2914,7 +2913,7 @@
                 'Doanh Thu (VND)': b.tong_dt,
                 'Bồi Thường (VND)': b.bt_trach_nhiem,
                 'CPDM (VND)': b.cpdm,
-                'Hiệu Quả HQ1 (VND)': b.hqqu
+                'Hiệu Quả HQ2 (VND)': b.hqqu
             }));
 
             try {
@@ -2998,23 +2997,23 @@
             
             try {
                 // Try loading 2025 data first
-                statusText.innerHTML = 'Đang tải tệp dữ liệu lịch sử <strong>DT_CTTV_HQ1_2025.xlsx</strong>...';
-                const response2025 = await fetch('DT_CTTV_HQ1_2025.xlsx');
+                statusText.innerHTML = 'Đang tải tệp dữ liệu lịch sử <strong>DT_CTTV_HQ2_2025.xlsx</strong>...';
+                const response2025 = await fetch('DT_CTTV_HQ2_2025.xlsx');
                 if (response2025.ok) {
                     const buffer2025 = await response2025.arrayBuffer();
                     parseExcelWorkbook2025(buffer2025);
                 } else {
-                    console.warn('Cannot download DT_CTTV_HQ1_2025.xlsx from server, YoY/QoQ will be unavailable');
+                    console.warn('Cannot download DT_CTTV_HQ2_2025.xlsx from server, YoY/QoQ will be unavailable');
                 }
             } catch (err2025) {
                 console.warn('Auto fetch 2025 data failed:', err2025);
             }
 
             try {
-                statusText.innerHTML = 'Đang tải tệp dữ liệu <strong>HQ1_Q1_2026.xlsx</strong>...';
-                const response = await fetch('HQ1_Q1_2026.xlsx');
+                statusText.innerHTML = 'Đang tải tệp dữ liệu <strong>HQ2_Q1_2026.xlsx</strong>...';
+                const response = await fetch('HQ2_Q1_2026.xlsx');
                 if (!response.ok) {
-                    throw new Error('Không thể tải tệp HQ1_Q1_2026.xlsx từ server.');
+                    throw new Error('Không thể tải tệp HQ2_Q1_2026.xlsx từ server.');
                 }
                 const buffer = await response.arrayBuffer();
                 parseExcelWorkbook(buffer);
@@ -3302,7 +3301,7 @@
 
                 console.log('Đã nạp thành công dữ liệu lịch sử 2025 cho', Object.keys(raw2025Cumulative).length, 'đơn vị');
             } catch (err) {
-                console.error('Lỗi khi phân tích tệp DT_CTTV_HQ1_2025.xlsx:', err);
+                console.error('Lỗi khi phân tích tệp DT_CTTV_HQ2_2025.xlsx:', err);
             }
         }
 
@@ -3995,7 +3994,7 @@
             let totalPremiumReserve = 0;
             let totalClaimReserveDiff = 0;
             let totalExpenseLimit = 0;
-            let totalHQ1 = 0;
+            let totalHQ2 = 0;
 
             let totalRevenueQ1_2025 = 0;
             let totalRevenueQ4_2025 = 0;
@@ -4009,7 +4008,7 @@
                 totalPremiumReserve += b.du_phong_phi;
                 totalClaimReserveDiff += b.chenh_lech_dpbt;
                 totalExpenseLimit += b.cpdm;
-                totalHQ1 += b.hqqu;
+                totalHQ2 += b.hqqu;
 
                 const hist = raw2025Cumulative[b.name];
                 if (hist) {
@@ -4024,7 +4023,7 @@
             let sumPremiumReserve = 0;
             let sumClaimReserveDiff = 0;
             let sumExpenseLimit = 0;
-            let sumHQ1 = 0;
+            let sumHQ2 = 0;
 
             const numBranches = branchesData.length;
             branchesData.forEach(b => {
@@ -4033,7 +4032,7 @@
                 sumPremiumReserve += b.du_phong_phi;
                 sumClaimReserveDiff += b.chenh_lech_dpbt;
                 sumExpenseLimit += b.cpdm;
-                sumHQ1 += b.hqqu;
+                sumHQ2 += b.hqqu;
             });
 
             const avgRevenue = numBranches > 0 ? (sumRevenue / numBranches) : 0;
@@ -4041,7 +4040,7 @@
             const avgPremiumReserve = numBranches > 0 ? (sumPremiumReserve / numBranches) : 0;
             const avgClaimReserveDiff = numBranches > 0 ? (sumClaimReserveDiff / numBranches) : 0;
             const avgExpenseLimit = numBranches > 0 ? (sumExpenseLimit / numBranches) : 0;
-            const avgHQ1 = numBranches > 0 ? (sumHQ1 / numBranches) : 0;
+            const avgHQ2 = numBranches > 0 ? (sumHQ2 / numBranches) : 0;
 
             // Render overall KPIs - Totals
             document.getElementById('kpiTotalRevenue').innerText = formatShortVND(totalRevenue);
@@ -4051,12 +4050,12 @@
             document.getElementById('kpiTotalPremiumReserve').innerText = formatShortVND(totalPremiumReserve);
             document.getElementById('kpiTotalClaimReserveDiff').innerText = formatShortVND(totalClaimReserveDiff);
             document.getElementById('kpiTotalExpenseLimit').innerText = formatShortVND(totalExpenseLimit);
-            document.getElementById('kpiTotalHQ1').innerText = formatShortVND(totalHQ1);
+            document.getElementById('kpiTotalHQ2').innerText = formatShortVND(totalHQ2);
 
-            if (totalHQ1 < 0) {
-                document.getElementById('kpiTotalHQ1').className = 'metric-value text-danger';
+            if (totalHQ2 < 0) {
+                document.getElementById('kpiTotalHQ2').className = 'metric-value text-danger';
             } else {
-                document.getElementById('kpiTotalHQ1').className = 'metric-value text-bv';
+                document.getElementById('kpiTotalHQ2').className = 'metric-value text-bv';
             }
 
             // Calculate new KPIs
@@ -4072,7 +4071,7 @@
 
             const claimsRatio = totalNetRevenue > 0 ? (totalClaims / totalNetRevenue) * 100 : 0;
             const cpdmRatio = totalNetRevenue > 0 ? (totalExpenseLimit / totalNetRevenue) * 100 : 0;
-            const hq1Ratio = totalNetRevenue > 0 ? (totalHQ1 / totalNetRevenue) * 100 : 0;
+            const hq2Ratio = totalNetRevenue > 0 ? (totalHQ2 / totalNetRevenue) * 100 : 0;
 
             // Render overall KPIs - New Cards
             document.getElementById('kpiCountProfitable').innerText = countProfitable + ' đơn vị';
@@ -4091,12 +4090,12 @@
                 }
             }
             
-            const hq1RatioEl = document.getElementById('kpiHQ1Ratio');
-            hq1RatioEl.innerText = hq1Ratio.toFixed(2) + '%';
-            if (hq1Ratio < 0) {
-                hq1RatioEl.className = 'metric-value text-danger';
+            const hq2RatioEl = document.getElementById('kpiHQ2Ratio');
+            hq2RatioEl.innerText = hq2Ratio.toFixed(2) + '%';
+            if (hq2Ratio < 0) {
+                hq2RatioEl.className = 'metric-value text-danger';
             } else {
-                hq1RatioEl.className = 'metric-value text-bv';
+                hq2RatioEl.className = 'metric-value text-bv';
             }
 
             // Build LOB breakdown metrics
@@ -4299,10 +4298,10 @@
         let ratioChartsSortStates = {
             chartProfClaims: 'default',
             chartProfCpdm: 'default',
-            chartProfHq1: 'default',
+            chartProfHq2: 'default',
             chartUnprofClaims: 'default',
             chartUnprofCpdm: 'default',
-            chartUnprofHq1: 'default'
+            chartUnprofHq2: 'default'
         };
 
         function getSortedData(canvasId, defaultNames, defaultVals) {
@@ -4370,16 +4369,16 @@
             const unprofitable = branchesData.filter(b => b.hqqu <= 0).sort((a, b) => a.hqqu - b.hqqu);
 
             // 1. Calculate Averages for Profitable group
-            let profTotalRev = 0, profTotalClaims = 0, profTotalCpdm = 0, profTotalHq1 = 0;
+            let profTotalRev = 0, profTotalClaims = 0, profTotalCpdm = 0, proftotalHQ2 = 0;
             profitable.forEach(b => {
                 profTotalRev += b.dt_thuan;
                 profTotalClaims += b.bt_trach_nhiem;
                 profTotalCpdm += b.cpdm;
-                profTotalHq1 += b.hqqu;
+                proftotalHQ2 += b.hqqu;
             });
             const avgProfClaimsRatio = profTotalRev > 0 ? (profTotalClaims / profTotalRev) : 0;
             const avgProfCpdmRatio = profTotalRev > 0 ? (profTotalCpdm / profTotalRev) : 0;
-            const avgProfHq1Ratio = profTotalRev > 0 ? (profTotalHq1 / profTotalRev) : 0;
+            const avgProfHq2Ratio = profTotalRev > 0 ? (proftotalHQ2 / profTotalRev) : 0;
 
             // Prepare lists for Profitable Charts
             const profNames = profitable.map(b => b.name);
@@ -4390,24 +4389,24 @@
             // Apply sort states
             const sortedProfClaims = getSortedData('chartProfClaims', profNames, profClaimsVals);
             const sortedProfCpdm = getSortedData('chartProfCpdm', profNames, profCpdmVals);
-            const sortedProfHq1 = getSortedData('chartProfHq1', profNames, profHq1Vals);
+            const sortedProfHq2 = getSortedData('chartProfHq2', profNames, profHq1Vals);
 
             // Create Profitable Charts
             createRatioChart('chartProfClaims', 'Tỷ lệ Bồi thường', sortedProfClaims.names, sortedProfClaims.vals, avgProfClaimsRatio, true);
             createRatioChart('chartProfCpdm', 'Tỷ lệ CPDM', sortedProfCpdm.names, sortedProfCpdm.vals, avgProfCpdmRatio, true);
-            createRatioChart('chartProfHq1', 'Tỷ lệ HQ1', sortedProfHq1.names, sortedProfHq1.vals, avgProfHq1Ratio, true);
+            createRatioChart('chartProfHq2', 'Tỷ lệ HQ2', sortedProfHq2.names, sortedProfHq2.vals, avgProfHq2Ratio, true);
 
             // 2. Calculate Averages for Unprofitable group
-            let unprofTotalRev = 0, unprofTotalClaims = 0, unprofTotalCpdm = 0, unprofTotalHq1 = 0;
+            let unprofTotalRev = 0, unprofTotalClaims = 0, unprofTotalCpdm = 0, unproftotalHQ2 = 0;
             unprofitable.forEach(b => {
                 unprofTotalRev += b.dt_thuan;
                 unprofTotalClaims += b.bt_trach_nhiem;
                 unprofTotalCpdm += b.cpdm;
-                unprofTotalHq1 += b.hqqu;
+                unproftotalHQ2 += b.hqqu;
             });
             const avgUnprofClaimsRatio = unprofTotalRev > 0 ? (unprofTotalClaims / unprofTotalRev) : 0;
             const avgUnprofCpdmRatio = unprofTotalRev > 0 ? (unprofTotalCpdm / unprofTotalRev) : 0;
-            const avgUnprofHq1Ratio = unprofTotalRev > 0 ? (unprofTotalHq1 / unprofTotalRev) : 0;
+            const avgUnprofHq2Ratio = unprofTotalRev > 0 ? (unproftotalHQ2 / unprofTotalRev) : 0;
 
             // Prepare lists for Unprofitable Charts
             const unprofNames = unprofitable.map(b => b.name);
@@ -4418,12 +4417,12 @@
             // Apply sort states
             const sortedUnprofClaims = getSortedData('chartUnprofClaims', unprofNames, unprofClaimsVals);
             const sortedUnprofCpdm = getSortedData('chartUnprofCpdm', unprofNames, unprofCpdmVals);
-            const sortedUnprofHq1 = getSortedData('chartUnprofHq1', unprofNames, unprofHq1Vals);
+            const sortedUnprofHq2 = getSortedData('chartUnprofHq2', unprofNames, unprofHq1Vals);
 
             // Create Unprofitable Charts
             createRatioChart('chartUnprofClaims', 'Tỷ lệ Bồi thường', sortedUnprofClaims.names, sortedUnprofClaims.vals, avgUnprofClaimsRatio, false);
             createRatioChart('chartUnprofCpdm', 'Tỷ lệ CPDM', sortedUnprofCpdm.names, sortedUnprofCpdm.vals, avgUnprofCpdmRatio, false);
-            createRatioChart('chartUnprofHq1', 'Tỷ lệ HQ1', sortedUnprofHq1.names, sortedUnprofHq1.vals, avgUnprofHq1Ratio, false);
+            createRatioChart('chartUnprofHq2', 'Tỷ lệ HQ2', sortedUnprofHq2.names, sortedUnprofHq2.vals, avgUnprofHq2Ratio, false);
         }
 
         // Table Sorting States
@@ -4621,7 +4620,7 @@
                 data: {
                     labels: topBranches.map(b => b.name),
                     datasets: [{
-                        label: 'HQ1',
+                        label: 'HQ2',
                         data: topBranches.map(b => b.hqqu),
                         backgroundColor: hqquGradient,
                         borderColor: 'rgba(16, 185, 129, 0.9)',
@@ -4644,7 +4643,7 @@
                             boxPadding: 6,
                             callbacks: {
                                 label: function(context) {
-                                    return 'HQ1: ' + formatVND(context.raw);
+                                    return 'HQ2: ' + formatVND(context.raw);
                                 }
                             }
                         }
@@ -4913,7 +4912,7 @@
                 data: {
                     datasets: [
                         {
-                            label: 'Doanh thu cao, HQ1 >= 0',
+                            label: 'Doanh thu cao, HQ2 >= 0',
                             data: stars,
                             backgroundColor: 'rgba(16, 185, 129, 0.85)',
                             borderColor: '#10b981',
@@ -4923,7 +4922,7 @@
                             hidden: !matrixGroupVisibility.stars
                         },
                         {
-                            label: 'Doanh thu thấp, HQ1 >= 0',
+                            label: 'Doanh thu thấp, HQ2 >= 0',
                             data: potentials,
                             backgroundColor: 'rgba(59, 130, 246, 0.85)',
                             borderColor: '#3b82f6',
@@ -4933,7 +4932,7 @@
                             hidden: !matrixGroupVisibility.potentials
                         },
                         {
-                            label: 'Doanh thu cao, HQ1 < 0',
+                            label: 'Doanh thu cao, HQ2 < 0',
                             data: cashCows,
                             backgroundColor: 'rgba(245, 158, 11, 0.85)',
                             borderColor: '#f59e0b',
@@ -4943,7 +4942,7 @@
                             hidden: !matrixGroupVisibility.cashCows
                         },
                         {
-                            label: 'Doanh thu thấp, HQ1 < 0',
+                            label: 'Doanh thu thấp, HQ2 < 0',
                             data: dogs,
                             backgroundColor: 'rgba(239, 68, 68, 0.85)',
                             borderColor: '#ef4444',
@@ -5010,7 +5009,7 @@
                                         }
                                     }
                                     return [
-                                        `${name}: DT = ${context.raw.x.toFixed(1)} Tỷ, Tỷ suất HQ1 = ${context.raw.y.toFixed(1)}%`,
+                                        `${name}: DT = ${context.raw.x.toFixed(1)} Tỷ, Tỷ suất HQ2 = ${context.raw.y.toFixed(1)}%`,
                                         ...(extraText ? [extraText] : [])
                                     ];
                                 }
@@ -5064,7 +5063,7 @@
                         y: {
                             title: {
                                 display: true,
-                                text: 'Tỷ suất HQ1 / Doanh thu thuần (%)',
+                                text: 'Tỷ suất HQ2 / Doanh thu thuần (%)',
                                 font: { family: 'Inter', size: 11, weight: '600' }
                             },
                             grid: {
@@ -5535,7 +5534,7 @@
                     datasets: [
                         {
                             type: 'bar',
-                            label: 'Lợi nhuận HQ1 (Tỷ VND)',
+                            label: 'Lợi nhuận HQ2 (Tỷ VND)',
                             data: posBarData,
                             backgroundColor: 'rgba(0, 86, 163, 0.85)',
                             borderColor: 'rgba(0, 86, 163, 1)',
@@ -5574,7 +5573,7 @@
                             callbacks: {
                                 label: function(context) {
                                     if (context.datasetIndex === 0) {
-                                        return `Lợi nhuận HQ1: ${(context.raw).toFixed(2)} Tỷ VND`;
+                                        return `Lợi nhuận HQ2: ${(context.raw).toFixed(2)} Tỷ VND`;
                                     } else {
                                         return `Đóng góp lũy kế: ${context.raw.toFixed(1)}%`;
                                     }
@@ -5597,7 +5596,7 @@
                             position: 'left',
                             title: {
                                 display: true,
-                                text: 'HQ1 (Tỷ VND)',
+                                text: 'HQ2 (Tỷ VND)',
                                 font: { family: 'Inter', size: 11, weight: '600' }
                             },
                             grid: { color: 'rgba(0, 0, 0, 0.03)' }
@@ -5885,12 +5884,12 @@
             document.getElementById('branchKpiPremiumReserve').innerText = formatVND(branch.du_phong_phi);
             document.getElementById('branchKpiClaimReserveDiff').innerText = formatVND(branch.chenh_lech_dpbt);
             document.getElementById('branchKpiExpenseLimit').innerText = formatVND(branch.cpdm);
-            document.getElementById('branchKpiHQ1').innerText = formatVND(branch.hqqu);
+            document.getElementById('branchKpiHQ2').innerText = formatVND(branch.hqqu);
 
             if (branch.hqqu < 0) {
-                document.getElementById('branchKpiHQ1').className = 'metric-value text-danger';
+                document.getElementById('branchKpiHQ2').className = 'metric-value text-danger';
             } else {
-                document.getElementById('branchKpiHQ1').className = 'metric-value text-bv';
+                document.getElementById('branchKpiHQ2').className = 'metric-value text-bv';
             }
 
             // Calculate YoY and QoQ for Revenue based on 2025 data
@@ -5904,7 +5903,7 @@
             const reserveRatio = branch.dt_thuan > 0 ? (branch.du_phong_phi / branch.dt_thuan) * 100 : 0;
             const reserveDiffRatio = branch.dt_thuan > 0 ? (branch.chenh_lech_dpbt / branch.dt_thuan) * 100 : 0;
             const combinedRatio = claimsRatio + expenseRatio;
-            const hq1Ratio = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
+            const hq2Ratio = branch.dt_thuan > 0 ? (branch.hqqu / branch.dt_thuan) * 100 : 0;
 
             // Render 6 Ratio KPIs
             document.getElementById('branchKpiClaimsRatio').innerText = claimsRatio.toFixed(2) + '%';
@@ -5920,12 +5919,12 @@
                 combinedRatioEl.className = 'metric-value text-success';
             }
 
-            const hq1RatioEl = document.getElementById('branchKpiHQ1Ratio');
-            hq1RatioEl.innerText = hq1Ratio.toFixed(2) + '%';
-            if (hq1Ratio < 0) {
-                hq1RatioEl.className = 'metric-value text-danger';
+            const hq2RatioEl = document.getElementById('branchkpiHQ2Ratio');
+            hq2RatioEl.innerText = hq2Ratio.toFixed(2) + '%';
+            if (hq2Ratio < 0) {
+                hq2RatioEl.className = 'metric-value text-danger';
             } else {
-                hq1RatioEl.className = 'metric-value text-bv';
+                hq2RatioEl.className = 'metric-value text-bv';
             }
 
             // Trend badges for ratios (set to neutral since no 2025 ratio history exists)
@@ -5939,8 +5938,8 @@
             updateTrendBadge('branchQoQReserveDiffRatio', null, null, 'QoQ');
             updateTrendBadge('branchYoYCombinedRatio', null, null, 'YoY');
             updateTrendBadge('branchQoQCombinedRatio', null, null, 'QoQ');
-            updateTrendBadge('branchYoYHQ1Ratio', null, null, 'YoY');
-            updateTrendBadge('branchQoQHQ1Ratio', null, null, 'QoQ');
+            updateTrendBadge('branchYoYHQ2Ratio', null, null, 'YoY');
+            updateTrendBadge('branchQoQHQ2Ratio', null, null, 'QoQ');
 
             // Build LOB breakdown rows
             const lobs = [
@@ -6213,11 +6212,11 @@
             floatData.push([accum, accum - cl]);
             accum -= cl;
 
-            // CPDM HQ1
+            // CPDM HQ2
             floatData.push([accum, accum - cp]);
             accum -= cp;
 
-            // HQ1 Thực tế
+            // HQ2 Thực tế
             floatData.push([0, hq]);
 
             // Map colors based on steps
@@ -6227,7 +6226,7 @@
                 dp < 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)',  // DP: Green if gain, Red if loss
                 cl < 0 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(239, 68, 68, 0.75)', // CL: Green if gain, Red if loss
                 'rgba(239, 68, 68, 0.75)',  // CPDM: Red
-                hq >= 0 ? 'rgba(0, 86, 163, 0.85)' : 'rgba(220, 38, 38, 0.85)' // HQ1: Dark blue if profit, Dark red if loss
+                hq >= 0 ? 'rgba(0, 86, 163, 0.85)' : 'rgba(220, 38, 38, 0.85)' // HQ2: Dark blue if profit, Dark red if loss
             ];
 
             const borderColors = [
@@ -6239,7 +6238,7 @@
                 hq >= 0 ? '#0056a3' : '#dc2626'
             ];
 
-            const labels = ['Doanh Thu Thuần', 'Bồi Thường TN', 'Dự Phòng Phí', 'Chênh Lệch DPBT', 'CPDM HQ1', 'HQQU Thực Tế'];
+            const labels = ['Doanh Thu Thuần', 'Bồi Thường TN', 'Dự Phòng Phí', 'Chênh Lệch DPBT', 'CPDM HQ2', 'HQQU Thực Tế'];
 
             // Calculate min/max bounds manually for proper Y-axis scaling
             let allBounds = [];
@@ -6595,7 +6594,7 @@
                 <tr><td>Bồi thường thuộc trách nhiệm</td><td class="text-right">${formatVND(branch.bt_trach_nhiem)}</td></tr>
                 <tr><td>Dự phòng phí</td><td class="text-right">${formatVND(branch.du_phong_phi)}</td></tr>
                 <tr><td>Chênh lệch Dự phòng bồi thường</td><td class="text-right">${formatVND(branch.chenh_lech_dpbt)}</td></tr>
-                <tr><td>CPDM HQ1</td><td class="text-right">${formatVND(branch.cpdm)}</td></tr>
+                <tr><td>CPDM HQ2</td><td class="text-right">${formatVND(branch.cpdm)}</td></tr>
             `;
 
             document.getElementById('modalBtnAnalyze').onclick = function() {
@@ -6616,7 +6615,7 @@
             if (branchesData.length === 0) return;
 
             let csvContent = '\uFEFF'; // UTF-8 BOM
-            csvContent += 'STT,Tên Đơn Vị,Doanh Thu (VND),Bồi Thường (VND),Doanh Thu Thuần (VND),CPDM HQ1 (VND),HQQU (VND)\n';
+            csvContent += 'STT,Tên Đơn Vị,Doanh Thu (VND),Bồi Thường (VND),Doanh Thu Thuần (VND),CPDM HQ2 (VND),HQQU (VND)\n';
 
             branchesData.forEach((b, index) => {
                 csvContent += `${index + 1},"${b.name}",${b.tong_dt},${b.tong_bt},${b.dt_thuan},${b.cpdm},${b.hqqu}\n`;
