@@ -1653,7 +1653,7 @@
 
         <div class="nav-label">Modules</div>
         
-        <div class="nav-item" id="dashboardNavItem" data-tooltip="HQ1 Dashboard" onclick="toggleSubmenu('hqqu-submenu', this)">
+        <div class="nav-item" id="dashboardNavItem" data-tooltip="HQ1 Dashboard" onclick="if(currentDashboard==='hq2'){switchDashboard('hq1');}else{toggleSubmenu('hqqu-submenu', this);}">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="9" rx="1"></rect>
@@ -1679,7 +1679,7 @@
             </div>
         </div>
 
-        <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="window.location.href='hq2.html'">
+        <div class="nav-item" id="hq2NavItem" data-tooltip="HQ2 Dashboard" onclick="toggleSubmenu('hq2-submenu', this); if(currentDashboard!=='hq2') switchDashboard('hq2');">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -1688,7 +1688,20 @@
                 </svg>
             </span>
             <span class="nav-text">HQ2 Dashboard</span>
-            <span class="nav-badge" style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#9ca3af;letter-spacing:0.05em;flex-shrink:0;">SOON</span>
+        </div>
+        <div id="hq2-submenu" class="submenu-container">
+            <div class="nav-sub-item" id="hq2SubitemOverview" onclick="switchSubTab('overview')">
+                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.5;"></span>
+                Phân tích tổng quan
+            </div>
+            <div class="nav-sub-item" id="hq2SubitemBranch" onclick="switchSubTab('branch')">
+                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
+                Phân tích chi tiết
+            </div>
+            <div class="nav-sub-item" id="hq2SubitemTable" onclick="switchSubTab('table')">
+                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
+                Bảng tổng hợp chi tiết
+            </div>
         </div>
 
         <div class="nav-item" id="settingsNavItem" data-tooltip="Cài đặt" onclick="switchSubTab('settings')">
@@ -6800,6 +6813,104 @@
                     document.getElementById('hqqu-submenu').classList.remove('expanded');
                 }
             });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // HQ2 DASHBOARD SUPPORT — Hoàn toàn mới, không đụng HQ1
+        // ═══════════════════════════════════════════════════════════
+        let currentDashboard = 'hq1'; // 'hq1' | 'hq2'
+
+        // Fetch data riêng cho HQ2 — bản sao độc lập của fetchExcelData()
+        // sử dụng cùng parsers (parseExcelWorkbook2025, parseExcelWorkbook)
+        async function fetchExcelDataHQ2() {
+            const statusText = document.getElementById('uploadStatusText');
+            statusText.innerHTML = 'Đang tải dữ liệu HQ2 từ máy chủ cục bộ...';
+
+            try {
+                statusText.innerHTML = 'Đang tải tệp dữ liệu lịch sử <strong>DT_CTTV_HQ2_2025.xlsx</strong>...';
+                const r2025 = await fetch('DT_CTTV_HQ2_2025.xlsx');
+                if (r2025.ok) {
+                    parseExcelWorkbook2025(await r2025.arrayBuffer());
+                } else {
+                    console.warn('Cannot download DT_CTTV_HQ2_2025.xlsx, YoY/QoQ sẽ không khả dụng');
+                }
+            } catch (e) { console.warn('Auto fetch HQ2 hist failed:', e); }
+
+            try {
+                statusText.innerHTML = 'Đang tải tệp dữ liệu <strong>HQ2_Q1_2026.xlsx</strong>...';
+                const r = await fetch('HQ2_Q1_2026.xlsx');
+                if (!r.ok) throw new Error('Không thể tải HQ2_Q1_2026.xlsx từ server.');
+                parseExcelWorkbook(await r.arrayBuffer());
+            } catch (e) {
+                console.warn('Auto fetch HQ2 failed:', e);
+                statusText.innerHTML = '⚠️ <strong>Không thể đồng bộ tự động HQ2!</strong><br>Do chạy ở chế độ file:// hoặc máy chủ chưa sẵn sàng. Vui lòng kéo thả hoặc tải lên các tệp dữ liệu.';
+                document.getElementById('manualUploadArea').style.display = 'block';
+                document.getElementById('uploadOverlay').classList.remove('hidden');
+            }
+        }
+
+        // Chuyển giữa HQ1 và HQ2 — xóa data cũ, load data mới
+        function switchDashboard(mode) {
+            if (currentDashboard === mode) return;
+            currentDashboard = mode;
+
+            // Cập nhật active state cho nav items
+            ['dashboardNavItem', 'hq2NavItem', 'settingsNavItem'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            const activeNav = document.getElementById(mode === 'hq1' ? 'dashboardNavItem' : 'hq2NavItem');
+            if (activeNav) activeNav.classList.add('active');
+
+            // Mở submenu đúng, đóng submenu kia
+            const hq1Sub = document.getElementById('hqqu-submenu');
+            const hq2Sub = document.getElementById('hq2-submenu');
+            if (mode === 'hq2') {
+                if (hq1Sub) hq1Sub.classList.remove('expanded');
+                if (hq2Sub) hq2Sub.classList.add('expanded');
+            } else {
+                if (hq2Sub) hq2Sub.classList.remove('expanded');
+                if (hq1Sub) hq1Sub.classList.add('expanded');
+            }
+
+            // Phá hủy tất cả chart instances để tránh lỗi canvas reuse
+            [
+                'chartProfClaims','chartProfCpdm','chartProfHq1',
+                'chartUnprofClaims','chartUnprofCpdm','chartUnprofHq1',
+                'chartSeasonalRevenue','chartSeasonalClaims','chartSeasonalBranchLob',
+                'chartBranchTrend','chartScatter','chartWaterfall',
+                'chartLobRevenue','chartLobClaims','chartLobComparison',
+                'chartLobPie','chartBranchBreakdown','chartBranchContribution',
+                'chartBranchRevenuePie','chartBranchClaimsPie',
+                'chartMatrixQuadrants','chartMatrixOperating',
+                'chartParetoPositive','chartParetoNegative'
+            ].forEach(id => {
+                const canvas = document.getElementById(id);
+                if (canvas) {
+                    const ch = Chart.getChart(canvas);
+                    if (ch) { try { ch.destroy(); } catch(e) {} }
+                }
+            });
+
+            // Reset toàn bộ global data
+            branchesData = [];
+            headquartersData = null;
+            parsedWorkbook = null;
+            data2025 = {};
+            activeBranchName = '';
+            highlightedBranchInMatrices = null;
+
+            // Reset UI về tab tổng quan
+            switchSubTab('overview');
+            document.getElementById('manualUploadArea').style.display = 'none';
+            document.getElementById('uploadOverlay').classList.remove('hidden');
+
+            // Load data tương ứng
+            if (mode === 'hq2') {
+                fetchExcelDataHQ2();
+            } else {
+                fetchExcelData();
+            }
         }
     </script>
     <!-- Floating Column Filter Dropdown -->
