@@ -3375,22 +3375,28 @@
                 if (total_25 === 0) peak_quarter = '--';
 
                 // Let's compute the seasonality group (Nhóm)
-                let group = "Khác";
+                let group = "Nhóm 1 - Tăng trưởng đều";
                 if (total_25 === 0) {
                     group = "-";
-                } else if (prop_q1 <= 30 && prop_q2 <= 30 && prop_q3 <= 30 && prop_q4 <= 30) {
-                    group = "Nhóm 1 - Tăng trưởng đều";
                 } else {
                     const maxProp = Math.max(prop_q1, prop_q2, prop_q3, prop_q4);
                     if (maxProp > 30) {
-                        if (maxProp === prop_q1 && (prop_q1 - prop_q2 >= 5) && (prop_q1 - prop_q3 >= 5) && (prop_q1 - prop_q4 >= 5)) {
-                            group = "Nhóm 2 - Q1";
-                        } else if (maxProp === prop_q2 && (prop_q2 - prop_q1 >= 5) && (prop_q2 - prop_q3 >= 5) && (prop_q2 - prop_q4 >= 5)) {
-                            group = "Nhóm 3 - Q2";
-                        } else if (maxProp === prop_q3 && (prop_q3 - prop_q1 >= 5) && (prop_q3 - prop_q2 >= 5) && (prop_q3 - prop_q4 >= 5)) {
-                            group = "Nhóm 4 - Q3";
-                        } else if (maxProp === prop_q4 && (prop_q4 - prop_q1 >= 5) && (prop_q4 - prop_q2 >= 5) && (prop_q4 - prop_q3 >= 5)) {
-                            group = "Nhóm 5 - Q4";
+                        if (maxProp === prop_q1) {
+                            if (prop_q1 - prop_q2 >= 5 && prop_q1 - prop_q3 >= 5 && prop_q1 - prop_q4 >= 5) {
+                                group = "Nhóm 2 - Q1";
+                            }
+                        } else if (maxProp === prop_q2) {
+                            if (prop_q2 - prop_q1 >= 5 && prop_q2 - prop_q3 >= 5 && prop_q2 - prop_q4 >= 5) {
+                                group = "Nhóm 3 - Q2";
+                            }
+                        } else if (maxProp === prop_q3) {
+                            if (prop_q3 - prop_q1 >= 5 && prop_q3 - prop_q2 >= 5 && prop_q3 - prop_q4 >= 5) {
+                                group = "Nhóm 4 - Q3";
+                            }
+                        } else if (maxProp === prop_q4) {
+                            if (prop_q4 - prop_q1 >= 5 && prop_q4 - prop_q2 >= 5 && prop_q4 - prop_q3 >= 5) {
+                                group = "Nhóm 5 - Q4";
+                            }
                         }
                     }
                 }
