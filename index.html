@@ -3771,22 +3771,6 @@
                 const q3Style = isMaxQ3 ? peakCellHighlight : '';
                 const q4Style = isMaxQ4 ? peakCellHighlight : '';
 
-                let badgeStyle = '';
-                if (item.group === 'Nhóm 1 - Tăng trưởng đều') {
-                    badgeStyle = 'background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);';
-                } else if (item.group === 'Nhóm 2 - Q1') {
-                    badgeStyle = 'background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2);';
-                } else if (item.group === 'Nhóm 3 - Q2') {
-                    badgeStyle = 'background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.2);';
-                } else if (item.group === 'Nhóm 4 - Q3') {
-                    badgeStyle = 'background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.2);';
-                } else if (item.group === 'Nhóm 5 - Q4') {
-                    badgeStyle = 'background: rgba(249, 115, 22, 0.1); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.2);';
-                } else {
-                    badgeStyle = 'background: rgba(107, 114, 128, 0.1); color: #6b7280; border: 1px solid rgba(107, 114, 128, 0.2);';
-                }
-                const groupBadge = `<span style="${badgeStyle} border-radius: 4px; padding: 3px 8px; font-size: 0.82rem; font-weight: 600; display: inline-block; white-space: nowrap;">${item.group}</span>`;
-
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td class="text-center">${index + 1}</td>
@@ -3800,7 +3784,7 @@
                         <td class="text-right" style="${q3Style}">${propQ3Str}</td>
                         <td class="text-right" style="${q4Style}">${propQ4Str}</td>
                         <td class="text-center bold">${item.peak_quarter}</td>
-                        <td class="text-center">${groupBadge}</td>
+                        <td class="text-center">${item.group}</td>
                     </tr>
                 `);
             });
