@@ -4,116 +4,61 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-# 1. Load HQ1 2025 historical data
-df_2025 = pd.read_excel(r"D:\bv_hqqu_dashboard\DT_CTTV_HQ1_2025.xlsx")
-df_2025.columns = ['Code', 'Name', 'LOB', 'Q1', 'Q2', 'Q3', 'Q4', 'Total']
-if df_2025.iloc[0]['Code'] == 'Chi nhánh':
-    df_2025 = df_2025.iloc[1:]
-
+# 1. Load HQ1 2025 historical data (using 'Tổng doanh thu quý' sheet)
+df_2025 = pd.read_excel(r"D:\bv_hqqu_dashboard\DT_CTTV_HQ1_2025.xlsx", sheet_name='Tổng doanh thu quý')
+df_2025.columns = ['Name', 'Q1', 'Q2', 'Q3', 'Q4']
 df_2025['Name'] = df_2025['Name'].astype(str).str.strip()
+
 for q in ['Q1', 'Q2', 'Q3', 'Q4']:
     df_2025[q] = pd.to_numeric(df_2025[q], errors='coerce').fillna(0)
 
-# Group 2025 by Name and sum
-df_2025_grouped = df_2025.groupby('Name')[\
-    ['Q1', 'Q2', 'Q3', 'Q4']].sum().to_dict('index')
+# Group by Name and sum (just in case there are duplicates, though it has 80 unique rows)
+df_2025_grouped = df_2025.groupby('Name')[['Q1', 'Q2', 'Q3', 'Q4']].sum().to_dict('index')
+
+# Calculate seasonality group for Doanh thu
+seasonality_groups_rev = {}
+
+for name, hist in df_2025_grouped.items():
+    q1_25 = hist['Q1']
+    q2_25 = hist['Q2']
+    q3_25 = hist['Q3']
+    q4_25 = hist['Q4']
+    
+    total_25 = q1_25 + q2_25 + q3_25 + q4_25
+    prop_q1 = (q1_25 / total_25 * 100) if total_25 > 0 else 0
+    prop_q2 = (q2_25 / total_25 * 100) if total_25 > 0 else 0
+    prop_q3 = (q3_25 / total_25 * 100) if total_25 > 0 else 0
+    prop_q4 = (q4_25 / total_25 * 100) if total_25 > 0 else 0
+    
+    group = "Nhóm 1 - Tăng trưởng đều"
+    if total_25 == 0:
+        group = "-"
+    else:
+        max_prop = max(prop_q1, prop_q2, prop_q3, prop_q4)
+        if max_prop > 30:
+            if max_prop == prop_q1:
+                if (prop_q1 - prop_q2 >= 5) and (prop_q1 - prop_q3 >= 5) and (prop_q1 - prop_q4 >= 5):
+                    group = "Nhóm 2 - Q1"
+            elif max_prop == prop_q2:
+                if (prop_q2 - prop_q1 >= 5) and (prop_q2 - prop_q3 >= 5) and (prop_q2 - prop_q4 >= 5):
+                    group = "Nhóm 3 - Q2"
+            elif max_prop == prop_q3:
+                if (prop_q3 - prop_q1 >= 5) and (prop_q3 - prop_q2 >= 5) and (prop_q3 - prop_q4 >= 5):
+                    group = "Nhóm 4 - Q3"
+            elif max_prop == prop_q4:
+                if (prop_q4 - prop_q1 >= 5) and (prop_q4 - prop_q2 >= 5) and (prop_q4 - prop_q3 >= 5):
+                    group = "Nhóm 5 - Q4"
+    seasonality_groups_rev[name] = group
 
 # 2. Load HQ1 2026 current data (wide format)
 df_2026 = pd.read_excel(r"D:\bv_hqqu_dashboard\HQ1_Q1_2026.xlsx")
 df_2026 = df_2026[df_2026['company_name_sun'].notna()]
 df_2026['company_name_sun'] = df_2026['company_name_sun'].astype(str).str.strip()
-# Filter out filters row
 df_2026 = df_2026[~df_2026['company_name_sun'].str.startswith('Applied filters')]
 df_2026 = df_2026[df_2026['company_name_sun'] != 'company_name_sun']
 
-# 3. Define seed function for claims
-def get_branch_seed(name):
-    hash_val = 0
-    for char in name:
-        hash_val = ord(char) + ((hash_val << 5) - hash_val)
-        hash_val = (hash_val + 2**31) % 2**32 - 2**31
-    return (abs(hash_val) % 100) / 100.0
-
-# 4. Calculate seasonality group for both Doanh thu and Bồi thường
-seasonality_groups_rev = {}
-seasonality_groups_clm = {}
-
-for name, hist in df_2025_grouped.items():
-    q1_25_rev = hist['Q1']
-    q2_25_rev = hist['Q2']
-    q3_25_rev = hist['Q3']
-    q4_25_rev = hist['Q4']
-    
-    # Doanh thu seasonality group
-    total_25_rev = q1_25_rev + q2_25_rev + q3_25_rev + q4_25_rev
-    prop_q1_rev = (q1_25_rev / total_25_rev * 100) if total_25_rev > 0 else 0
-    prop_q2_rev = (q2_25_rev / total_25_rev * 100) if total_25_rev > 0 else 0
-    prop_q3_rev = (q3_25_rev / total_25_rev * 100) if total_25_rev > 0 else 0
-    prop_q4_rev = (q4_25_rev / total_25_rev * 100) if total_25_rev > 0 else 0
-    
-    group_rev = "Nhóm 1 - Tăng trưởng đều"
-    if total_25_rev == 0:
-        group_rev = "-"
-    else:
-        max_prop = max(prop_q1_rev, prop_q2_rev, prop_q3_rev, prop_q4_rev)
-        if max_prop > 30:
-            if max_prop == prop_q1_rev:
-                if (prop_q1_rev - prop_q2_rev >= 5) and (prop_q1_rev - prop_q3_rev >= 5) and (prop_q1_rev - prop_q4_rev >= 5):
-                    group_rev = "Nhóm 2 - Q1"
-            elif max_prop == prop_q2_rev:
-                if (prop_q2_rev - prop_q1_rev >= 5) and (prop_q2_rev - prop_q3_rev >= 5) and (prop_q2_rev - prop_q4_rev >= 5):
-                    group_rev = "Nhóm 3 - Q2"
-            elif max_prop == prop_q3_rev:
-                if (prop_q3_rev - prop_q1_rev >= 5) and (prop_q3_rev - prop_q2_rev >= 5) and (prop_q3_rev - prop_q4_rev >= 5):
-                    group_rev = "Nhóm 4 - Q3"
-            elif max_prop == prop_q4_rev:
-                if (prop_q4_rev - prop_q1_rev >= 5) and (prop_q4_rev - prop_q2_rev >= 5) and (prop_q4_rev - prop_q3_rev >= 5):
-                    group_rev = "Nhóm 5 - Q4"
-    seasonality_groups_rev[name] = group_rev
-
-    # Bồi thường seasonality group
-    row_26 = df_2026[df_2026['company_name_sun'] == name]
-    if row_26.empty:
-        dt_thuan_26 = bt_trach_nhiem_26 = 0
-    else:
-        dt_thuan_26 = float(row_26.iloc[0]['Doanh thu thuần']) if not pd.isna(row_26.iloc[0]['Doanh thu thuần']) else 0
-        bt_trach_nhiem_26 = float(row_26.iloc[0]['Bồi thường thuộc trách nghiệm']) if not pd.isna(row_26.iloc[0]['Bồi thường thuộc trách nghiệm']) else 0
-
-    claim_ratio = (bt_trach_nhiem_26 / dt_thuan_26) if dt_thuan_26 > 0 else 0
-    q1_25_clm = q1_25_rev * claim_ratio * (0.95 + 0.1 * get_branch_seed(name + 'q1'))
-    q2_25_clm = q2_25_rev * claim_ratio * (0.85 + 0.15 * get_branch_seed(name + 'q2'))
-    q3_25_clm = q3_25_rev * claim_ratio * (1.10 + 0.2 * get_branch_seed(name + 'q3'))
-    q4_25_clm = q4_25_rev * claim_ratio * (1.05 + 0.15 * get_branch_seed(name + 'q4'))
-    
-    total_25_clm = q1_25_clm + q2_25_clm + q3_25_clm + q4_25_clm
-    prop_q1_clm = (q1_25_clm / total_25_clm * 100) if total_25_clm > 0 else 0
-    prop_q2_clm = (q2_25_clm / total_25_clm * 100) if total_25_clm > 0 else 0
-    prop_q3_clm = (q3_25_clm / total_25_clm * 100) if total_25_clm > 0 else 0
-    prop_q4_clm = (q4_25_clm / total_25_clm * 100) if total_25_clm > 0 else 0
-
-    group_clm = "Nhóm 1 - Tăng trưởng đều"
-    if total_25_clm == 0:
-        group_clm = "-"
-    else:
-        max_prop = max(prop_q1_clm, prop_q2_clm, prop_q3_clm, prop_q4_clm)
-        if max_prop > 30:
-            if max_prop == prop_q1_clm:
-                if (prop_q1_clm - prop_q2_clm >= 5) and (prop_q1_clm - prop_q3_clm >= 5) and (prop_q1_clm - prop_q4_clm >= 5):
-                    group_clm = "Nhóm 2 - Q1"
-            elif max_prop == prop_q2_clm:
-                if (prop_q2_clm - prop_q1_clm >= 5) and (prop_q2_clm - prop_q3_clm >= 5) and (prop_q2_clm - prop_q4_clm >= 5):
-                    group_clm = "Nhóm 3 - Q2"
-            elif max_prop == prop_q3_clm:
-                if (prop_q3_clm - prop_q1_clm >= 5) and (prop_q3_clm - prop_q2_clm >= 5) and (prop_q3_clm - prop_q4_clm >= 5):
-                    group_clm = "Nhóm 4 - Q3"
-            elif max_prop == prop_q4_clm:
-                if (prop_q4_clm - prop_q1_clm >= 5) and (prop_q4_clm - prop_q2_clm >= 5) and (prop_q4_clm - prop_q3_clm >= 5):
-                    group_clm = "Nhóm 5 - Q4"
-    seasonality_groups_clm[name] = group_clm
-
-# 5. Populate sheets
-rows_rev = []
-rows_clm = []
+# 3. Calculate allocated LOB-level HQQU
+rows_hqqu = []
 
 # Sort unit names alphabetically
 sorted_units = sorted(df_2026['company_name_sun'].unique(), key=lambda x: str(x).lower())
@@ -121,54 +66,99 @@ sorted_units = sorted(df_2026['company_name_sun'].unique(), key=lambda x: str(x)
 for name in sorted_units:
     r26 = df_2026[df_2026['company_name_sun'] == name].iloc[0]
     
-    # Revenue sheet row
-    rows_rev.append({
+    # Extract values and handle NaN
+    dt_con_nguoi = float(r26['DT_Con người']) if not pd.isna(r26['DT_Con người']) else 0.0
+    dt_du_lich = float(r26['DT_Du lịch']) if not pd.isna(r26['DT_Du lịch']) else 0.0
+    dt_xe_co_gioi = float(r26['DT_Xe Cơ Giới']) if not pd.isna(r26['DT_Xe Cơ Giới']) else 0.0
+    dt_y_te = float(r26['DT_Y tế']) if not pd.isna(r26['DT_Y tế']) else 0.0
+    
+    bt_con_nguoi = float(r26['BT_Con Người']) if not pd.isna(r26['BT_Con Người']) else 0.0
+    bt_du_lich = float(r26['BT_Du Lịch']) if not pd.isna(r26['BT_Du Lịch']) else 0.0
+    bt_xe_co_gioi = float(r26['BT_Xe Cơ Giới']) if not pd.isna(r26['BT_Xe Cơ Giới']) else 0.0
+    bt_y_te = float(r26['BT_Y tế']) if not pd.isna(r26['BT_Y tế']) else 0.0
+    
+    dt_thuan = float(r26['Doanh thu thuần']) if not pd.isna(r26['Doanh thu thuần']) else 0.0
+    bt_trach_nhiem = float(r26['Bồi thường thuộc trách nghiệm']) if not pd.isna(r26['Bồi thường thuộc trách nghiệm']) else 0.0
+    du_phong_phi = float(r26['Dự phòng phí']) if not pd.isna(r26['Dự phòng phí']) else 0.0
+    chenh_lech_dpbt = float(r26['Chênh lệch Dự phòng bồi thường']) if not pd.isna(r26['Chênh lệch Dự phòng bồi thường']) else 0.0
+    cpdm = float(r26['CPDM_HQ1']) if not pd.isna(r26['CPDM_HQ1']) else 0.0
+    hqqu_total = float(r26['HQQU']) if not pd.isna(r26['HQQU']) else 0.0
+    
+    # Allocated calculation lists: index 0: Con nguoi, index 1: Du lich, index 2: Xe co gioi, index 3: Y te (last LOB)
+    lobs = [
+        {'name': 'Con người', 'rev': dt_con_nguoi, 'clm': bt_con_nguoi},
+        {'name': 'Du lịch', 'rev': dt_du_lich, 'clm': bt_du_lich},
+        {'name': 'Xe Cơ Giới', 'rev': dt_xe_co_gioi, 'clm': bt_xe_co_gioi},
+        {'name': 'Y tế', 'rev': dt_y_te, 'clm': bt_y_te}
+    ]
+    
+    sum_dt_thuan = 0.0
+    sum_bt_trach_nhiem = 0.0
+    sum_du_phong = 0.0
+    sum_chenh_lech = 0.0
+    sum_cpdm = 0.0
+    sum_hqqu = 0.0
+    
+    hqqu_by_lob = {}
+    
+    for idx, lob in enumerate(lobs):
+        if idx < len(lobs) - 1:
+            dt_thuan_lob = lob['rev']
+            bt_trach_nhiem_lob = lob['clm']
+            
+            allocated_dp = du_phong_phi * (lob['rev'] / dt_thuan) if dt_thuan > 0 else 0.0
+            allocated_cp = cpdm * (lob['rev'] / dt_thuan) if dt_thuan > 0 else 0.0
+            allocated_cl = 0.0
+            if bt_trach_nhiem > 0:
+                allocated_cl = chenh_lech_dpbt * (lob['clm'] / bt_trach_nhiem)
+            else:
+                allocated_cl = chenh_lech_dpbt * (lob['rev'] / dt_thuan) if dt_thuan > 0 else 0.0
+                
+            allocated_hqqu = dt_thuan_lob - bt_trach_nhiem_lob - allocated_dp - allocated_cl - allocated_cp
+            
+            sum_dt_thuan += dt_thuan_lob
+            sum_bt_trach_nhiem += bt_trach_nhiem_lob
+            sum_du_phong += allocated_dp
+            sum_chenh_lech += allocated_cl;
+            sum_cpdm += allocated_cp
+            sum_hqqu += allocated_hqqu
+            
+            hqqu_by_lob[lob['name']] = allocated_hqqu
+        else:
+            # Last LOB (Y tế) gets the remainder
+            allocated_hqqu = hqqu_total - sum_hqqu
+            hqqu_by_lob[lob['name']] = allocated_hqqu
+
+    # Append row
+    rows_hqqu.append({
         'CTTV': name,
-        'Y TE': r26['DT_Y tế'] if not pd.isna(r26['DT_Y tế']) else 0,
-        'DU_LICH': r26['DT_Du lịch'] if not pd.isna(r26['DT_Du lịch']) else 0,
-        'CON_NGUOI': r26['DT_Con người'] if not pd.isna(r26['DT_Con người']) else 0,
-        'XCG': r26['DT_Xe Cơ Giới'] if not pd.isna(r26['DT_Xe Cơ Giới']) else 0,
-        'TONG': r26['Tổng Doanh thu'] if not pd.isna(r26['Tổng Doanh thu']) else 0,
+        'Y TE': hqqu_by_lob['Y tế'],
+        'DU_LICH': hqqu_by_lob['Du lịch'],
+        'CON_NGUOI': hqqu_by_lob['Con người'],
+        'XCG': hqqu_by_lob['Xe Cơ Giới'],
+        'TONG': hqqu_total,
         'Phân nhóm': seasonality_groups_rev.get(name, "-")
     })
-    
-    # Claims sheet row
-    rows_clm.append({
-        'CTTV': name,
-        'Y TE': r26['BT_Y tế'] if not pd.isna(r26['BT_Y tế']) else 0,
-        'DU_LICH': r26['BT_Du Lịch'] if not pd.isna(r26['BT_Du Lịch']) else 0,
-        'CON_NGUOI': r26['BT_Con Người'] if not pd.isna(r26['BT_Con Người']) else 0,
-        'XCG': r26['BT_Xe Cơ Giới'] if not pd.isna(r26['BT_Xe Cơ Giới']) else 0,
-        'TONG': r26['Tổng Bồi thường'] if not pd.isna(r26['Tổng Bồi thường']) else 0,
-        'Phân nhóm': seasonality_groups_clm.get(name, "-")
-    })
 
-df_output_rev = pd.DataFrame(rows_rev)
-df_output_clm = pd.DataFrame(rows_clm)
+df_output = pd.DataFrame(rows_hqqu)
 
+# 4. Save to Excel
 output_file = r"D:\bv_hqqu_dashboard\HQ1_Q1_2026_form.xlsx"
 
-try:
-    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
-        df_output_rev.to_excel(writer, sheet_name="Sheet1", index=False)
-        df_output_clm.to_excel(writer, sheet_name="Bồi thường", index=False)
+def save_workbook(path):
+    with pd.ExcelWriter(path, engine='openpyxl') as writer:
+        df_output.to_excel(writer, sheet_name="Sheet1", index=False)
+        ws = writer.sheets["Sheet1"]
         # Auto adjust column widths
-        for sheet_name in ["Sheet1", "Bồi thường"]:
-            ws = writer.sheets[sheet_name]
-            for col in ws.columns:
-                max_len = max(len(str(cell.value or '')) for cell in col)
-                col_letter = col[0].column_letter
-                ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
+        for col in ws.columns:
+            max_len = max(len(str(cell.value or '')) for cell in col)
+            col_letter = col[0].column_letter
+            ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
+
+try:
+    save_workbook(output_file)
     print(f"Successfully populated file. Output saved to: {output_file}")
 except PermissionError:
     fallback_file = r"D:\bv_hqqu_dashboard\HQ1_Q1_2026_form_filled.xlsx"
     print(f"File locked. Saving to fallback: {fallback_file}")
-    with pd.ExcelWriter(fallback_file, engine='openpyxl') as writer:
-        df_output_rev.to_excel(writer, sheet_name="Sheet1", index=False)
-        df_output_clm.to_excel(writer, sheet_name="Bồi thường", index=False)
-        for sheet_name in ["Sheet1", "Bồi thường"]:
-            ws = writer.sheets[sheet_name]
-            for col in ws.columns:
-                max_len = max(len(str(cell.value or '')) for cell in col)
-                col_letter = col[0].column_letter
-                ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
+    save_workbook(fallback_file)

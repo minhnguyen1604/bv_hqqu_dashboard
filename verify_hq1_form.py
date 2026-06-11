@@ -3,31 +3,18 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-print("Starting verification of HQ1_Q1_2026_form_filled.xlsx...")
+print("Starting verification of HQ1_Q1_2026_form.xlsx (allocated HQQU values)...")
 
 # Load generated file
 try:
-    xl = pd.ExcelFile(r"D:\bv_hqqu_dashboard\HQ1_Q1_2026_form_filled.xlsx")
+    df_gen = pd.read_excel(r"D:\bv_hqqu_dashboard\HQ1_Q1_2026_form.xlsx", sheet_name='Sheet1')
 except Exception as e:
     print(f"Error loading file: {e}")
     sys.exit(1)
 
-print("Sheet names:", xl.sheet_names)
-if 'Sheet1' not in xl.sheet_names or 'Bồi thường' not in xl.sheet_names:
-    print("Error: Missing expected sheets.")
-    sys.exit(1)
-
-df_rev = xl.parse('Sheet1')
-df_clm = xl.parse('Bồi thường')
-
-print(f"Revenue sheet rows: {len(df_rev)}")
-print(f"Claims sheet rows: {len(df_clm)}")
-
-# Check 80 rows
-if len(df_rev) != 80:
-    print(f"Warning: Expected 80 rows in Revenue, got {len(df_rev)}")
-if len(df_clm) != 80:
-    print(f"Warning: Expected 80 rows in Claims, got {len(df_clm)}")
+print(f"Generated Sheet1 rows: {len(df_gen)}")
+if len(df_gen) != 80:
+    print(f"Warning: Expected 80 rows, got {len(df_gen)}")
 
 # Load original raw data to compare
 df_raw = pd.read_excel(r"D:\bv_hqqu_dashboard\HQ1_Q1_2026.xlsx")
@@ -36,54 +23,81 @@ df_raw['company_name_sun'] = df_raw['company_name_sun'].astype(str).str.strip()
 df_raw = df_raw[~df_raw['company_name_sun'].str.startswith('Applied filters')]
 df_raw = df_raw[df_raw['company_name_sun'] != 'company_name_sun']
 
-print(f"Raw 2026 data rows: {len(df_raw)}")
+# Align both by index
+df_gen = df_gen.set_index('CTTV')
+df_raw_aligned = df_raw.set_index('company_name_sun')
 
-# Check mapping of LOBs
-lob_cols = ['Y TE', 'DU_LICH', 'CON_NGUOI', 'XCG']
+# Check that TONG = sum(LOBs)
+sum_lobs = df_gen[['Y TE', 'DU_LICH', 'CON_NGUOI', 'XCG']].sum(axis=1)
+diff_tong = (df_gen['TONG'] - sum_lobs).abs()
+print(f"Max difference between TONG and sum of LOBs: {diff_tong.max()}")
+if diff_tong.max() > 1e-2:
+    print("Error: TONG column does not equal the sum of LOB columns!")
+    sys.exit(1)
 
-for sheet_name, df, prefix in [('Sheet1', df_rev, 'DT_'), ('Bồi thường', df_clm, 'BT_')]:
-    print(f"\nVerifying sheet: {sheet_name}")
-    # Align by unit name
-    df = df.set_index('CTTV')
+# Check TONG matches HQQU column from raw
+diff_raw_hqqu = (df_gen['TONG'] - df_raw_aligned['HQQU']).abs().max()
+print(f"Max difference with raw HQQU: {diff_raw_hqqu}")
+if diff_raw_hqqu > 1e-2:
+    print("Error: Total HQQU does not match raw HQQU!")
+    sys.exit(1)
+
+# Verify allocated math for CON_NGUOI, DU_LICH, XCG
+for name, r_gen in df_gen.iterrows():
+    r_raw = df_raw_aligned.loc[name]
     
-    # Check that TONG = sum(LOBs)
-    sum_lobs = df[lob_cols].sum(axis=1)
-    diff_tong = (df['TONG'] - sum_lobs).abs()
-    max_diff_tong = diff_tong.max()
-    print(f"Max difference between TONG and sum of LOBs: {max_diff_tong}")
-    if max_diff_tong > 1e-2:
-        print("Error: TONG does not match sum of LOBs!")
+    dt_con_nguoi = float(r_raw['DT_Con người']) if not pd.isna(r_raw['DT_Con người']) else 0.0
+    dt_du_lich = float(r_raw['DT_Du lịch']) if not pd.isna(r_raw['DT_Du lịch']) else 0.0
+    dt_xe_co_gioi = float(r_raw['DT_Xe Cơ Giới']) if not pd.isna(r_raw['DT_Xe Cơ Giới']) else 0.0
+    dt_y_te = float(r_raw['DT_Y tế']) if not pd.isna(r_raw['DT_Y tế']) else 0.0
+    
+    bt_con_nguoi = float(r_raw['BT_Con Người']) if not pd.isna(r_raw['BT_Con Người']) else 0.0
+    bt_du_lich = float(r_raw['BT_Du Lịch']) if not pd.isna(r_raw['BT_Du Lịch']) else 0.0
+    bt_xe_co_gioi = float(r_raw['BT_Xe Cơ Giới']) if not pd.isna(r_raw['BT_Xe Cơ Giới']) else 0.0
+    bt_y_te = float(r_raw['BT_Y tế']) if not pd.isna(r_raw['BT_Y tế']) else 0.0
+    
+    dt_thuan = float(r_raw['Doanh thu thuần']) if not pd.isna(r_raw['Doanh thu thuần']) else 0.0
+    bt_trach_nhiem = float(r_raw['Bồi thường thuộc trách nghiệm']) if not pd.isna(r_raw['Bồi thường thuộc trách nghiệm']) else 0.0
+    du_phong_phi = float(r_raw['Dự phòng phí']) if not pd.isna(r_raw['Dự phòng phí']) else 0.0
+    chenh_lech_dpbt = float(r_raw['Chênh lệch Dự phòng bồi thường']) if not pd.isna(r_raw['Chênh lệch Dự phòng bồi thường']) else 0.0
+    cpdm = float(r_raw['CPDM_HQ1']) if not pd.isna(r_raw['CPDM_HQ1']) else 0.0
+    hqqu_total = float(r_raw['HQQU']) if not pd.isna(r_raw['HQQU']) else 0.0
+    
+    # Calculate allocated HQQU for CON_NGUOI
+    con_nguoi_dp = du_phong_phi * (dt_con_nguoi / dt_thuan) if dt_thuan > 0 else 0.0
+    con_nguoi_cp = cpdm * (dt_con_nguoi / dt_thuan) if dt_thuan > 0 else 0.0
+    con_nguoi_cl = chenh_lech_dpbt * (bt_con_nguoi / bt_trach_nhiem) if bt_trach_nhiem > 0 else (chenh_lech_dpbt * (dt_con_nguoi / dt_thuan) if dt_thuan > 0 else 0.0)
+    con_nguoi_hqqu = dt_con_nguoi - bt_con_nguoi - con_nguoi_dp - con_nguoi_cl - con_nguoi_cp
+    
+    # Calculate allocated HQQU for DU_LICH
+    du_lich_dp = du_phong_phi * (dt_du_lich / dt_thuan) if dt_thuan > 0 else 0.0
+    du_lich_cp = cpdm * (dt_du_lich / dt_thuan) if dt_thuan > 0 else 0.0
+    du_lich_cl = chenh_lech_dpbt * (bt_du_lich / bt_trach_nhiem) if bt_trach_nhiem > 0 else (chenh_lech_dpbt * (dt_du_lich / dt_thuan) if dt_thuan > 0 else 0.0)
+    du_lich_hqqu = dt_du_lich - bt_du_lich - du_lich_dp - du_lich_cl - du_lich_cp
+    
+    # Calculate allocated HQQU for XCG
+    xcg_dp = du_phong_phi * (dt_xe_co_gioi / dt_thuan) if dt_thuan > 0 else 0.0
+    xcg_cp = cpdm * (dt_xe_co_gioi / dt_thuan) if dt_thuan > 0 else 0.0
+    xcg_cl = chenh_lech_dpbt * (bt_xe_co_gioi / bt_trach_nhiem) if bt_trach_nhiem > 0 else (chenh_lech_dpbt * (dt_xe_co_gioi / dt_thuan) if dt_thuan > 0 else 0.0)
+    xcg_hqqu = dt_xe_co_gioi - bt_xe_co_gioi - xcg_dp - xcg_cl - xcg_cp
+
+    # Check matches
+    if abs(r_gen['CON_NGUOI'] - con_nguoi_hqqu) > 1e-2:
+        print(f"Error for branch {name}: CON_NGUOI hqqu mismatch. Generated: {r_gen['CON_NGUOI']}, Expected: {con_nguoi_hqqu}")
         sys.exit(1)
         
-    # Check against raw file
-    raw_aligned = df_raw.set_index('company_name_sun')
-    
-    # Check TONG matches
-    raw_col_total = 'Tổng Doanh thu' if prefix == 'DT_' else 'Tổng Bồi thường'
-    diff_raw_total = (df['TONG'] - raw_aligned[raw_col_total]).abs()
-    print(f"Max difference with raw total column: {diff_raw_total.max()}")
-    
-    # Check LOB values
-    for col in lob_cols:
-        raw_col = prefix + col
-        # Normalize casing / spacing for matching raw columns
-        # Map: Y TE -> Y tế, DU_LICH -> Du lịch / Du Lịch, CON_NGUOI -> Con người / Con Người, XCG -> Xe Cơ Giới / Xe cơ giới
-        if prefix == 'DT_':
-            map_name = {'Y TE': 'DT_Y tế', 'DU_LICH': 'DT_Du lịch', 'CON_NGUOI': 'DT_Con người', 'XCG': 'DT_Xe Cơ Giới'}
-        else:
-            map_name = {'Y TE': 'BT_Y tế', 'DU_LICH': 'BT_Du Lịch', 'CON_NGUOI': 'BT_Con Người', 'XCG': 'BT_Xe Cơ Giới'}
+    if abs(r_gen['DU_LICH'] - du_lich_hqqu) > 1e-2:
+        print(f"Error for branch {name}: DU_LICH hqqu mismatch. Generated: {r_gen['DU_LICH']}, Expected: {du_lich_hqqu}")
+        sys.exit(1)
         
-        raw_val = raw_aligned[map_name[col]].fillna(0)
-        diff_val = (df[col] - raw_val).abs().max()
-        print(f"  Column {col} max difference: {diff_val}")
-        if diff_val > 1e-2:
-            print(f"Error: Mismatch in column {col}!")
-            sys.exit(1)
+    if abs(r_gen['XCG'] - xcg_hqqu) > 1e-2:
+        print(f"Error for branch {name}: XCG hqqu mismatch. Generated: {r_gen['XCG']}, Expected: {xcg_hqqu}")
+        sys.exit(1)
 
-    # Check seasonality groups
-    groups = df['Phân nhóm'].unique()
-    print("Seasonality groups found:", groups)
-    if '-' in groups or None in groups or pd.isna(groups).any():
-        print("Warning: Some rows have unclassified seasonality groups ('-')")
+# Check seasonality groups
+groups = df_gen['Phân nhóm'].unique()
+print("Seasonality groups found:", groups)
+if '-' in groups or None in groups or pd.isna(groups).any():
+    print("Warning: Some rows have unclassified seasonality groups ('-')")
 
-print("\nVerification completed successfully!")
+print("All checks passed! The file contains correct allocated performance numbers.")
