@@ -2266,6 +2266,12 @@
                                             <span class="filter-arrow-btn">▼</span>
                                         </div>
                                     </th>
+                                    <th class="filterable-th" data-col="group" style="min-width: 180px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">
+                                        <div class="th-content" style="justify-content: center;">
+                                            <span>Nhóm</span>
+                                            <span class="filter-arrow-btn">▼</span>
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="seasonalTableBody">
@@ -3368,6 +3374,27 @@
                 if (prop_q4 > max_prop) { max_prop = prop_q4; peak_quarter = 'Q4'; }
                 if (total_25 === 0) peak_quarter = '--';
 
+                // Let's compute the seasonality group (Nhóm)
+                let group = "Khác";
+                if (total_25 === 0) {
+                    group = "-";
+                } else if (prop_q1 <= 30 && prop_q2 <= 30 && prop_q3 <= 30 && prop_q4 <= 30) {
+                    group = "Nhóm 1 - Tăng trưởng đều";
+                } else {
+                    const maxProp = Math.max(prop_q1, prop_q2, prop_q3, prop_q4);
+                    if (maxProp > 30) {
+                        if (maxProp === prop_q1 && (prop_q1 - prop_q2 >= 5) && (prop_q1 - prop_q3 >= 5) && (prop_q1 - prop_q4 >= 5)) {
+                            group = "Nhóm 2 - Q1";
+                        } else if (maxProp === prop_q2 && (prop_q2 - prop_q1 >= 5) && (prop_q2 - prop_q3 >= 5) && (prop_q2 - prop_q4 >= 5)) {
+                            group = "Nhóm 3 - Q2";
+                        } else if (maxProp === prop_q3 && (prop_q3 - prop_q1 >= 5) && (prop_q3 - prop_q2 >= 5) && (prop_q3 - prop_q4 >= 5)) {
+                            group = "Nhóm 4 - Q3";
+                        } else if (maxProp === prop_q4 && (prop_q4 - prop_q1 >= 5) && (prop_q4 - prop_q2 >= 5) && (prop_q4 - prop_q3 >= 5)) {
+                            group = "Nhóm 5 - Q4";
+                        }
+                    }
+                }
+
                 seasonalData.push({
                     name: name,
                     q1_25: q1_25,
@@ -3383,7 +3410,8 @@
                     prop_q4: prop_q4,
                     q1_26: q1_26,
                     change_25_26: change_25_26,
-                    peak_quarter: peak_quarter
+                    peak_quarter: peak_quarter,
+                    group: group
                 });
             });
             computeLobSeasonalData();
@@ -3479,6 +3507,7 @@
 
         let activeColFilters = {
             name: [],
+            group: [],
             peak_quarter: [],
             change_q1_q2: [],
             change_q2_q3: [],
@@ -3506,6 +3535,8 @@
             let uniqueValues = [];
             if (colKey === 'name') {
                 uniqueValues = seasonalData.map(item => item.name);
+            } else if (colKey === 'group') {
+                uniqueValues = seasonalData.map(item => item.group);
             } else if (colKey === 'peak_quarter') {
                 uniqueValues = seasonalData.map(item => item.peak_quarter);
             } else if (colKey.startsWith('prop_')) {
@@ -3520,7 +3551,7 @@
             
             uniqueValues = [...new Set(uniqueValues)];
             
-            if (colKey === 'name' || colKey === 'peak_quarter') {
+            if (colKey === 'name' || colKey === 'peak_quarter' || colKey === 'group') {
                 uniqueValues.sort((a, b) => a.localeCompare(b, 'vi'));
             } else {
                 uniqueValues.sort((a, b) => parseFloat(a) - parseFloat(b));
@@ -3677,6 +3708,8 @@
                         let itemStr = '';
                         if (colKey === 'name') {
                             itemStr = item.name;
+                        } else if (colKey === 'group') {
+                            itemStr = item.group;
                         } else if (colKey === 'peak_quarter') {
                             itemStr = item.peak_quarter;
                         } else if (colKey.startsWith('prop_')) {
@@ -3732,6 +3765,22 @@
                 const q3Style = isMaxQ3 ? peakCellHighlight : '';
                 const q4Style = isMaxQ4 ? peakCellHighlight : '';
 
+                let badgeStyle = '';
+                if (item.group === 'Nhóm 1 - Tăng trưởng đều') {
+                    badgeStyle = 'background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);';
+                } else if (item.group === 'Nhóm 2 - Q1') {
+                    badgeStyle = 'background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2);';
+                } else if (item.group === 'Nhóm 3 - Q2') {
+                    badgeStyle = 'background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.2);';
+                } else if (item.group === 'Nhóm 4 - Q3') {
+                    badgeStyle = 'background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.2);';
+                } else if (item.group === 'Nhóm 5 - Q4') {
+                    badgeStyle = 'background: rgba(249, 115, 22, 0.1); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.2);';
+                } else {
+                    badgeStyle = 'background: rgba(107, 114, 128, 0.1); color: #6b7280; border: 1px solid rgba(107, 114, 128, 0.2);';
+                }
+                const groupBadge = `<span style="${badgeStyle} border-radius: 4px; padding: 3px 8px; font-size: 0.82rem; font-weight: 600; display: inline-block; white-space: nowrap;">${item.group}</span>`;
+
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td class="text-center">${index + 1}</td>
@@ -3745,6 +3794,7 @@
                         <td class="text-right" style="${q3Style}">${propQ3Str}</td>
                         <td class="text-right" style="${q4Style}">${propQ4Str}</td>
                         <td class="text-center bold">${item.peak_quarter}</td>
+                        <td class="text-center">${groupBadge}</td>
                     </tr>
                 `);
             });
@@ -3825,7 +3875,8 @@
                 'Tỉ trọng Q2 2025': item.prop_q2.toFixed(2) + '%',
                 'Tỉ trọng Q3 2025': item.prop_q3.toFixed(2) + '%',
                 'Tỉ trọng Q4 2025': item.prop_q4.toFixed(2) + '%',
-                'Quý Cao Điểm': item.peak_quarter
+                'Quý Cao Điểm': item.peak_quarter,
+                'Nhóm': item.group
             }));
 
             try {
@@ -3843,7 +3894,8 @@
                     { wch: 18 },
                     { wch: 18 },
                     { wch: 18 },
-                    { wch: 15 }
+                    { wch: 15 },
+                    { wch: 25 }
                 ];
                 ws['!cols'] = colWidths;
 
