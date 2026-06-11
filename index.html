@@ -1688,7 +1688,7 @@
                 </svg>
             </span>
             <span class="nav-text">HQ2 Dashboard</span>
-            <span class="nav-badge" style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#f0f0f0;color:#9ca3af;letter-spacing:0.05em;flex-shrink:0;">SOON</span>
+            
         </div>
 
         <div class="nav-item" id="settingsNavItem" data-tooltip="Cài đặt" onclick="switchSubTab('settings')">
@@ -2150,10 +2150,10 @@
                             <div class="panel-title" style="border-left-color: var(--bv-accent);">Đóng góp hiệu quả nghiệp vụ (Pareto)</div>
                             <div class="segmented-control" style="padding: 2px; border-radius: 14px;">
                                 <button class="active" id="tabParetoPositive" onclick="switchParetoTab('positive')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    <span class="hq-label">HQ1</span> > 0
+                                    HQ1 > 0
                                 </button>
                                 <button id="tabParetoNegative" onclick="switchParetoTab('negative')" style="padding: 4px 10px; border-radius: 12px; font-size: 11px;">
-                                    <span class="hq-label">HQ1</span> < 0
+                                    HQ1 < 0
                                 </button>
                             </div>
                         </div>
@@ -2792,13 +2792,6 @@
     <!-- Application Script -->
     <script>
         // Global variables for dashboard data
-        // Dashboard switching config
-        let activeDashboard = 'hq1';
-        const DASH_CONFIG = {
-            hq1: { name: 'HQ1', mainFile: 'HQ1_Q1_2026.xlsx', histFile: 'DT_CTTV_HQ1_2025.xlsx', title: 'HQ1 Dashboard' },
-            hq2: { name: 'HQ2', mainFile: 'HQ2_Q1_2026.xlsx', histFile: 'DT_CTTV_HQ2_2025.xlsx', title: 'HQ2 Dashboard' }
-        };
-        function dashName() { return DASH_CONFIG[activeDashboard].name; }
         let branchesData = []; // Array of branch records
         let headquartersData = null; // Headquarter row object
         let parsedWorkbook = null;
@@ -2998,6 +2991,14 @@
 
         // Fetch excel workbook from the server
         let data2025 = {}; // Global variable to store 2025 aggregated data
+
+        // ── Dashboard switching config ──────────────────────────────
+        let activeDashboard = 'hq1';
+        const DASH_CONFIG = {
+            hq1: { name: 'HQ1', mainFile: 'HQ1_Q1_2026.xlsx', histFile: 'DT_CTTV_HQ1_2025.xlsx', title: 'HQ1 Dashboard' },
+            hq2: { name: 'HQ2', mainFile: 'HQ2_Q1_2026.xlsx', histFile: 'DT_CTTV_HQ2_2025.xlsx', title: 'HQ2 Dashboard' }
+        };
+        function dashName() { return DASH_CONFIG[activeDashboard].name; }
 
         async function fetchExcelData() {
             const statusText = document.getElementById('uploadStatusText');
@@ -4940,7 +4941,7 @@
                             hidden: !matrixGroupVisibility.potentials
                         },
                         {
-                            label: 'Doanh thu cao, HQ1 < 0',
+                            label: 'Doanh thu cao, ' + dashName() + ' < 0',
                             data: cashCows,
                             backgroundColor: 'rgba(245, 158, 11, 0.85)',
                             borderColor: '#f59e0b',
@@ -4950,7 +4951,7 @@
                             hidden: !matrixGroupVisibility.cashCows
                         },
                         {
-                            label: 'Doanh thu thấp, HQ1 < 0',
+                            label: 'Doanh thu thấp, ' + dashName() + ' < 0',
                             data: dogs,
                             backgroundColor: 'rgba(239, 68, 68, 0.85)',
                             borderColor: '#ef4444',
@@ -6810,63 +6811,47 @@
         }
 
         // =====================================================
-        // DASHBOARD SWITCHING (HQ1 <-> HQ2 in single page)
+        // DASHBOARD SWITCHING (HQ1 <-> HQ2) - Single Page
         // =====================================================
         function switchDashboard(mode) {
             if (activeDashboard === mode) return;
             activeDashboard = mode;
 
-            // Update nav active states
+            // Update nav: highlight active, de-highlight others
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const navId = mode === 'hq1' ? 'dashboardNavItem' : 'hq2NavItem';
-            const activeNavItem = document.getElementById(navId);
-            if (activeNavItem) activeNavItem.classList.add('active');
+            const activeNavEl = document.getElementById(navId);
+            if (activeNavEl) activeNavEl.classList.add('active');
 
-            // Update nav tooltip and text
-            const hq1Nav = document.getElementById('dashboardNavItem');
-            const hq2Nav = document.getElementById('hq2NavItem');
-            if (hq1Nav) {
-                hq1Nav.setAttribute('data-tooltip', 'HQ1 Dashboard');
-                const t = hq1Nav.querySelector('.nav-text');
-                if (t) t.textContent = 'HQ1 Dashboard';
-            }
-
-            // Update all hq-label spans in HTML
+            // Update all hq-label spans
             const name = DASH_CONFIG[mode].name;
             document.querySelectorAll('.hq-label').forEach(el => el.textContent = name);
 
-            // Update upload zone hint text
+            // Update upload hint file name
             const mainFile = DASH_CONFIG[mode].mainFile;
-            const uploadHintMain = document.getElementById('uploadHintMain');
-            if (uploadHintMain) uploadHintMain.textContent = mainFile;
-            const uploadStatusText = document.getElementById('uploadStatusText');
-            if (uploadStatusText) uploadStatusText.innerHTML =
-                'Ứng dụng đang cố gắng đồng bộ trực tiếp tệp <strong>' + mainFile + '</strong> từ máy chủ cục bộ...';
+            const hintEl = document.getElementById('uploadHintMain');
+            if (hintEl) hintEl.textContent = mainFile;
 
             // Update page title
             document.title = 'Baoviet ' + DASH_CONFIG[mode].title;
 
-            // Destroy all Chart.js instances
-            const allCanvasIds = [
-                'chartProfClaims', 'chartProfCpdm', 'chartProfHq1',
-                'chartUnprofClaims', 'chartUnprofCpdm', 'chartUnprofHq1',
-                'chartSeasonalRevenue', 'chartSeasonalClaims', 'chartSeasonalBranchLob',
-                'chartBranchTrend', 'chartScatter', 'chartWaterfall',
-                'chartLobRevenue', 'chartLobClaims', 'chartLobComparison',
-                'chartLobPie', 'chartBranchBreakdown', 'chartBranchContribution',
-                'chartBranchRevenuePie', 'chartBranchClaimsPie',
-                'chartMatrixQuadrants', 'chartMatrixOperating',
-                'chartParetoPositive', 'chartParetoNegative'
-            ];
-            allCanvasIds.forEach(id => {
+            // Destroy all existing Chart.js instances to avoid canvas reuse errors
+            [
+                'chartProfClaims','chartProfCpdm','chartProfHq1',
+                'chartUnprofClaims','chartUnprofCpdm','chartUnprofHq1',
+                'chartSeasonalRevenue','chartSeasonalClaims','chartSeasonalBranchLob',
+                'chartBranchTrend','chartScatter','chartWaterfall',
+                'chartLobRevenue','chartLobClaims','chartLobComparison',
+                'chartLobPie','chartBranchBreakdown','chartBranchContribution',
+                'chartBranchRevenuePie','chartBranchClaimsPie',
+                'chartMatrixQuadrants','chartMatrixOperating',
+                'chartParetoPositive','chartParetoNegative'
+            ].forEach(id => {
                 const canvas = document.getElementById(id);
-                if (canvas) {
-                    const ch = Chart.getChart(canvas);
-                    if (ch) { try { ch.destroy(); } catch(e) {} }
-                }
+                if (canvas) { const ch = Chart.getChart(canvas); if (ch) { try { ch.destroy(); } catch(e){} } }
             });
 
-            // Reset global data variables
+            // Reset all global data state
             branchesData = [];
             headquartersData = null;
             parsedWorkbook = null;
@@ -6874,12 +6859,12 @@
             activeBranchName = '';
             highlightedBranchInMatrices = null;
 
-            // Reset UI to overview tab and hide manual upload area
+            // Reset UI
             switchSubTab('overview');
             document.getElementById('manualUploadArea').style.display = 'none';
-
-            // Show upload overlay briefly then attempt fetch
             document.getElementById('uploadOverlay').classList.remove('hidden');
+
+            // Reload data from correct files
             fetchExcelData();
         }
     </script>
