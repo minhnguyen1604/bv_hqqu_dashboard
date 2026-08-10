@@ -1975,33 +1975,53 @@
                         </div>
                         <div class="table-container" style="max-height: 250px; overflow-y: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
                             <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
-                                                                                        <thead id="masterVarianceTableHead">
+                                                                                                                    <thead id="masterVarianceTableHead">
                                 <tr style="background:#f8fafc;">
-                                    <th rowspan="2" style="width: 40px; text-align: center; background: #f8fafc !important; padding: 8px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#475569; font-weight:700;">STT</th>
-                                    <th rowspan="2" style="min-width: 150px; background: #f8fafc !important; padding: 8px 8px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; text-align: left; color:#475569; font-weight:700;">Đơn Vị / Chi Nhánh</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">DOANH THU (TỶ VNĐ)</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">BỒI THƯỜNG (TỶ VNĐ)</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">CPDM (TỶ VNĐ)</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">HQQU (TỶ VNĐ)</th>
-                                    <th rowspan="2" style="width: 80px; text-align: center; background: #f8fafc !important; padding: 8px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700;">Chi tiết</th>
-                                </tr>
-                                <tr style="background:#f8fafc;">
+                                    <th style="width: 40px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; position:sticky; top:0; z-index:10;">STT</th>
+                                    <th style="min-width: 150px; text-align: left; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('name')">
+                                        Đơn Vị / Chi Nhánh <span id="sortIcon_name" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- DT -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('dt_past')">
+                                        <span class="thPastLabel">DT Q2.25</span> <span id="sortIcon_dt_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('dt_curr')">
+                                        DT Q2.26 <span id="sortIcon_dt_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('dt_diff')">
+                                        Chênh Lệch DT <span id="sortIcon_dt_diff" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- BT -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('bt_past')">
+                                        <span class="thPastLabel">BT Q2.25</span> <span id="sortIcon_bt_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('bt_curr')">
+                                        BT Q2.26 <span id="sortIcon_bt_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('bt_diff')">
+                                        Chênh Lệch BT <span id="sortIcon_bt_diff" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- CPDM -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('cpdm_past')">
+                                        <span class="thPastLabel">CPDM Q2.25</span> <span id="sortIcon_cpdm_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('cpdm_curr')">
+                                        CPDM Q2.26 <span id="sortIcon_cpdm_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('cpdm_diff')">
+                                        Chênh Lệch CPDM <span id="sortIcon_cpdm_diff" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- HQQU -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('hqqu_past')">
+                                        <span class="thPastLabel">HQQU Q2.25</span> <span id="sortIcon_hqqu_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('hqqu_curr')">
+                                        HQQU Q2.26 <span id="sortIcon_hqqu_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('hqqu_diff')">
+                                        Chênh Lệch HQQU <span id="sortIcon_hqqu_diff" style="font-size:10px; color:#0056A3;">▼</span>
+                                    </th>
+                                    <th style="width: 80px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; position:sticky; top:0; z-index:10;">Chi tiết</th>
                                 </tr>
                             </thead>
                                 <tbody id="profitableTableBody">
@@ -2793,33 +2813,53 @@
                     <!-- Master Table Container -->
                     <div class="table-container scroll-custom-hidden" style="max-height: 440px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
                         <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size:12px;">
-                                                        <thead id="masterVarianceTableHead">
+                                                                                    <thead id="masterVarianceTableHead">
                                 <tr style="background:#f8fafc;">
-                                    <th rowspan="2" style="width: 40px; text-align: center; background: #f8fafc !important; padding: 8px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#475569; font-weight:700;">STT</th>
-                                    <th rowspan="2" style="min-width: 150px; background: #f8fafc !important; padding: 8px 8px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; text-align: left; color:#475569; font-weight:700;">Đơn Vị / Chi Nhánh</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">DOANH THU (TỶ VNĐ)</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">BỒI THƯỜNG (TỶ VNĐ)</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">CPDM (TỶ VNĐ)</th>
-                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-right:1px solid #e2e8f0 !important; color:#0056A3; font-weight:700; border-bottom: none !important;">HQQU (TỶ VNĐ)</th>
-                                    <th rowspan="2" style="width: 80px; text-align: center; background: #f8fafc !important; padding: 8px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700;">Chi tiết</th>
-                                </tr>
-                                <tr style="background:#f8fafc;">
+                                    <th style="width: 40px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; position:sticky; top:0; z-index:10;">STT</th>
+                                    <th style="min-width: 150px; text-align: left; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('name')">
+                                        Đơn Vị / Chi Nhánh <span id="sortIcon_name" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- DT -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('dt_past')">
+                                        <span class="thPastLabel">DT Q2.25</span> <span id="sortIcon_dt_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('dt_curr')">
+                                        DT Q2.26 <span id="sortIcon_dt_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('dt_diff')">
+                                        Chênh Lệch DT <span id="sortIcon_dt_diff" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- BT -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('bt_past')">
+                                        <span class="thPastLabel">BT Q2.25</span> <span id="sortIcon_bt_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('bt_curr')">
+                                        BT Q2.26 <span id="sortIcon_bt_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('bt_diff')">
+                                        Chênh Lệch BT <span id="sortIcon_bt_diff" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- CPDM -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('cpdm_past')">
+                                        <span class="thPastLabel">CPDM Q2.25</span> <span id="sortIcon_cpdm_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('cpdm_curr')">
+                                        CPDM Q2.26 <span id="sortIcon_cpdm_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('cpdm_diff')">
+                                        Chênh Lệch CPDM <span id="sortIcon_cpdm_diff" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
                                     <!-- HQQU -->
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#64748b; font-size:11px;" class="thPastLabel">Q2.2025</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-size:11px;">Q2.2026</th>
-                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #cbd5e1 !important; border-right:1px solid #e2e8f0 !important; color:#64748b; font-size:11px;">Chênh lệch</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('hqqu_past')">
+                                        <span class="thPastLabel">HQQU Q2.25</span> <span id="sortIcon_hqqu_past" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0f172a; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('hqqu_curr')">
+                                        HQQU Q2.26 <span id="sortIcon_hqqu_curr" style="font-size:10px; color:#94a3b8;">↕</span>
+                                    </th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#0056A3; font-weight:700; cursor:pointer; position:sticky; top:0; z-index:10;" onclick="sortMasterVarianceTable('hqqu_diff')">
+                                        Chênh Lệch HQQU <span id="sortIcon_hqqu_diff" style="font-size:10px; color:#0056A3;">▼</span>
+                                    </th>
+                                    <th style="width: 80px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #cbd5e1 !important; color:#475569; font-weight:700; position:sticky; top:0; z-index:10;">Chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody id="masterVarianceTableBody">
@@ -7297,7 +7337,20 @@
         }
 
         
-                // ================= MASTER ALL-BRANCH VARIANCE OVERVIEW ENGINE =================
+                        // ================= MASTER ALL-BRANCH VARIANCE OVERVIEW ENGINE =================
+        let masterSortKey = 'hqqu_diff';
+        let masterSortDir = 'desc';
+
+        function sortMasterVarianceTable(colName) {
+            if (masterSortKey === colName) {
+                masterSortDir = masterSortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                masterSortKey = colName;
+                masterSortDir = (colName.includes('diff') || colName.includes('curr') || colName.includes('past')) ? 'desc' : 'asc';
+            }
+            renderMasterVarianceTable();
+        }
+
         function renderMasterVarianceTable() {
             const tbody = document.getElementById('masterVarianceTableBody');
             if (!tbody || !varianceData) return;
@@ -7313,7 +7366,7 @@
             }
 
             document.querySelectorAll('.thPastLabel').forEach(el => {
-                el.innerText = compareLabel;
+                el.innerText = `Q2.25 (${compareLabel})`;
             });
 
             const searchVal = (document.getElementById('masterVarianceSearchInput')?.value || '').toLowerCase().trim();
@@ -7325,13 +7378,7 @@
             let branchNames = Object.keys(currData);
             if (branchNames.length === 0) return;
 
-            branchNames.sort((a, b) => {
-                if (a.includes('Trụ sở chính') || a.includes('TRỤ SỞ CHÍNH')) return -1;
-                if (b.includes('Trụ sở chính') || b.includes('TRỤ SỞ CHÍNH')) return 1;
-                return a.localeCompare(b, 'vi');
-            });
-
-            let count = 0;
+            let items = [];
             branchNames.forEach(bName => {
                 if (searchVal && !bName.toLowerCase().includes(searchVal)) return;
 
@@ -7353,8 +7400,44 @@
                 if (statusFilter === 'PROFIT' && dHq < 0) return;
                 if (statusFilter === 'LOSS' && dHq >= 0) return;
 
-                count++;
+                items.push({
+                    name: bName,
+                    dt_past: pTotal.dt, dt_curr: cTotal.dt, dt_diff: dDt, pDt: pDt,
+                    bt_past: pTotal.bt, bt_curr: cTotal.bt, bt_diff: dBt, pBt: pBt,
+                    cpdm_past: pTotal.cpdm, cpdm_curr: cTotal.cpdm, cpdm_diff: dCpdm, pCpdm: pCpdm,
+                    hqqu_past: pTotal.hqqu, hqqu_curr: cTotal.hqqu, hqqu_diff: dHq, pHq: pHq
+                });
+            });
 
+            // Sort items
+            items.sort((a, b) => {
+                let valA = a[masterSortKey];
+                let valB = b[masterSortKey];
+
+                if (typeof valA === 'string') {
+                    return masterSortDir === 'asc' ? valA.localeCompare(valB, 'vi') : valB.localeCompare(valA, 'vi');
+                } else {
+                    return masterSortDir === 'asc' ? valA - valB : valB - valA;
+                }
+            });
+
+            // Update sort icon indicators
+            ['name', 'dt_past', 'dt_curr', 'dt_diff', 'bt_past', 'bt_curr', 'bt_diff', 'cpdm_past', 'cpdm_curr', 'cpdm_diff', 'hqqu_past', 'hqqu_curr', 'hqqu_diff'].forEach(key => {
+                const el = document.getElementById('sortIcon_' + key);
+                if (el) {
+                    if (key === masterSortKey) {
+                        el.innerText = masterSortDir === 'asc' ? '▲' : '▼';
+                        el.style.color = '#0056A3';
+                    } else {
+                        el.innerText = '↕';
+                        el.style.color = '#94a3b8';
+                    }
+                }
+            });
+
+            let count = 0;
+            items.forEach(item => {
+                count++;
                 const fmtDiff = (dVal, pPct, invertColor = false) => {
                     const sign = dVal >= 0 ? '+' : '';
                     let isGood = dVal >= 0;
@@ -7366,35 +7449,35 @@
                 const tr = document.createElement('tr');
                 tr.style.cursor = 'pointer';
                 tr.onclick = (e) => {
-                    if (e.target.tagName !== 'BUTTON') jumpToBranchVariance(bName);
+                    if (e.target.tagName !== 'BUTTON') jumpToBranchVariance(item.name);
                 };
 
                 tr.innerHTML = `
-                    <td style="text-align:center; color:#64748b; border-right:1px solid #f1f5f9;">${count}</td>
-                    <td style="font-weight:700; color:#0056A3; border-right:1px solid #f1f5f9;">${bName}</td>
+                    <td style="text-align:center; color:#64748b;">${count}</td>
+                    <td style="font-weight:700; color:#0056A3;">${item.name}</td>
                     
                     <!-- DT -->
-                    <td style="text-align:right; color:#64748b;">${(pTotal.dt/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(cTotal.dt/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dDt, pDt, false)}</td>
+                    <td style="text-align:right; color:#64748b;">${(item.dt_past/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(item.dt_curr/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right;">${fmtDiff(item.dt_diff, item.pDt, false)}</td>
                     
                     <!-- BT -->
-                    <td style="text-align:right; color:#64748b;">${(pTotal.bt/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(cTotal.bt/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dBt, pBt, true)}</td>
+                    <td style="text-align:right; color:#64748b;">${(item.bt_past/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(item.bt_curr/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right;">${fmtDiff(item.bt_diff, item.pBt, true)}</td>
                     
                     <!-- CPDM -->
-                    <td style="text-align:right; color:#64748b;">${(pTotal.cpdm/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(cTotal.cpdm/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dCpdm, pCpdm, true)}</td>
+                    <td style="text-align:right; color:#64748b;">${(item.cpdm_past/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(item.cpdm_curr/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right;">${fmtDiff(item.cpdm_diff, item.pCpdm, true)}</td>
                     
                     <!-- HQQU -->
-                    <td style="text-align:right; color:${pTotal.hqqu>=0?'#64748b':'#ef4444'};">${(pTotal.hqqu/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; font-weight:700; color:${cTotal.hqqu>=0?'#0f172a':'#ef4444'};">${(cTotal.hqqu/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dHq, pHq, false)}</td>
+                    <td style="text-align:right; color:${item.hqqu_past>=0?'#64748b':'#ef4444'};">${(item.hqqu_past/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:700; color:${item.hqqu_curr>=0?'#0f172a':'#ef4444'};">${(item.hqqu_curr/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right;">${fmtDiff(item.hqqu_diff, item.pHq, false)}</td>
                     
                     <td style="text-align:center;">
-                        <button onclick="jumpToBranchVariance('${bName.replace(/'/g, "\'")}')" style="padding:3px 8px; font-size:11px; font-weight:700; border:none; border-radius:5px; background:#e0f2fe; color:#0369a1; cursor:pointer;">
+                        <button onclick="jumpToBranchVariance('${item.name.replace(/'/g, "\'")}')" style="padding:3px 8px; font-size:11px; font-weight:700; border:none; border-radius:5px; background:#e0f2fe; color:#0369a1; cursor:pointer;">
                             Soi chi tiết
                         </button>
                     </td>
