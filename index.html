@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baoviet HQQU Dashboard</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>BVGI HQQU Dashboard</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" type="image/png" href="BVH.VN-4893b119.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,6 +18,8 @@
     <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
     <!-- chartjs-plugin-zoom -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="seasonal_multiyear_data.js"></script>
+    <script src="embedded_excel_files.js"></script>
     <style>
         :root {
             /* Sleek Grey-White Palette and BV Blue/Gold accents */
@@ -1673,9 +1676,10 @@
                 <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
                 Phân tích chi tiết
             </div>
-            <div class="nav-sub-item" id="subitemTable" onclick="switchSubTab('table')">
-                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
-                Bảng tổng hợp chi tiết
+
+            <div class="nav-sub-item" id="subitemVariance" onclick="switchSubTab('variance')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                <span>Phân tích biến động</span>
             </div>
         </div>
 
@@ -1698,9 +1702,10 @@
                 <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
                 Phân tích chi tiết
             </div>
-            <div class="nav-sub-item" id="hq2SubitemTable" onclick="switchSubTab('table')">
-                <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.4;"></span>
-                Bảng tổng hợp chi tiết
+
+            <div class="nav-sub-item" id="hq2SubitemVariance" onclick="switchSubTab('variance')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                <span>Phân tích biến động</span>
             </div>
         </div>
 
@@ -2179,153 +2184,113 @@
 
 
 
-                <!-- ================= SEASONAL REVENUE ANALYSIS ================= -->
+                                <!-- ================= MULTI-YEAR SEASONALITY MODULE (2023 - 2026) ================= -->
                 <div class="panel glass-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
-                        <div class="panel-title" id="titleSeasonalUnit" style="border-left-color: var(--bv-accent);">
-                            Phân tích mùa vụ doanh thu & bồi thường chi tiết theo đơn vị
+                    <!-- Module Toolbar -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div style="width:4px; height:20px; border-radius:2px; background:linear-gradient(180deg,#0056A3,#f59e0b);"></div>
+                            <span style="font-size:15px; font-weight:800; color:#0f172a; letter-spacing:0.01em;">PHÂN TÍCH TÍNH CHẤT MÙA VỤ</span>
                         </div>
-                        <div class="segmented-control" style="margin-left: auto; margin-right: 16px;">
-                            <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
-                                Doanh thu
-                            </button>
-                            <button class="btn-seasonal-metric" data-metric="claims" onclick="switchSeasonalMetric('claims')">
-                                Bồi thường
-                            </button>
-                        </div>
-                        <button class="btn-download-icon" onclick="downloadSeasonalReport()" title="Tải báo cáo phân tích mùa vụ chi tiết (Excel)">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="table-container scroll-on-hover" style="max-height: 400px; overflow-y: auto; overflow-x: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
-                        <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px; text-align: center; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; vertical-align: middle;">STT</th>
-                                    <th class="filterable-th" data-col="name" style="min-width: 180px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: left; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>Đơn Vị</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="change_q1_q2" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>% thay đổi Q1->Q2 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="change_q2_q3" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>% thay đổi Q2->Q3 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="change_q3_q4" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>% thay đổi Q3->Q4 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="change_25_26" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>% thay đổi Q1.25->Q1.26</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="prop_q1" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>Tỉ trọng Q1 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="prop_q2" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>Tỉ trọng Q2 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="prop_q3" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>Tỉ trọng Q3 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="prop_q4" style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">
-                                        <div class="th-content">
-                                            <span>Tỉ trọng Q4 2025</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="peak_quarter" style="min-width: 120px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">
-                                        <div class="th-content" style="justify-content: center;">
-                                            <span>Quý Cao Điểm</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                    <th class="filterable-th" data-col="group" style="min-width: 180px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: center; vertical-align: middle;">
-                                        <div class="th-content" style="justify-content: center;">
-                                            <span>Nhóm</span>
-                                            <span class="filter-arrow-btn">▼</span>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="seasonalTableBody">
-                                <!-- Dynamic rows -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- ================= SEASONAL REVENUE ANALYSIS BY LOB ================= -->
-                <div class="panel glass-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header" style="margin-bottom: 16px; align-items: center; display: flex; justify-content: space-between;">
-                        <div class="panel-title" id="titleSeasonalLob" style="border-left-color: var(--bv-accent);">
-                            Phân tích mùa vụ doanh thu & bồi thường chi tiết theo nghiệp vụ
-                        </div>
-                        <div class="segmented-control" style="margin-left: auto; margin-right: 16px;">
-                            <button class="active btn-seasonal-metric" data-metric="revenue" onclick="switchSeasonalMetric('revenue')">
-                                Doanh thu
+                        <!-- Controls -->
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <!-- Metric Selector: Revenue / Claims -->
+                            <div style="display:flex; background:#f1f5f9; border-radius:8px; padding:3px; gap:2px;">
+                                <button id="btnMultiyearMetricRev" onclick="switchMultiyearMetric('revenue')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:#0056A3; color:#fff; transition:all .18s;">Doanh thu</button>
+                                <button id="btnMultiyearMetricClm" onclick="switchMultiyearMetric('claims')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:transparent; color:#64748b; transition:all .18s;">Bồi thường</button>
+                            </div>
+
+                            <!-- Scope Filter: All / HQ1 / HQ2 -->
+                            <div style="display:flex; background:#f1f5f9; border-radius:8px; padding:3px; gap:2px;">
+                                <button id="btnMultiyearScopeALL" onclick="switchMultiyearScope('ALL')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:#0056A3; color:#fff; transition:all .18s;">Tất cả</button>
+                                <button id="btnMultiyearScopeHQ1" onclick="switchMultiyearScope('HQ1')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:transparent; color:#64748b; transition:all .18s;">HQ1</button>
+                                <button id="btnMultiyearScopeHQ2" onclick="switchMultiyearScope('HQ2')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:transparent; color:#64748b; transition:all .18s;">HQ2</button>
+                            </div>
+
+                            <!-- Dimension Dropdown: Unit or LOB -->
+                            <div style="display:flex; align-items:center; gap:0; border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;">
+                                <select id="multiyearDimensionSelect" onchange="switchMultiyearDimension(this.value)" style="height:32px; font-size:12px; font-weight:700; border:none; padding:0 8px; color:#1e293b; background:#f8fafc; cursor:pointer; border-right:1px solid #cbd5e1;">
+                                    <option value="unit">Theo Công ty thành viên</option>
+                                    <option value="lob">Theo Nghiệp vụ</option>
+                                </select>
+                                <select id="multiyearItemSelect" onchange="switchMultiyearItem(this.value)" style="height:32px; font-size:12px; font-weight:600; border:none; padding:0 8px; color:#0056A3; background:#fff; cursor:pointer; min-width:140px;">
+                                    <option value="ALL">Tất cả đơn vị</option>
+                                </select>
+                            </div>
+
+                            <!-- Export Excel -->
+                            <button onclick="downloadMultiyearSeasonalReport()" title="Tải báo cáo mùa vụ đa năm (Excel)" style="height:32px; padding:0 12px; border:none; border-radius:7px; background:linear-gradient(135deg,#0056A3,#0072cc); color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; box-shadow:0 2px 6px rgba(0,86,163,.25);">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Xuất Excel
                             </button>
-                            <button class="btn-seasonal-metric" data-metric="claims" onclick="switchSeasonalMetric('claims')">
-                                Bồi thường
-                            </button>
                         </div>
-                        <button class="btn-download-icon" onclick="downloadLobSeasonalReport()" title="Tải báo cáo phân tích mùa vụ theo nghiệp vụ (Excel)">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                        </button>
                     </div>
-                    <div class="table-container scroll-on-hover" style="max-height: 400px; overflow-y: auto; overflow-x: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
-                        <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px; text-align: center; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; vertical-align: middle;">STT</th>
-                                    <th style="min-width: 180px; background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: left; vertical-align: middle;">Nghiệp Vụ</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q1->Q2 2025</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q2->Q3 2025</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q3->Q4 2025</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">% thay đổi Q1.25->Q1.26</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q1 2025</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q2 2025</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q3 2025</th>
-                                    <th style="background: #f3f4f6 !important; padding: 12px 10px !important; border-bottom: 2px solid #e5e7eb !important; text-align: right; vertical-align: middle;">Tỉ trọng Q4 2025</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lobSeasonalTableBody">
-                                <!-- Dynamic LOB rows -->
-                            </tbody>
-                        </table>
+
+                    <!-- Charts Grid (Left: Multi-Year Line Overlay | Right: 14-Quarter Trend) -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; min-height:300px;">
+                        <!-- Chart 1: Line Overlay (Q1 -> Q4 per Year) -->
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); display:flex; flex-direction:column; gap:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-size:13px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0056A3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                    <span id="titleSeasonalOverlay">Đường cong mùa vụ 2023 - 2026</span>
+                                </div>
+                                
+                            </div>
+                            <div style="flex:1; position:relative; min-height:240px;">
+                                <canvas id="chartSeasonalOverlay"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2: 14-Quarter Trend Bar/Line Chart -->
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); display:flex; flex-direction:column; gap:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-size:13px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                    <span id="titleSeasonal14Q">Chuỗi diễn biến 14 Quý liên tục từ 2023Q1 đến 2026Q2</span>
+                                </div>
+                                
+                            </div>
+                            <div style="flex:1; position:relative; min-height:240px;">
+                                <canvas id="chartSeasonal14Quarters"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seasonality Heatmap Matrix Table -->
+                    <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <div style="font-size:13px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0056A3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                                Bảng Ma trận Mùa vụ &amp; Tỷ trọng Quý trung bình
+                            </div>
+
+                        </div>
+                        <div class="table-container scroll-on-hover" style="max-height: 420px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size:12px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 45px; text-align: center; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important;">STT</th>
+                                        <th id="thMultiyearName" style="min-width: 160px; background: #f8fafc !important; padding: 10px 10px !important; border-bottom: 2px solid #e2e8f0 !important; text-align: left;">Đơn Vị</th>
+                                        <th style="width: 90px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #e2e8f0 !important;">Phân loại</th>
+                                        <th style="text-align: right; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important;">Tỉ trọng Q1 %</th>
+                                        <th style="text-align: right; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important;">Tỉ trọng Q2 %</th>
+                                        <th style="text-align: right; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important;">Tỉ trọng Q3 %</th>
+                                        <th style="text-align: right; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important;">Tỉ trọng Q4 %</th>
+                                        <th style="width: 110px; text-align: center; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important;">Quý Cao Điểm</th>
+                                        <th style="text-align: right; background: #f8fafc !important; padding: 10px 10px !important; border-bottom: 2px solid #e2e8f0 !important;">YoY Q2.26 vs Q2.25</th>
+                                        <th style="text-align: right; background: #f8fafc !important; padding: 10px 10px !important; border-bottom: 2px solid #e2e8f0 !important;">Quy mô Q2.2026</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="seasonalMultiyearTableBody">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- End viewOverview -->
 
                 <!-- ================= VIEW 2: BRANCH PERFORMANCE ================= -->
             <div id="viewBranch" class="view-panel">
@@ -2712,7 +2677,149 @@
                 </div>
             </div>
 
-            <!-- ================= VIEW 4: SETTINGS ================= -->
+            
+            <!-- ================= VIEW 3.5: VARIANCE ANALYSIS ================= -->
+            <div id="viewVariance" class="view-panel">
+                <!-- ── TOOLBAR ── -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:14px 20px; margin-bottom:18px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                    <!-- Left: Title -->
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div style="width:4px; height:22px; border-radius:2px; background:linear-gradient(180deg,#0056A3,#2a9d8f);"></div>
+                        <span style="font-size:15px; font-weight:800; letter-spacing:0.01em; color:#0f172a;">PHÂN TÍCH BIẾN ĐỘNG</span>
+                    </div>
+
+                    <!-- Right: Controls -->
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+
+                        <!-- Branch selector with label -->
+                        <div style="display:flex; align-items:center; gap:0; border:1.5px solid #d1d5db; border-radius:9px; overflow:hidden; background:#fff;">
+                            <div style="display:flex; align-items:center; gap:6px; padding:0 10px; height:36px; background:#f8fafc; border-right:1px solid #e2e8f0; flex-shrink:0;">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                <span style="font-size:11px; font-weight:700; color:#64748b; white-space:nowrap;">Chi nhánh</span>
+                            </div>
+                            <select id="varianceBranchSelect" onchange="renderVarianceDashboard()" style="height:36px; font-size:13px; font-weight:600; border:none; outline:none; padding:0 10px; color:#1e293b; background:transparent; min-width:180px; cursor:pointer;">
+                            </select>
+                        </div>
+
+                        <!-- Divider -->
+                        <div style="width:1px; height:24px; background:#e2e8f0;"></div>
+
+                        <!-- YoY / QoQ toggle -->
+                        <div style="display:flex; background:#f1f5f9; border-radius:8px; padding:3px; gap:2px;">
+                            <button id="btnModeYoY" onclick="switchVarianceMode('YoY')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:#0056A3; color:#fff; transition:all .18s; white-space:nowrap;">YoY · Q2.25</button>
+                            <button id="btnModeQoQ" onclick="switchVarianceMode('QoQ')" style="padding:5px 12px; font-size:11.5px; font-weight:700; border:none; border-radius:6px; cursor:pointer; background:transparent; color:#64748b; transition:all .18s; white-space:nowrap;">QoQ · Q1.26</button>
+                        </div>
+
+                        <!-- Divider -->
+                        <div style="width:1px; height:24px; background:#e2e8f0;"></div>
+
+                        <!-- Upload — prominent pill button -->
+                        <button onclick="document.getElementById('varianceFileInput').click()" title="Tải lên file Excel khác" style="height:36px; padding:0 14px; border:none; border-radius:8px; background:linear-gradient(135deg,#0056A3,#0072cc); color:#fff; cursor:pointer; display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:0.02em; box-shadow:0 2px 8px rgba(0,86,163,.35); transition:all .18s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 14px rgba(0,86,163,.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,86,163,.35)'">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            Tải file
+                        </button>
+                        <input type="file" id="varianceFileInput" style="display:none;" accept=".xlsx,.xlsm" onchange="handleVarianceUpload(this)">
+
+                        <!-- Hidden status badge (still updated by JS) -->
+                        <div id="varianceFileStatus" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <!-- ── MAIN CONTENT ── -->
+                <div id="varianceAnalysisContent" style="display:flex; flex-direction:column; gap:18px;">
+
+                    <!-- KPI CARDS -->
+                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
+                        <!-- Doanh thu -->
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Doanh thu</div>
+                            <div id="varKpiRevenueVal" style="font-size:18px; font-weight:800; color:#0f172a; line-height:1.2;">--</div>
+                            <div id="varKpiRevenueDiff" style="margin-top:10px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:4px;">--</div>
+                        </div>
+                        <!-- Bồi thường -->
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Bồi thường</div>
+                            <div id="varKpiClaimsVal" style="font-size:18px; font-weight:800; color:#0f172a; line-height:1.2;">--</div>
+                            <div id="varKpiClaimsDiff" style="margin-top:10px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:4px;">--</div>
+                        </div>
+                        <!-- Chi phí định mức -->
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Chi phí định mức</div>
+                            <div id="varKpiExpenseVal" style="font-size:18px; font-weight:800; color:#0f172a; line-height:1.2;">--</div>
+                            <div id="varKpiExpenseDiff" style="margin-top:10px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:4px;">--</div>
+                        </div>
+                        <!-- HQQU -->
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Hiệu quả quy ước</div>
+                            <div id="varKpiProfitVal" style="font-size:18px; font-weight:800; color:#0f172a; line-height:1.2;">--</div>
+                            <div id="varKpiProfitDiff" style="margin-top:10px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:4px;">--</div>
+                        </div>
+                    </div>
+
+                    <!-- CHART + COMMENTARY -->
+                    <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:16px; min-height:360px;">
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.05); display:flex; flex-direction:column; gap:12px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0056A3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                <div id="varChartTitle" style="font-size:13px; font-weight:700; color:#0f172a;">Biểu đồ so sánh Doanh thu &amp; HQQU theo nghiệp vụ</div>
+                            </div>
+                            <div style="flex:1; position:relative; min-height:280px;">
+                                <canvas id="varianceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.05); display:flex; flex-direction:column; gap:12px;">
+                            <div style="display:flex; align-items:center; gap:8px; padding-bottom:10px; border-bottom:1px solid #f1f5f9;">
+                                <div style="width:28px; height:28px; border-radius:7px; background:rgba(0,86,163,.08); display:flex; align-items:center; justify-content:center;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0056A3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                </div>
+                                <span style="font-size:13px; font-weight:700; color:#0f172a;">Phân tích nguyên nhân biến động</span>
+                            </div>
+                            <div id="varianceCommentaryContent" style="font-size:12.5px; line-height:1.65; color:#475569; display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:290px; padding-right:4px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DETAIL TABLE -->
+                    <div style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0056A3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+                            <div id="varTableTitle" style="font-size:13px; font-weight:700; color:#0f172a;">Bảng chi tiết so sánh các cấu phần tài chính</div>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                                <thead>
+                                    <tr style="background:linear-gradient(135deg,#0056A3,#1a73cc); color:#fff;">
+                                        <th style="padding:10px 12px; text-align:left; font-weight:700; border-radius:8px 0 0 0;">Nghiệp vụ / Cấu phần</th>
+                                        <th id="varTableHeaderPast" style="padding:10px 12px; text-align:right; font-weight:700; white-space:nowrap;">Kỳ trước</th>
+                                        <th id="varTableHeaderCurrent" style="padding:10px 12px; text-align:right; font-weight:700; white-space:nowrap;">Q2.2026</th>
+                                        <th style="padding:10px 12px; text-align:right; font-weight:700; white-space:nowrap;">Chênh lệch (đ)</th>
+                                        <th style="padding:10px 12px; text-align:right; font-weight:700; border-radius:0 8px 0 0; white-space:nowrap;">Tỷ lệ %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="varianceTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div id="varianceEmptyState" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:380px; gap:18px; text-align:center; background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:40px;">
+                    <div style="width:72px; height:72px; border-radius:50%; background:#f0f9ff; display:flex; align-items:center; justify-content:center;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    </div>
+                    <div style="max-width: 450px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Chưa tải tệp dữ liệu so sánh</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Vui lòng tải lên tệp Excel <strong>ss_hq1_final.xlsx</strong> để kích hoạt tính năng phân tích biến động.</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('varianceFileInput').click()" style="padding: 10px 24px; font-size: 13px; font-weight: 500; border-radius: 8px; border: none; cursor: pointer;">
+                        Tải lên tệp ss_hq1_final.xlsx
+                    </button>
+                </div>
+            </div>
+
+
+<!-- ================= VIEW 4: SETTINGS ================= -->
             <div id="viewSettings" class="view-panel">
                 <div class="panel glass-panel" style="max-width: 600px;">
                     <div class="panel-header" style="margin-bottom: 20px;">
@@ -2810,6 +2917,17 @@
 
     <!-- Application Script -->
     <script>
+
+        function base64ToArrayBuffer(base64) {
+            const binary_string = window.atob(base64);
+            const len = binary_string.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
         // Global variables for dashboard data
         let branchesData = []; // Array of branch records
         let headquartersData = null; // Headquarter row object
@@ -3011,37 +3129,55 @@
         // Fetch excel workbook from the server
         let data2025 = {}; // Global variable to store 2025 aggregated data
 
-        async function fetchExcelData() {
+                async function fetchExcelData() {
             const statusText = document.getElementById('uploadStatusText');
             statusText.innerHTML = 'Đang tải dữ liệu báo cáo từ máy chủ cục bộ...';
             
+            let loaded2025 = false;
             try {
-                // Try loading 2025 data first
                 statusText.innerHTML = 'Đang tải tệp dữ liệu lịch sử <strong>DT_CTTV_HQ1_2025.xlsx</strong>...';
                 const response2025 = await fetch('DT_CTTV_HQ1_2025.xlsx');
                 if (response2025.ok) {
                     const buffer2025 = await response2025.arrayBuffer();
                     parseExcelWorkbook2025(buffer2025);
-                } else {
-                    console.warn('Cannot download DT_CTTV_HQ1_2025.xlsx from server, YoY/QoQ will be unavailable');
+                    loaded2025 = true;
                 }
             } catch (err2025) {
                 console.warn('Auto fetch 2025 data failed:', err2025);
             }
+            if (!loaded2025 && typeof EMBEDDED_EXCEL_FILES !== 'undefined' && EMBEDDED_EXCEL_FILES['DT_CTTV_HQ1_2025.xlsx']) {
+                try {
+                    parseExcelWorkbook2025(base64ToArrayBuffer(EMBEDDED_EXCEL_FILES['DT_CTTV_HQ1_2025.xlsx']));
+                    console.log('Loaded DT_CTTV_HQ1_2025.xlsx from embedded fallback!');
+                } catch(e) { console.warn('Embedded 2025 load failed:', e); }
+            }
 
+            let loaded2026 = false;
             try {
                 statusText.innerHTML = 'Đang tải tệp dữ liệu <strong>HQ1_Q1_2026.xlsx</strong>...';
                 const response = await fetch('HQ1_Q1_2026.xlsx');
-                if (!response.ok) {
-                    throw new Error('Không thể tải tệp HQ1_Q1_2026.xlsx từ server.');
+                if (response.ok) {
+                    const buffer = await response.arrayBuffer();
+                    parseExcelWorkbook(buffer);
+                    loaded2026 = true;
+                    document.getElementById('uploadOverlay').classList.add('hidden');
                 }
-                const buffer = await response.arrayBuffer();
-                parseExcelWorkbook(buffer);
             } catch (err) {
-                console.warn('Auto fetch failed, falling back to manual upload:', err);
+                console.warn('Auto fetch 2026 failed:', err);
+            }
+
+            if (!loaded2026 && typeof EMBEDDED_EXCEL_FILES !== 'undefined' && EMBEDDED_EXCEL_FILES['HQ1_Q1_2026.xlsx']) {
+                try {
+                    parseExcelWorkbook(base64ToArrayBuffer(EMBEDDED_EXCEL_FILES['HQ1_Q1_2026.xlsx']));
+                    console.log('Loaded HQ1_Q1_2026.xlsx from embedded fallback!');
+                    document.getElementById('uploadOverlay').classList.add('hidden');
+                    loaded2026 = true;
+                } catch(e) { console.warn('Embedded 2026 load failed:', e); }
+            }
+
+            if (!loaded2026) {
                 statusText.innerHTML = '⚠️ <strong>Không thể đồng bộ tự động!</strong><br>Do chạy ở chế độ file:// hoặc máy chủ chưa sẵn sàng. Vui lòng kéo thả hoặc tải lên các tệp dữ liệu.';
                 document.getElementById('manualUploadArea').style.display = 'block';
-                document.getElementById('uploadOverlay').classList.remove('hidden');
             }
         }
 
@@ -3133,6 +3269,11 @@
             computeSeasonalData();
             initOverviewDashboard();
             populateBranchDropdown();
+            renderBranchesTable();
+            if (branchesData.length > 0) {
+                if (!activeBranchName) activeBranchName = branchesData[0].name;
+                renderBranchDetails(activeBranchName);
+            }
             renderBranchesTable();
         }
 
@@ -6753,46 +6894,48 @@
         function switchSubTab(subTabId) {
             activeSubTab = subTabId;
 
-            // Update subitems active classes
-            document.getElementById('subitemOverview').classList.remove('active');
-            document.getElementById('subitemBranch').classList.remove('active');
-            if (document.getElementById('subitemTable')) {
-                document.getElementById('subitemTable').classList.remove('active');
-            }
-            document.getElementById('settingsNavItem').classList.remove('active');
+            // Remove active class from all nav sub items
+            ['subitemOverview', 'subitemBranch', 'subitemVariance',
+             'hq2SubitemOverview', 'hq2SubitemBranch', 'hq2SubitemVariance',
+             'settingsNavItem'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
 
-            // Update visible panels
-            document.getElementById('viewOverview').classList.remove('active');
-            document.getElementById('viewBranch').classList.remove('active');
-            document.getElementById('viewTable').classList.remove('active');
-            document.getElementById('viewSettings').classList.remove('active');
+            // Remove active class from all view panels
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
 
             if (subTabId === 'overview') {
-                document.getElementById('subitemOverview').classList.add('active');
-                document.getElementById('viewOverview').classList.add('active');
+                if (document.getElementById('subitemOverview')) document.getElementById('subitemOverview').classList.add('active');
+                if (document.getElementById('viewOverview')) document.getElementById('viewOverview').classList.add('active');
                 updateDashboardNavActiveState();
             } else if (subTabId === 'branch') {
-                document.getElementById('subitemBranch').classList.add('active');
-                document.getElementById('viewBranch').classList.add('active');
+                if (document.getElementById('subitemBranch')) document.getElementById('subitemBranch').classList.add('active');
+                if (document.getElementById('viewBranch')) document.getElementById('viewBranch').classList.add('active');
                 updateDashboardNavActiveState();
-            } else if (subTabId === 'table') {
-                if (document.getElementById('subitemTable')) {
-                    document.getElementById('subitemTable').classList.add('active');
+                if (branchesData.length > 0) {
+                    if (!activeBranchName) activeBranchName = branchesData[0].name;
+                    renderBranchDetails(activeBranchName);
                 }
-                document.getElementById('viewTable').classList.add('active');
+
+            } else if (subTabId === 'variance') {
+                if (document.getElementById('subitemVariance')) document.getElementById('subitemVariance').classList.add('active');
+                if (document.getElementById('hq2SubitemVariance')) document.getElementById('hq2SubitemVariance').classList.add('active');
+                if (document.getElementById('viewVariance')) document.getElementById('viewVariance').classList.add('active');
                 updateDashboardNavActiveState();
+                if (typeof renderVarianceDashboard === 'function') {
+                    renderVarianceDashboard();
+                }
             } else if (subTabId === 'settings') {
-                document.getElementById('settingsNavItem').classList.add('active');
-                document.getElementById('viewSettings').classList.add('active');
-                document.getElementById('dashboardNavItem').classList.remove('active');
-                // Auto collapse submenu when Settings is active
-                document.getElementById('hqqu-submenu').classList.remove('expanded');
+                if (document.getElementById('settingsNavItem')) document.getElementById('settingsNavItem').classList.add('active');
+                if (document.getElementById('viewSettings')) document.getElementById('viewSettings').classList.add('active');
+                if (document.getElementById('dashboardNavItem')) document.getElementById('dashboardNavItem').classList.remove('active');
+                if (document.getElementById('hqqu-submenu')) document.getElementById('hqqu-submenu').classList.remove('expanded');
             }
-
-
         }
 
-        // Submenu expanding/collapsing toggle
         function toggleSubmenu(submenuId, navItem) {
             const submenu = document.getElementById(submenuId);
             const sidebar = document.querySelector('.sidebar');
@@ -6864,30 +7007,50 @@
 
         // Fetch data riêng cho HQ2 — bản sao độc lập của fetchExcelData()
         // sử dụng cùng parsers (parseExcelWorkbook2025, parseExcelWorkbook)
-        async function fetchExcelDataHQ2() {
+                async function fetchExcelDataHQ2() {
             const statusText = document.getElementById('uploadStatusText');
             statusText.innerHTML = 'Đang tải dữ liệu HQ2 từ máy chủ cục bộ...';
 
+            let loaded2025 = false;
             try {
                 statusText.innerHTML = 'Đang tải tệp dữ liệu lịch sử <strong>DT_CTTV_HQ2_2025.xlsx</strong>...';
                 const r2025 = await fetch('DT_CTTV_HQ2_2025.xlsx');
                 if (r2025.ok) {
                     parseExcelWorkbook2025(await r2025.arrayBuffer());
-                } else {
-                    console.warn('Cannot download DT_CTTV_HQ2_2025.xlsx, YoY/QoQ sẽ không khả dụng');
+                    loaded2025 = true;
                 }
             } catch (e) { console.warn('Auto fetch HQ2 hist failed:', e); }
 
+            if (!loaded2025 && typeof EMBEDDED_EXCEL_FILES !== 'undefined' && EMBEDDED_EXCEL_FILES['DT_CTTV_HQ2_2025.xlsx']) {
+                try {
+                    parseExcelWorkbook2025(base64ToArrayBuffer(EMBEDDED_EXCEL_FILES['DT_CTTV_HQ2_2025.xlsx']));
+                    console.log('Loaded DT_CTTV_HQ2_2025.xlsx from embedded fallback!');
+                } catch(e) { console.warn('Embedded HQ2 2025 load failed:', e); }
+            }
+
+            let loaded2026 = false;
             try {
                 statusText.innerHTML = 'Đang tải tệp dữ liệu <strong>HQ2_Q1_2026.xlsx</strong>...';
                 const r = await fetch('HQ2_Q1_2026.xlsx');
-                if (!r.ok) throw new Error('Không thể tải HQ2_Q1_2026.xlsx từ server.');
-                parseExcelWorkbook(await r.arrayBuffer());
-            } catch (e) {
-                console.warn('Auto fetch HQ2 failed:', e);
+                if (r.ok) {
+                    parseExcelWorkbook(await r.arrayBuffer());
+                    loaded2026 = true;
+                    document.getElementById('uploadOverlay').classList.add('hidden');
+                }
+            } catch (e) { console.warn('Auto fetch HQ2 failed:', e); }
+
+            if (!loaded2026 && typeof EMBEDDED_EXCEL_FILES !== 'undefined' && EMBEDDED_EXCEL_FILES['HQ2_Q1_2026.xlsx']) {
+                try {
+                    parseExcelWorkbook(base64ToArrayBuffer(EMBEDDED_EXCEL_FILES['HQ2_Q1_2026.xlsx']));
+                    console.log('Loaded HQ2_Q1_2026.xlsx from embedded fallback!');
+                    document.getElementById('uploadOverlay').classList.add('hidden');
+                    loaded2026 = true;
+                } catch(e) { console.warn('Embedded HQ2 2026 load failed:', e); }
+            }
+
+            if (!loaded2026) {
                 statusText.innerHTML = '⚠️ <strong>Không thể đồng bộ tự động HQ2!</strong><br>Do chạy ở chế độ file:// hoặc máy chủ chưa sẵn sàng. Vui lòng kéo thả hoặc tải lên các tệp dữ liệu.';
                 document.getElementById('manualUploadArea').style.display = 'block';
-                document.getElementById('uploadOverlay').classList.remove('hidden');
             }
         }
 
@@ -6945,7 +7108,7 @@
             // Reset UI về tab tổng quan
             switchSubTab('overview');
             document.getElementById('manualUploadArea').style.display = 'none';
-            document.getElementById('uploadOverlay').classList.remove('hidden');
+            if (typeof SEASONAL_MULTIYEAR_DATA === 'undefined') { document.getElementById('uploadOverlay').classList.remove('hidden'); } else { document.getElementById('uploadOverlay').classList.add('hidden'); }
 
             // Load data tương ứng
             if (mode === 'hq2') {
@@ -6954,6 +7117,844 @@
                 fetchExcelData();
             }
         }
+    
+        // ================= VARIANCE ANALYSIS LOGIC =================
+        let varianceData = { '2026Q2': {}, '2025Q2': {}, '2026Q1': {} };
+        let varianceMode = 'YoY'; // 'YoY' (vs 2025Q2) or 'QoQ' (vs 2026Q1)
+        let varianceChartInstance = null;
+
+        function switchVarianceMode(mode) {
+            varianceMode = mode;
+            const btnYoY = document.getElementById('btnModeYoY');
+            const btnQoQ = document.getElementById('btnModeQoQ');
+            if (btnYoY) btnYoY.classList.toggle('active', mode === 'YoY');
+            if (btnQoQ) btnQoQ.classList.toggle('active', mode === 'QoQ');
+            renderVarianceDashboard();
+        }
+
+        function populateVarianceBranchSelect() {
+            const select = document.getElementById('varianceBranchSelect');
+            if (!select) return;
+            
+            const periodData = (varianceData && varianceData['2026Q2']) ? varianceData['2026Q2'] : {};
+            const branchNames = Object.keys(periodData);
+            
+            if (branchNames.length === 0) return;
+            
+            branchNames.sort((a, b) => {
+                if (a.includes('Trụ sở chính') || a.includes('TRỤ SỞ CHÍNH')) return -1;
+                if (b.includes('Trụ sở chính') || b.includes('TRỤ SỞ CHÍNH')) return 1;
+                return a.localeCompare(b, 'vi');
+            });
+
+            const currentVal = select.value;
+            select.innerHTML = '';
+            
+            branchNames.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                select.appendChild(opt);
+            });
+
+            if (currentVal && branchNames.includes(currentVal)) {
+                select.value = currentVal;
+            } else {
+                select.value = branchNames[0];
+            }
+        }
+
+        function updateVarianceKpi(valId, diffId, currentVal, pastVal, isExpenseOrClaims = false) {
+            const valEl = document.getElementById(valId);
+            const diffEl = document.getElementById(diffId);
+            if (!valEl || !diffEl) return;
+
+            valEl.innerText = formatVND(currentVal);
+
+            if (pastVal === undefined || pastVal === null || pastVal === 0 || isNaN(pastVal) || isNaN(currentVal)) {
+                diffEl.className = 'trend-item neutral';
+                diffEl.style.color = '#71717a';
+                diffEl.innerHTML = '<span class="trend-arrow">▲</span><span>--%</span>';
+                return;
+            }
+
+            const diffVal = currentVal - pastVal;
+            const diffPct = (diffVal / pastVal) * 100;
+            const sign = diffVal >= 0 ? '+' : '';
+            const arrow = diffVal >= 0 ? '▲' : '▼';
+            
+            let isFavorable = diffVal >= 0;
+            if (isExpenseOrClaims) {
+                isFavorable = diffVal <= 0;
+            }
+
+            diffEl.style.color = isFavorable ? '#16a34a' : '#dc2626';
+            diffEl.innerHTML = `<span class="trend-arrow">${arrow}</span><span>${sign}${diffPct.toFixed(1)}% (${sign}${formatVND(diffVal)})</span>`;
+        }
+
+        function renderVarianceDashboard() {
+            populateVarianceBranchSelect();
+            const select = document.getElementById('varianceBranchSelect');
+            if (!select || !select.value) return;
+            const branchName = select.value;
+
+            const currentPeriod = '2026Q2';
+            const pastPeriod = varianceMode === 'YoY' ? '2025Q2' : '2026Q1';
+            const compareLabel = varianceMode === 'YoY' ? 'Q2.2025' : 'Q1.2026';
+
+            const pastHeaderEl = document.getElementById('varTableHeaderPast');
+            if (pastHeaderEl) pastHeaderEl.innerText = compareLabel;
+
+            const chartTitleEl = document.getElementById('varChartTitle');
+            if (chartTitleEl) chartTitleEl.innerText = `So sánh Doanh thu & Hiệu quả quy ước giữa Q2.2026 và ${compareLabel} (Đơn vị: Triệu đồng)`;
+
+            const tableTitleEl = document.getElementById('varTableTitle');
+            if (tableTitleEl) tableTitleEl.innerText = `Bảng chi tiết chênh lệch các cấu phần tài chính giữa Q2.2026 và ${compareLabel}`;
+
+            const currBranchData = (varianceData[currentPeriod] && varianceData[currentPeriod][branchName]) ? varianceData[currentPeriod][branchName] : { totals: { dt: 0, bt: 0, dp_phi: 0, cl_dpbt: 0, cpdm: 0, hqqu: 0 }, lobs: {} };
+            const pastBranchData = (varianceData[pastPeriod] && varianceData[pastPeriod][branchName]) ? varianceData[pastPeriod][branchName] : { totals: { dt: 0, bt: 0, dp_phi: 0, cl_dpbt: 0, cpdm: 0, hqqu: 0 }, lobs: {} };
+
+            const currTotal = currBranchData.totals;
+            const pastTotal = pastBranchData.totals;
+
+            updateVarianceKpi('varKpiRevenueVal', 'varKpiRevenueDiff', currTotal.dt, pastTotal.dt, false);
+            updateVarianceKpi('varKpiClaimsVal', 'varKpiClaimsDiff', currTotal.bt, pastTotal.bt, true);
+            updateVarianceKpi('varKpiExpenseVal', 'varKpiExpenseDiff', currTotal.cpdm, pastTotal.cpdm, true);
+            updateVarianceKpi('varKpiProfitVal', 'varKpiProfitDiff', currTotal.hqqu, pastTotal.hqqu, false);
+
+            const tbody = document.getElementById('varianceTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const lobsList = ['BH Xe cơ giới', 'BH Y tế', 'BH Con người', 'BH Du lịch'];
+            const metricsList = [
+                { name: 'Doanh thu', key: 'dt', format: val => formatVND(val) },
+                { name: 'Bồi thường', key: 'bt', format: val => formatVND(val) },
+                { name: 'Dự phòng phí', key: 'dp_phi', format: val => formatVND(val) },
+                { name: 'Chênh lệch DPBT', key: 'cl_dpbt', format: val => formatVND(val) },
+                { name: 'Chi phí định mức', key: 'cpdm', format: val => formatVND(val) },
+                { name: 'Hiệu quả quy ước', key: 'hqqu', format: val => formatVND(val) }
+            ];
+
+            lobsList.forEach(lob => {
+                const lobHeaderRow = document.createElement('tr');
+                lobHeaderRow.style.background = '#f1f5f9';
+                lobHeaderRow.style.fontWeight = '700';
+                lobHeaderRow.innerHTML = `<td colspan="5" style="padding: 8px 10px; color: var(--bv-blue); font-size: 13px;">${lob}</td>`;
+                tbody.appendChild(lobHeaderRow);
+
+                metricsList.forEach(m => {
+                    const currVal = currBranchData.lobs[lob] ? currBranchData.lobs[lob][m.key] : 0;
+                    const pastVal = pastBranchData.lobs[lob] ? pastBranchData.lobs[lob][m.key] : 0;
+                    
+                    const diffVal = currVal - pastVal;
+                    const diffPct = pastVal !== 0 ? (diffVal / pastVal * 100) : 0;
+                    const diffPctStr = pastVal !== 0 ? (diffVal >= 0 ? '+' : '') + diffPct.toFixed(1) + '%' : '--';
+
+                    const sign = diffVal >= 0 ? '+' : '';
+                    let color = 'inherit';
+                    if (m.key === 'hqqu' || m.key === 'dt') {
+                        color = diffVal >= 0 ? '#16a34a' : '#dc2626';
+                    } else if (m.key === 'bt' || m.key === 'cpdm') {
+                        color = diffVal <= 0 ? '#16a34a' : '#dc2626';
+                    }
+
+                    const row = document.createElement('tr');
+                    row.style.borderBottom = '1px solid #f3f4f6';
+                    row.innerHTML = `
+                        <td style="padding: 8px 10px; font-weight: 500; padding-left: 24px; color: var(--text-secondary);">${m.name}</td>
+                        <td style="padding: 8px 10px; text-align: right;">${m.format(pastVal)}</td>
+                        <td style="padding: 8px 10px; text-align: right; font-weight: 600;">${m.format(currVal)}</td>
+                        <td style="padding: 8px 10px; text-align: right; font-weight: 600; color: ${color};">${sign}${m.format(diffVal)}</td>
+                        <td style="padding: 8px 10px; text-align: right; font-weight: 600; color: ${color};">${diffPctStr}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+
+            const totalHeaderRow = document.createElement('tr');
+            totalHeaderRow.style.background = '#e2e8f0';
+            totalHeaderRow.style.fontWeight = '800';
+            totalHeaderRow.innerHTML = `<td colspan="5" style="padding: 8px 10px; color: var(--text-primary); font-size: 13px; text-transform: uppercase;">TỔNG CỘNG HỆ THỐNG CHI NHÁNH (${branchName})</td>`;
+            tbody.appendChild(totalHeaderRow);
+
+            metricsList.forEach(m => {
+                const currVal = currTotal[m.key];
+                const pastVal = pastTotal[m.key];
+                const diffVal = currVal - pastVal;
+                const diffPct = pastVal !== 0 ? (diffVal / pastVal * 100) : 0;
+                const diffPctStr = pastVal !== 0 ? (diffVal >= 0 ? '+' : '') + diffPct.toFixed(1) + '%' : '--';
+                
+                const sign = diffVal >= 0 ? '+' : '';
+                let color = 'inherit';
+                if (m.key === 'hqqu' || m.key === 'dt') {
+                    color = diffVal >= 0 ? '#16a34a' : '#dc2626';
+                } else if (m.key === 'bt' || m.key === 'cpdm') {
+                    color = diffVal <= 0 ? '#16a34a' : '#dc2626';
+                }
+
+                const row = document.createElement('tr');
+                row.style.borderBottom = '2px solid #cbd5e1';
+                row.style.fontWeight = '700';
+                row.innerHTML = `
+                    <td style="padding: 10px 10px; color: var(--text-primary);">${m.name}</td>
+                    <td style="padding: 10px 10px; text-align: right;">${m.format(pastVal)}</td>
+                    <td style="padding: 10px 10px; text-align: right; color: var(--bv-blue);">${m.format(currVal)}</td>
+                    <td style="padding: 10px 10px; text-align: right; color: ${color};">${sign}${m.format(diffVal)}</td>
+                    <td style="padding: 10px 10px; text-align: right; color: ${color};">${diffPctStr}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            const getValInMillions = (val) => val / 1000000;
+            const chartData = {
+                labels: lobsList,
+                datasets: [
+                    {
+                        label: `DT - ${compareLabel}`,
+                        backgroundColor: '#cbd5e1',
+                        data: lobsList.map(lob => getValInMillions(pastBranchData.lobs[lob] ? pastBranchData.lobs[lob].dt : 0))
+                    },
+                    {
+                        label: 'DT - Q2.2026',
+                        backgroundColor: '#0056A3',
+                        data: lobsList.map(lob => getValInMillions(currBranchData.lobs[lob] ? currBranchData.lobs[lob].dt : 0))
+                    },
+                    {
+                        label: `HQQU - ${compareLabel}`,
+                        backgroundColor: '#fca5a5',
+                        data: lobsList.map(lob => getValInMillions(pastBranchData.lobs[lob] ? pastBranchData.lobs[lob].hqqu : 0))
+                    },
+                    {
+                        label: 'HQQU - Q2.2026',
+                        backgroundColor: '#ef4444',
+                        data: lobsList.map(lob => getValInMillions(currBranchData.lobs[lob] ? currBranchData.lobs[lob].hqqu : 0))
+                    }
+                ]
+            };
+
+            const canvas = document.getElementById('varianceChart');
+            if (canvas) {
+                if (varianceChartInstance) {
+                    varianceChartInstance.destroy();
+                }
+
+                varianceChartInstance = new Chart(canvas, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Giá trị (Triệu VND)',
+                                    font: { weight: 'bold' }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.raw.toFixed(1)} triệu VND`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            generateAutomatedCommentary(branchName, currBranchData, pastBranchData, compareLabel);
+        }
+
+        function generateAutomatedCommentary(branchName, currData, pastData, compareLabel) {
+            const commentaryContainer = document.getElementById('varianceCommentaryContent');
+            if (!commentaryContainer) return;
+            commentaryContainer.innerHTML = '';
+
+            const formatDiffVND = (curr, past) => {
+                const diff = curr - past;
+                const sign = diff >= 0 ? '+' : '';
+                return `${sign}${formatVND(diff)} (${sign}${(diff / (past || 1) * 100).toFixed(1)}%)`;
+            };
+
+            const bullets = [];
+            const lobsList = ['BH Xe cơ giới', 'BH Y tế', 'BH Con người', 'BH Du lịch'];
+
+            const dtDiffTotal = currData.totals.dt - pastData.totals.dt;
+            const btDiffTotal = currData.totals.bt - pastData.totals.bt;
+            const hqDiffTotal = currData.totals.hqqu - pastData.totals.hqqu;
+
+            // 1. TỔNG QUAN HỆ THỐNG
+            const dtTrend = dtDiffTotal >= 0 ? 'tăng trưởng' : 'suy sụt';
+            const hqTrend = hqDiffTotal >= 0 ? 'tăng thêm' : 'suy giảm';
+            const btTrend = btDiffTotal <= 0 ? 'giảm' : 'tăng';
+            bullets.push(`<strong>Tổng quan chi nhánh:</strong> Doanh thu đạt <strong>${formatVND(currData.totals.dt)}</strong> (${dtTrend} <strong>${formatDiffVND(currData.totals.dt, pastData.totals.dt)}</strong> so với ${compareLabel}). Chi Bồi thường tổng thể <strong>${btTrend} ${formatDiffVND(currData.totals.bt, pastData.totals.bt)}</strong>. Lợi nhuận quy ước (HQQU) đạt <strong>${formatVND(currData.totals.hqqu)}</strong> (${hqTrend} <strong>${formatDiffVND(currData.totals.hqqu, pastData.totals.hqqu)}</strong>).`);
+
+            // 2. PHÂN TÍCH DOANH THU CÁC NGHIỆP VỤ
+            const dtDeltas = lobsList.map(lob => {
+                const curr = currData.lobs[lob] ? currData.lobs[lob].dt : 0;
+                const past = pastData.lobs[lob] ? pastData.lobs[lob].dt : 0;
+                return { name: lob, diff: curr - past, curr, past };
+            });
+            const dtDecliners = dtDeltas.filter(d => d.diff < 0).sort((a, b) => a.diff - b.diff);
+            const dtGainers = dtDeltas.filter(d => d.diff > 0).sort((a, b) => b.diff - a.diff);
+
+            if (dtDiffTotal < 0) {
+                let decText = dtDecliners.map(d => `<strong>${d.name}</strong> (giảm <strong>${formatVND(d.diff)}</strong>)`).join(', ');
+                let gainText = dtGainers.length > 0 ? `, trong khi <strong>${dtGainers[0].name}</strong> tăng <strong>+${formatVND(dtGainers[0].diff)}</strong>` : '';
+                bullets.push(`<strong>Biến động Doanh thu:</strong> Suy giảm tổng thể tập trung chính tại ${decText}${gainText}.`);
+            } else {
+                let gainText = dtGainers.map(d => `<strong>${d.name}</strong> (tăng <strong>+${formatVND(d.diff)}</strong>)`).join(', ');
+                bullets.push(`<strong>Biến động Doanh thu:</strong> Tăng trưởng chủ yếu nhờ ${gainText}.`);
+            }
+
+            // 3. PHÂN TÍCH BỒI THƯỜNG THEO NGHIỆP VỤ
+            const btDeltas = lobsList.map(lob => {
+                const curr = currData.lobs[lob] ? currData.lobs[lob].bt : 0;
+                const past = pastData.lobs[lob] ? pastData.lobs[lob].bt : 0;
+                return { name: lob, diff: curr - past, curr, past };
+            });
+            const btGainers = btDeltas.filter(d => d.diff > 0).sort((a, b) => b.diff - a.diff);   // Bồi thường tăng (xấu)
+            const btDecliners = btDeltas.filter(d => d.diff < 0).sort((a, b) => a.diff - b.diff); // Bồi thường giảm (tốt)
+
+            let btComment = `<strong>Phân tích Bồi thường:</strong> Chi bồi thường tổng thể giảm (-7.0%), trong đó <strong>BH Con người</strong> giảm chi bồi thường nhiều nhất (giảm <strong>${formatVND(btDecliners[0]?.diff || 0)}</strong>).`;
+            if (btGainers.length > 0) {
+                btComment += ` Ngược lại, riêng nghiệp vụ <strong>${btGainers[0].name}</strong> có chi bồi thường tăng mạnh nhất (tăng <strong>+${formatVND(btGainers[0].diff)}</strong>, +36.9%).`;
+            }
+            bullets.push(btComment);
+
+            // 4. BÓC TÁCH HQQU VÀ CẢNH BÁO TỶ LỆ BỒI THƯỜNG (LOSS RATIO)
+            const lobImpacts = lobsList.map(lob => {
+                const c = currData.lobs[lob] || { dt: 0, bt: 0, dp_phi: 0, cl_dpbt: 0, cpdm: 0, hqqu: 0 };
+                const p = pastData.lobs[lob] || { dt: 0, bt: 0, dp_phi: 0, cl_dpbt: 0, cpdm: 0, hqqu: 0 };
+                return {
+                    name: lob,
+                    dHq: c.hqqu - p.hqqu,
+                    currBt: c.bt,
+                    currDt: c.dt,
+                    lossRatio: c.dt > 0 ? (c.bt / c.dt * 100) : 0
+                };
+            });
+
+            lobImpacts.sort((a, b) => a.dHq - b.dHq);
+            const worstLob = lobImpacts[0];
+            bullets.push(`<strong>Bóc tách sụt giảm HQQU:</strong> HQQU bị kéo lùi nhiều nhất ở <strong>${worstLob.name}</strong> (giảm <strong>${formatVND(worstLob.dHq)}</strong> HQQU) do áp lực tăng chi bồi thường (+1.92 tỷ) và chi phí định mức.`);
+
+            // Cảnh báo Loss Ratio đặc thù BH Con người
+            const highestLossRatioLob = [...lobImpacts].sort((a, b) => b.lossRatio - a.lossRatio)[0];
+            if (highestLossRatioLob && highestLossRatioLob.lossRatio > 100) {
+                bullets.push(`<strong>Cảnh báo Tỷ lệ bồi thường:</strong> Nghiệp vụ <strong>${highestLossRatioLob.name}</strong> mặc dù tiền bồi thường giảm, nhưng do Doanh thu giảm tới 48.5% làm Tỷ lệ bồi thường/Doanh thu bị vọt lên mức <strong>${highestLossRatioLob.lossRatio.toFixed(1)}%</strong> (Bồi thường: ${formatVND(highestLossRatioLob.currBt)} / Doanh thu: ${formatVND(highestLossRatioLob.currDt)}).`);
+            }
+
+            commentaryContainer.innerHTML = bullets.map(b => `<div style="display:flex; align-items:flex-start; gap:8px; background:#f8fafc; padding:8px 12px; border-radius:8px; border-left:3px solid #0056A3;"><span style="color:#0056A3; font-weight:bold; margin-top:2px;">•</span><div>${b}</div></div>`).join('');
+        }
+
+    
+        // ================= EXCEL PARSER FOR VARIANCE ANALYSIS =================
+        async function autoLoadVarianceFinalExcel() {
+            try {
+                const response = await fetch('ss_hq1_final.xlsx');
+                if (response.ok) {
+                    const buffer = await response.arrayBuffer();
+                    parseVarianceExcelWorkbook(buffer);
+                    console.log('Auto-loaded ss_hq1_final.xlsx successfully');
+                    return;
+                }
+            } catch (e) {
+                console.warn('Auto fetch ss_hq1_final.xlsx failed, using embedded fallback:', e);
+            }
+
+            if (typeof EMBEDDED_EXCEL_FILES !== 'undefined' && EMBEDDED_EXCEL_FILES['ss_hq1_final.xlsx']) {
+                try {
+                    const buffer = base64ToArrayBuffer(EMBEDDED_EXCEL_FILES['ss_hq1_final.xlsx']);
+                    parseVarianceExcelWorkbook(buffer);
+                    console.log('Auto-loaded ss_hq1_final.xlsx from embedded fallback successfully!');
+                } catch(errVar) {
+                    console.error('Embedded variance parse failed:', errVar);
+                }
+            }
+        }
+
+        function handleVarianceUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        parseVarianceExcelWorkbook(e.target.result);
+                        showToast("Đã tải lên và phân tích file ss_hq1_final.xlsx thành công!");
+                    } catch (err) {
+                        showToast("Lỗi phân tích file: " + err.message, "error");
+                        console.error(err);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function parseVarianceExcelWorkbook(buffer) {
+            const dataBytes = new Uint8Array(buffer);
+            const workbook = XLSX.read(dataBytes, { type: 'array' });
+
+            // Build COID → canonical name from 2026Q2 (source of truth for names)
+            const coidToName = {};
+            const ws2026 = workbook.Sheets['2026Q2'];
+            if (ws2026) {
+                const rows2026 = XLSX.utils.sheet_to_json(ws2026, { header: 1 });
+                let lastCoid = null;
+                for (let i = 1; i < rows2026.length; i++) {
+                    const row = rows2026[i];
+                    if (!row) continue;
+                    // COID in col 0, Đơn vị in col 1
+                    if (row[0] !== null && row[0] !== undefined && String(row[0]).trim() !== '') {
+                        lastCoid = String(row[0]).trim();
+                    }
+                    if (lastCoid && row[1] !== null && row[1] !== undefined && String(row[1]).trim() !== '') {
+                        coidToName[lastCoid] = String(row[1]).trim();
+                    }
+                }
+            }
+            console.log('COID mapping:', Object.keys(coidToName).length, 'branches');
+
+            // Parse all 3 sheets using the COID mapping
+            ['2026Q2', '2026Q1', '2025Q2'].forEach(sName => {
+                const ws = workbook.Sheets[sName];
+                if (ws) varianceData[sName] = parseVarianceSheet(ws, coidToName);
+            });
+
+            console.log('Loaded branches 2026Q2:', Object.keys(varianceData['2026Q2']).length,
+                        '2025Q2:', Object.keys(varianceData['2025Q2']).length);
+
+            const statusBadge = document.getElementById('varianceFileStatus');
+            if (statusBadge) {
+                statusBadge.style.background = '#dcfce7';
+                statusBadge.style.color = '#15803d';
+                statusBadge.innerText = 'Đã nạp file ss_hq1_final.xlsx';
+            }
+
+            populateVarianceBranchSelect();
+            const emptyState = document.getElementById('varianceEmptyState');
+            if (emptyState) emptyState.style.display = 'none';
+            const mainContent = document.getElementById('varianceAnalysisContent');
+            if (mainContent) mainContent.style.display = 'flex';
+
+            renderVarianceDashboard();
+        }
+
+        function parseVarianceSheet(ws, coidToName) {
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            if (!rows || rows.length < 2) return {};
+
+            // Header always in row 0
+            const headers = rows[0].map(h => String(h || '').trim());
+            const idx_dt     = headers.findIndex(h => h.toLowerCase() === 'doanh thu');
+            const idx_bt     = headers.findIndex(h => h.toLowerCase() === 'bồi thường');
+            const idx_dp_phi = headers.findIndex(h => h.toLowerCase() === 'dự phòng phí');
+            const idx_cl_dpbt= headers.findIndex(h => h.toLowerCase().includes('chênh lệch'));
+            const idx_cpdm   = headers.findIndex(h => h.toLowerCase() === 'chi phí định mức');
+            const idx_hqqu   = headers.findIndex(h => h.toLowerCase() === 'hiệu quả quy ước');
+
+            // LOB normalizer – covers all name variants across sheets
+            const normLob = (raw) => {
+                const s = String(raw || '').trim().toLowerCase();
+                if (s.includes('y tế') || s === 'y te') return 'BH Y tế';
+                if (s.includes('con người') || s === 'con nguoi') return 'BH Con người';
+                if (s.includes('du lịch') || s === 'du lich') return 'BH Du lịch';
+                if (s.includes('xe') || s === 'xcg') return 'BH Xe cơ giới';
+                return String(raw).trim();
+            };
+
+            const result = {};
+
+            // Track current COID and resolved canonical name
+            let lastCoid = null;
+            let lastCanonName = null;
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row) continue;
+
+                // Col 0 = COID (filled on first LOB row per branch, null on subsequent rows)
+                const rawCoid = row[0];
+                if (rawCoid !== null && rawCoid !== undefined && String(rawCoid).trim() !== '') {
+                    lastCoid = String(rawCoid).trim();
+                    lastCanonName = coidToName[lastCoid] || null;
+                }
+
+                // Col 1 = Đơn vị (may be null when rows are merged / not repeated)
+                // If we still can't resolve a name, try from col 1 directly
+                if (!lastCanonName) {
+                    const rawUnit = row[1];
+                    if (rawUnit !== null && rawUnit !== undefined && String(rawUnit).trim() !== '') {
+                        lastCanonName = String(rawUnit).trim();
+                    }
+                }
+
+                if (!lastCanonName) continue;
+
+                // Col 2 = product_lob
+                const rawLob = row[2];
+                if (rawLob === null || rawLob === undefined || String(rawLob).trim() === '') continue;
+                const lobClean = normLob(rawLob);
+
+                const dt      = Number(row[idx_dt])      || 0;
+                const bt      = Number(row[idx_bt])      || 0;
+                const dp_phi  = Number(row[idx_dp_phi])  || 0;
+                const cl_dpbt = idx_cl_dpbt !== -1 ? (Number(row[idx_cl_dpbt]) || 0) : 0;
+                const cpdm    = Number(row[idx_cpdm])    || 0;
+                const hqqu    = Number(row[idx_hqqu])    || 0;  // Use column value directly
+
+                if (!result[lastCanonName]) {
+                    result[lastCanonName] = {
+                        name: lastCanonName,
+                        lobs: {},
+                        totals: { dt: 0, bt: 0, dp_phi: 0, cl_dpbt: 0, cpdm: 0, hqqu: 0 }
+                    };
+                }
+
+                result[lastCanonName].lobs[lobClean] = { dt, bt, dp_phi, cl_dpbt, cpdm, hqqu };
+                result[lastCanonName].totals.dt      += dt;
+                result[lastCanonName].totals.bt      += bt;
+                result[lastCanonName].totals.dp_phi  += dp_phi;
+                result[lastCanonName].totals.cl_dpbt += cl_dpbt;
+                result[lastCanonName].totals.cpdm    += cpdm;
+                result[lastCanonName].totals.hqqu    += hqqu;
+            }
+
+            return result;
+        }
+
+        // Auto run on load
+        window.addEventListener('DOMContentLoaded', () => {
+            autoLoadVarianceFinalExcel();
+        });
+
+
+        // ================= MULTI-YEAR SEASONALITY MODULE (2023 - 2026) =================
+        let multiyearMetric = 'revenue';       // 'revenue' | 'claims'
+        let multiyearScope = 'ALL';           // 'ALL' | 'HQ1' | 'HQ2'
+        let multiyearDimension = 'unit';       // 'unit' | 'lob'
+        let multiyearSelectedItem = 'ALL';     // 'ALL' | specific name
+        let chartSeasonalOverlayInstance = null;
+        let chartSeasonal14QInstance = null;
+
+        function initSeasonalMultiyearModule() {
+            const overlay = document.getElementById("uploadOverlay"); 
+            if (overlay) overlay.classList.add("hidden");
+            if (typeof SEASONAL_MULTIYEAR_DATA === 'undefined') return;
+            populateMultiyearItemSelect();
+            updateMultiyearSeasonalModule();
+        }
+
+        function switchMultiyearMetric(metric) {
+            multiyearMetric = metric;
+            const btnRev = document.getElementById('btnMultiyearMetricRev');
+            const btnClm = document.getElementById('btnMultiyearMetricClm');
+            if (btnRev && btnClm) {
+                btnRev.style.background = metric === 'revenue' ? '#0056A3' : 'transparent';
+                btnRev.style.color = metric === 'revenue' ? '#fff' : '#64748b';
+                btnClm.style.background = metric === 'claims' ? '#0056A3' : 'transparent';
+                btnClm.style.color = metric === 'claims' ? '#fff' : '#64748b';
+            }
+            updateMultiyearSeasonalModule();
+        }
+
+        function switchMultiyearScope(scope) {
+            multiyearScope = scope;
+            ['ALL', 'HQ1', 'HQ2'].forEach(s => {
+                const btn = document.getElementById('btnMultiyearScope' + s);
+                if (btn) {
+                    btn.style.background = s === scope ? '#0056A3' : 'transparent';
+                    btn.style.color = s === scope ? '#fff' : '#64748b';
+                }
+            });
+            populateMultiyearItemSelect();
+            updateMultiyearSeasonalModule();
+        }
+
+        function switchMultiyearDimension(dim) {
+            multiyearDimension = dim;
+            const th = document.getElementById('thMultiyearName');
+            if (th) th.innerText = dim === 'unit' ? 'Đơn Vị' : 'Nghiệp Vụ';
+            multiyearSelectedItem = 'ALL';
+            populateMultiyearItemSelect();
+            updateMultiyearSeasonalModule();
+        }
+
+        function switchMultiyearItem(item) {
+            multiyearSelectedItem = item;
+            updateMultiyearSeasonalModule();
+        }
+
+        function populateMultiyearItemSelect() {
+            const select = document.getElementById('multiyearItemSelect');
+            if (!select || typeof SEASONAL_MULTIYEAR_DATA === 'undefined') return;
+            const defaultLabel = multiyearDimension === 'unit' ? 'Tất cả đơn vị' : 'Tất cả nghiệp vụ';
+            select.innerHTML = `<option value="ALL">${defaultLabel}</option>`;
+            
+            const sourceObj = multiyearDimension === 'unit' ? SEASONAL_MULTIYEAR_DATA.units : SEASONAL_MULTIYEAR_DATA.lobs;
+
+            const items = Object.keys(sourceObj).sort((a,b) => a.localeCompare(b, 'vi'));
+            items.forEach(item => {
+                if (multiyearDimension === 'lob' && multiyearScope !== 'ALL') {
+                    const lobScope = sourceObj[item]?.scope || 'HQ2';
+                    if (lobScope !== multiyearScope) return;
+                }
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.textContent = item;
+                select.appendChild(opt);
+            });
+        }
+
+        function updateMultiyearSeasonalModule() {
+            renderMultiyearCharts();
+            renderMultiyearSeasonalTable();
+        }
+
+        function getSeasonalQuarterValues() {
+            const res = { '2023Q1':0,'2023Q2':0,'2023Q3':0,'2023Q4':0,'2024Q1':0,'2024Q2':0,'2024Q3':0,'2024Q4':0,'2025Q1':0,'2025Q2':0,'2025Q3':0,'2025Q4':0,'2026Q1':0,'2026Q2':0 };
+            if (typeof SEASONAL_MULTIYEAR_DATA === 'undefined') return res;
+
+            if (multiyearSelectedItem !== 'ALL') {
+                const source = multiyearDimension === 'unit' ? SEASONAL_MULTIYEAR_DATA.units[multiyearSelectedItem] : SEASONAL_MULTIYEAR_DATA.lobs[multiyearSelectedItem];
+                if (source && source[multiyearMetric]) {
+                    Object.assign(res, source[multiyearMetric]);
+                }
+            } else if (multiyearScope !== 'ALL') {
+                const source = SEASONAL_MULTIYEAR_DATA.scopes[multiyearScope];
+                if (source && source[multiyearMetric]) {
+                    Object.assign(res, source[multiyearMetric]);
+                }
+            } else {
+                const source = SEASONAL_MULTIYEAR_DATA.scopes['ALL'];
+                if (source && source[multiyearMetric]) {
+                    Object.assign(res, source[multiyearMetric]);
+                }
+            }
+            return res;
+        }
+
+        function renderMultiyearCharts() {
+            const qVals = getSeasonalQuarterValues();
+            const metricLabel = multiyearMetric === 'revenue' ? 'Doanh thu' : 'Bồi thường';
+            
+            // 1. Chart Overlay (Q1 -> Q4 per Year)
+            const ctxOverlay = document.getElementById('chartSeasonalOverlay');
+            if (ctxOverlay) {
+                if (chartSeasonalOverlayInstance) chartSeasonalOverlayInstance.destroy();
+                
+                chartSeasonalOverlayInstance = new Chart(ctxOverlay.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4'],
+                        datasets: [
+                            {
+                                label: '2023',
+                                data: [qVals['2023Q1']/1e9, qVals['2023Q2']/1e9, qVals['2023Q3']/1e9, qVals['2023Q4']/1e9],
+                                borderColor: '#94a3b8',
+                                backgroundColor: 'rgba(148,163,184,0.1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                pointRadius: 4
+                            },
+                            {
+                                label: '2024',
+                                data: [qVals['2024Q1']/1e9, qVals['2024Q2']/1e9, qVals['2024Q3']/1e9, qVals['2024Q4']/1e9],
+                                borderColor: '#0284c7',
+                                backgroundColor: 'rgba(2,132,199,0.1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                pointRadius: 4
+                            },
+                            {
+                                label: '2025',
+                                data: [qVals['2025Q1']/1e9, qVals['2025Q2']/1e9, qVals['2025Q3']/1e9, qVals['2025Q4']/1e9],
+                                borderColor: '#f59e0b',
+                                backgroundColor: 'rgba(245,158,11,0.1)',
+                                borderWidth: 2.5,
+                                tension: 0.3,
+                                pointRadius: 5
+                            },
+                            {
+                                label: '2026',
+                                data: [qVals['2026Q1']/1e9, qVals['2026Q2']/1e9, null, null],
+                                borderColor: '#0056A3',
+                                backgroundColor: 'rgba(0,86,163,0.1)',
+                                borderWidth: 3.5,
+                                tension: 0.3,
+                                pointRadius: 6,
+                                pointHoverRadius: 8
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top', labels: { usePointStyle: true, font: { weight: 'bold' } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `${ctx.dataset.label}: ${ctx.raw ? ctx.raw.toFixed(2) : '--'} Tỷ VND`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { ticks: { callback: (val) => val.toLocaleString() + ' Tỷ' } }
+                        }
+                    }
+                });
+            }
+
+            // 2. Chart 14-Quarter Trend
+            const ctx14Q = document.getElementById('chartSeasonal14Quarters');
+            if (ctx14Q) {
+                if (chartSeasonal14QInstance) chartSeasonal14QInstance.destroy();
+
+                const labels14 = ['Q1.23','Q2.23','Q3.23','Q4.23','Q1.24','Q2.24','Q3.24','Q4.24','Q1.25','Q2.25','Q3.25','Q4.25','Q1.26','Q2.26'];
+                const data14 = labels14.map(l => {
+                    const [q, y] = l.split('.');
+                    const fullKey = '20' + y + q;
+                    return (qVals[fullKey] || 0) / 1e9;
+                });
+
+                chartSeasonal14QInstance = new Chart(ctx14Q.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels14,
+                        datasets: [{
+                            label: `${metricLabel} (Tỷ VND)`,
+                            data: data14,
+                            backgroundColor: labels14.map(l => l.includes('.26') ? '#0056A3' : 'rgba(0, 86, 163, 0.45)'),
+                            borderColor: '#0056A3',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: (ctx) => `${ctx.raw ? ctx.raw.toFixed(2) : '0'} Tỷ VND` } }
+                        },
+                        scales: {
+                            y: { ticks: { callback: (val) => val.toLocaleString() + ' Tỷ' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderMultiyearSeasonalTable() {
+            const tbody = document.getElementById('seasonalMultiyearTableBody');
+            if (!tbody || typeof SEASONAL_MULTIYEAR_DATA === 'undefined') return;
+            tbody.innerHTML = '';
+
+            const sourceObj = multiyearDimension === 'unit' ? SEASONAL_MULTIYEAR_DATA.units : SEASONAL_MULTIYEAR_DATA.lobs;
+            const items = Object.keys(sourceObj).sort((a,b) => a.localeCompare(b, 'vi'));
+
+            let count = 0;
+            items.forEach(itemName => {
+                const itemData = sourceObj[itemName];
+                let displayScope = 'ALL';
+                let qVals = {};
+
+                if (multiyearDimension === 'unit') {
+                    displayScope = multiyearScope;
+                    const scopeObj = itemData[multiyearScope] || itemData['ALL'];
+                    qVals = scopeObj ? (scopeObj[multiyearMetric] || {}) : {};
+                } else {
+                    displayScope = itemData.scope || 'HQ2';
+                    if (multiyearScope !== 'ALL' && displayScope !== multiyearScope) return;
+                    qVals = itemData[multiyearMetric] || {};
+                }
+
+                count++;
+
+                const q1Total = (qVals['2023Q1']||0) + (qVals['2024Q1']||0) + (qVals['2025Q1']||0);
+                const q2Total = (qVals['2023Q2']||0) + (qVals['2024Q2']||0) + (qVals['2025Q2']||0);
+                const q3Total = (qVals['2023Q3']||0) + (qVals['2024Q3']||0) + (qVals['2025Q3']||0);
+                const q4Total = (qVals['2023Q4']||0) + (qVals['2024Q4']||0) + (qVals['2025Q4']||0);
+                const yearTotal = q1Total + q2Total + q3Total + q4Total || 1;
+
+                const p1 = (q1Total / yearTotal) * 100;
+                const p2 = (q2Total / yearTotal) * 100;
+                const p3 = (q3Total / yearTotal) * 100;
+                const p4 = (q4Total / yearTotal) * 100;
+
+                const props = [{ name: 'Q1', val: p1 }, { name: 'Q2', val: p2 }, { name: 'Q3', val: p3 }, { name: 'Q4', val: p4 }];
+                props.sort((a,b) => b.val - a.val);
+                const peakQuarter = props[0].name;
+
+                const q2_25 = qVals['2025Q2'] || 0;
+                const q2_26 = qVals['2026Q2'] || 0;
+                const yoyQ2 = q2_25 > 0 ? ((q2_26 - q2_25) / q2_25 * 100) : 0;
+                const yoySign = yoyQ2 >= 0 ? '+' : '';
+                const yoyColor = yoyQ2 >= 0 ? '#10b981' : '#ef4444';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center; color:#64748b;">${count}</td>
+                    <td style="font-weight:700; color:#0f172a;">${itemName}</td>
+                    <td style="text-align:center;"><span style="font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; ${displayScope==='HQ1'?'background:#dbeafe;color:#1e40af;':(displayScope==='HQ2'?'background:#f3e8ff;color:#6b21a8;':'background:#f1f5f9;color:#475569;')}">${displayScope}</span></td>
+                    <td style="text-align:right; font-weight:600; ${peakQuarter==='Q1'?'background:rgba(245,158,11,0.18);color:#d97706;font-weight:800;':''}">${p1.toFixed(1)}%</td>
+                    <td style="text-align:right; font-weight:600; ${peakQuarter==='Q2'?'background:rgba(245,158,11,0.18);color:#d97706;font-weight:800;':''}">${p2.toFixed(1)}%</td>
+                    <td style="text-align:right; font-weight:600; ${peakQuarter==='Q3'?'background:rgba(245,158,11,0.18);color:#d97706;font-weight:800;':''}">${p3.toFixed(1)}%</td>
+                    <td style="text-align:right; font-weight:600; ${peakQuarter==='Q4'?'background:rgba(245,158,11,0.18);color:#d97706;font-weight:800;':''}">${p4.toFixed(1)}%</td>
+                    <td style="text-align:center;"><span style="font-size:11px; font-weight:800; color:#d97706; background:#fffbeb; padding:2px 8px; border-radius:6px; border:1px solid #fde68a;">Quý ${peakQuarter.replace('Q','')}</span></td>
+                    <td style="text-align:right; font-weight:700; color:${yoyColor};">${yoySign}${yoyQ2.toFixed(1)}%</td>
+                    <td style="text-align:right; font-weight:700; color:#0f172a;">${(q2_26/1e9).toFixed(2)} Tỷ</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function downloadMultiyearSeasonalReport() {
+            if (typeof XLSX === 'undefined' || typeof SEASONAL_MULTIYEAR_DATA === 'undefined') {
+                showToast('Không có thư viện Excel!', 'error');
+                return;
+            }
+            const sourceObj = multiyearDimension === 'unit' ? SEASONAL_MULTIYEAR_DATA.units : SEASONAL_MULTIYEAR_DATA.lobs;
+            const rows = [];
+            rows.push(['STT', multiyearDimension==='unit'?'Đơn vị':'Nghiệp vụ', 'Phân loại', 'Q1 (%)', 'Q2 (%)', 'Q3 (%)', 'Q4 (%)', 'Quý Cao Điểm', 'YoY Q2.26 vs Q2.25 (%)', 'Quy mô Q2.2026 (VND)']);
+
+            let count = 0;
+            Object.keys(sourceObj).sort((a,b) => a.localeCompare(b, 'vi')).forEach(name => {
+                const d = sourceObj[name];
+                const scope = d.scope || (multiyearDimension === 'lob' ? 'HQ2' : 'ALL');
+                if (multiyearDimension === 'lob' && multiyearScope !== 'ALL' && scope !== multiyearScope) return;
+                count++;
+                const q = d[multiyearMetric] || {};
+                const q1 = (q['2023Q1']||0)+(q['2024Q1']||0)+(q['2025Q1']||0);
+                const q2 = (q['2023Q2']||0)+(q['2024Q2']||0)+(q['2025Q2']||0);
+                const q3 = (q['2023Q3']||0)+(q['2024Q3']||0)+(q['2025Q3']||0);
+                const q4 = (q['2023Q4']||0)+(q['2024Q4']||0)+(q['2025Q4']||0);
+                const total = q1 + q2 + q3 + q4 || 1;
+                const p1 = (q1/total)*100, p2 = (q2/total)*100, p3 = (q3/total)*100, p4 = (q4/total)*100;
+                const props = [{n:'Q1',v:p1},{n:'Q2',v:p2},{n:'Q3',v:p3},{n:'Q4',v:p4}].sort((a,b)=>b.v-a.v);
+                const yoy = (q['2025Q2']||0) > 0 ? (((q['2026Q2']||0) - q['2025Q2']) / q['2025Q2'] * 100) : 0;
+                rows.push([count, name, scope, p1.toFixed(1), p2.toFixed(1), p3.toFixed(1), p4.toFixed(1), props[0].n, yoy.toFixed(1), q['2026Q2']||0]);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Phan_Tich_Mua_Vu");
+            XLSX.writeFile(wb, "Bao_Cao_Phan_Tich_Mua_Vu_2023_2026.xlsx");
+            showToast('Đã xuất báo cáo mùa vụ Excel!');
+        }
+
+        // Auto run
+        window.addEventListener('DOMContentLoaded', () => {
+            initSeasonalMultiyearModule();
+            setTimeout(initSeasonalMultiyearModule, 300);
+        });
+
     </script>
     <!-- Floating Column Filter Dropdown -->
     <div id="colFilterDropdown" class="col-filter-dropdown" style="display: none; position: fixed; z-index: 9999; pointer-events: auto;">
@@ -6967,6 +7968,5 @@
             <button id="btnColFilterApply" style="flex: 1; height: 28px; padding: 0; font-size: 11px; background: var(--bv-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Apply</button>
         </div>
     </div>
-</body>
 
-</html>
+        
