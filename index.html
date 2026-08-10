@@ -1950,23 +1950,35 @@
                         </div>
                         <div class="table-container" style="max-height: 250px; overflow-y: auto; margin-top: 0; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none;">
                             <table class="table-simple" style="width: 100%; border-collapse: separate; border-spacing: 0;">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 100px; text-align: center;">Xếp hạng</th>
-                                        <th>Đơn Vị</th>
-                                        <th class="text-right" style="padding-right: 8px;">
-                                            <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; width: 100%;">
-                                                <span>HQ1</span>
-                                                <button class="table-sort-btn" id="btnSort_profitableTable" onclick="toggleTableSort('profitableTable')" title="Sắp xếp">
-                                                    <span class="sort-icon-wrapper">
-                                                        <svg class="sort-icon-up" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 14h16L12 6z"/></svg>
-                                                        <svg class="sort-icon-down" viewBox="0 0 24 24" width="8" height="8" fill="currentColor"><path d="M4 10h16l-8 8z"/></svg>
-                                                    </span>
-                                                </button>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </thead>
+                                                            <thead id="masterVarianceTableHead">
+                                <tr>
+                                    <th rowspan="2" style="width: 40px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #e2e8f0 !important; border-right:1px solid #e2e8f0;">STT</th>
+                                    <th rowspan="2" style="min-width: 150px; background: #f8fafc !important; padding: 10px 8px !important; border-bottom: 2px solid #e2e8f0 !important; text-align: left; border-right:1px solid #e2e8f0;">Đơn Vị / Chi Nhánh</th>
+                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-bottom: 1px solid #cbd5e1 !important; border-right:1px solid #e2e8f0; color:#0056A3; font-weight:700;">DOANH THU (TỶ VNĐ)</th>
+                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-bottom: 1px solid #cbd5e1 !important; border-right:1px solid #e2e8f0; color:#0056A3; font-weight:700;">BỒI THƯỜNG (TỶ VNĐ)</th>
+                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-bottom: 1px solid #cbd5e1 !important; border-right:1px solid #e2e8f0; color:#0056A3; font-weight:700;">CPDM (TỶ VNĐ)</th>
+                                    <th colspan="3" style="text-align: center; background: #f8fafc !important; padding: 6px 8px !important; border-bottom: 1px solid #cbd5e1 !important; border-right:1px solid #e2e8f0; color:#0056A3; font-weight:700;">HQQU (TỶ VNĐ)</th>
+                                    <th rowspan="2" style="width: 80px; text-align: center; background: #f8fafc !important; padding: 10px 6px !important; border-bottom: 2px solid #e2e8f0 !important;">Chi tiết</th>
+                                </tr>
+                                <tr>
+                                    <!-- DT -->
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;" class="thPastLabel">Q2.2025</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;">Q2.2026</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important; border-right:1px solid #e2e8f0;">Chênh lệch</th>
+                                    <!-- BT -->
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;" class="thPastLabel">Q2.2025</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;">Q2.2026</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important; border-right:1px solid #e2e8f0;">Chênh lệch</th>
+                                    <!-- CPDM -->
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;" class="thPastLabel">Q2.2025</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;">Q2.2026</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important; border-right:1px solid #e2e8f0;">Chênh lệch</th>
+                                    <!-- HQQU -->
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;" class="thPastLabel">Q2.2025</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important;">Q2.2026</th>
+                                    <th style="text-align: right; background: #f8fafc !important; padding: 6px 6px !important; border-bottom: 2px solid #e2e8f0 !important; border-right:1px solid #e2e8f0;">Chênh lệch</th>
+                                </tr>
+                            </thead>
                                 <tbody id="profitableTableBody">
                                     <!-- Dynamic rows -->
                                 </tbody>
@@ -7246,7 +7258,7 @@
         }
 
         
-        // ================= MASTER ALL-BRANCH VARIANCE OVERVIEW ENGINE =================
+                // ================= MASTER ALL-BRANCH VARIANCE OVERVIEW ENGINE =================
         function renderMasterVarianceTable() {
             const tbody = document.getElementById('masterVarianceTableBody');
             if (!tbody || !varianceData) return;
@@ -7260,6 +7272,10 @@
             if (titleEl) {
                 titleEl.innerText = `BẢNG TỔNG QUAN BIẾN ĐỘNG TOÀN HỆ THỐNG (Q2.2026 VS ${compareLabel})`;
             }
+
+            document.querySelectorAll('.thPastLabel').forEach(el => {
+                el.innerText = compareLabel;
+            });
 
             const searchVal = (document.getElementById('masterVarianceSearchInput')?.value || '').toLowerCase().trim();
             const statusFilter = document.getElementById('masterVarianceStatusSelect')?.value || 'ALL';
@@ -7315,16 +7331,29 @@
                 };
 
                 tr.innerHTML = `
-                    <td style="text-align:center; color:#64748b;">${count}</td>
-                    <td style="font-weight:700; color:#0056A3;">${bName}</td>
-                    <td style="text-align:right; font-weight:600;">${(cTotal.dt/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right;">${fmtDiff(dDt, pDt, false)}</td>
-                    <td style="text-align:right; font-weight:600;">${(cTotal.bt/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right;">${fmtDiff(dBt, pBt, true)}</td>
-                    <td style="text-align:right; font-weight:600;">${(cTotal.cpdm/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right;">${fmtDiff(dCpdm, pCpdm, true)}</td>
+                    <td style="text-align:center; color:#64748b; border-right:1px solid #f1f5f9;">${count}</td>
+                    <td style="font-weight:700; color:#0056A3; border-right:1px solid #f1f5f9;">${bName}</td>
+                    
+                    <!-- DT -->
+                    <td style="text-align:right; color:#64748b;">${(pTotal.dt/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(cTotal.dt/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dDt, pDt, false)}</td>
+                    
+                    <!-- BT -->
+                    <td style="text-align:right; color:#64748b;">${(pTotal.bt/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(cTotal.bt/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dBt, pBt, true)}</td>
+                    
+                    <!-- CPDM -->
+                    <td style="text-align:right; color:#64748b;">${(pTotal.cpdm/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; font-weight:600; color:#0f172a;">${(cTotal.cpdm/1e9).toFixed(2)} Tỷ</td>
+                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dCpdm, pCpdm, true)}</td>
+                    
+                    <!-- HQQU -->
+                    <td style="text-align:right; color:${pTotal.hqqu>=0?'#64748b':'#ef4444'};">${(pTotal.hqqu/1e9).toFixed(2)} Tỷ</td>
                     <td style="text-align:right; font-weight:700; color:${cTotal.hqqu>=0?'#0f172a':'#ef4444'};">${(cTotal.hqqu/1e9).toFixed(2)} Tỷ</td>
-                    <td style="text-align:right;">${fmtDiff(dHq, pHq, false)}</td>
+                    <td style="text-align:right; border-right:1px solid #f1f5f9;">${fmtDiff(dHq, pHq, false)}</td>
+                    
                     <td style="text-align:center;">
                         <button onclick="jumpToBranchVariance('${bName.replace(/'/g, "\'")}')" style="padding:3px 8px; font-size:11px; font-weight:700; border:none; border-radius:5px; background:#e0f2fe; color:#0369a1; cursor:pointer;">
                             Soi chi tiết
